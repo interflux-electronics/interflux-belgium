@@ -1,4 +1,11 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!"
+	"continue_in_your_language": "Continue in your language",
+	"explore_more": "Explore more",
+	"member_of_interflux_group": "Member of the [Interflux Group](https://interflux.group)",
+	"office_building": "office building of Interflux Electronics in Belgium",
+	"LMPA_Q_solder_alloy": "LMPA-Q solder alloy",
+	"ICSF_jet_fluxer": "ICSF Select6 jet fluxer",
+	"partners": "partners",
+	"follow_Interflux": "Follow Interflux"
 }
