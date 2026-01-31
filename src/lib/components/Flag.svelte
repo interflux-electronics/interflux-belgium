@@ -15,9 +15,6 @@
 />
 
 <style lang="scss">
-	@import '$lib/styles/mixins.scss';
-	@import '$lib/styles/variables.scss';
-
 	img.flag {
 		height: auto;
 		@include widescreen {

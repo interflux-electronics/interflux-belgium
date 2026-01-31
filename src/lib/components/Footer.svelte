@@ -193,6 +193,8 @@
 </footer>
 
 <style lang="scss">
+	@use 'sass:color';
+
 	footer {
 		@include widescreen {
 			display: flex;
@@ -251,20 +253,36 @@
 			background-color: $blue-3;
 			@include widescreen {
 				gap: 50px;
-				background: radial-gradient(at top right, lighten($blue-3, 3%), darken($blue-3, 3%));
+				background: radial-gradient(
+					at top right,
+					color.adjust($blue-3, $lightness: 3%),
+					color.adjust($blue-3, $lightness: -3%)
+				);
 			}
 			@include desktop {
 				gap: vw(50px);
-				background: radial-gradient(at bottom right, lighten($blue-3, 3%), darken($blue-3, 3%));
+				background: radial-gradient(
+					at bottom right,
+					color.adjust($blue-3, $lightness: 3%),
+					color.adjust($blue-3, $lightness: -3%)
+				);
 			}
 			@include tablet {
 				gap: 5vw;
-				background: radial-gradient(at bottom right, lighten($blue-3, 3%), darken($blue-3, 3%));
+				background: radial-gradient(
+					at bottom right,
+					color.adjust($blue-3, $lightness: 3%),
+					color.adjust($blue-3, $lightness: -3%)
+				);
 			}
 			@include mobile {
 				gap: 10vw;
 				padding: 25vw 0;
-				background: radial-gradient(at center, lighten($blue-3, 3%), darken($blue-3, 3%));
+				background: radial-gradient(
+					at center,
+					color.adjust($blue-3, $lightness: 3%),
+					color.adjust($blue-3, $lightness: -3%)
+				);
 			}
 			img#electronics {
 				height: auto;
@@ -442,16 +460,32 @@
 			grid-area: languages;
 			background-color: $blue-4;
 			@include widescreen {
-				background: radial-gradient(at top left, lighten($blue-4, 3%), darken($blue-4, 3%));
+				background: radial-gradient(
+					at top left,
+					color.adjust($blue-4, $lightness: 3%),
+					color.adjust($blue-4, $lightness: -3%)
+				);
 			}
 			@include desktop {
-				background: radial-gradient(at top right, lighten($blue-4, 3%), darken($blue-4, 3%));
+				background: radial-gradient(
+					at top right,
+					color.adjust($blue-4, $lightness: 3%),
+					color.adjust($blue-4, $lightness: -3%)
+				);
 			}
 			@include tablet {
-				background: radial-gradient(at top right, lighten($blue-4, 3%), darken($blue-4, 3%));
+				background: radial-gradient(
+					at top right,
+					color.adjust($blue-4, $lightness: 3%),
+					color.adjust($blue-4, $lightness: -3%)
+				);
 			}
 			@include mobile {
-				background: radial-gradient(at bottom left, lighten($blue-4, 3%), darken($blue-4, 3%));
+				background: radial-gradient(
+					at bottom left,
+					color.adjust($blue-4, $lightness: 3%),
+					color.adjust($blue-4, $lightness: -3%)
+				);
 			}
 			a {
 				position: relative;
@@ -504,7 +538,11 @@
 		#links {
 			grid-area: links;
 			background-color: $blue-5;
-			background: radial-gradient(at top left, lighten($blue-5, 3%), darken($blue-5, 3%));
+			background: radial-gradient(
+				at top left,
+				color.adjust($blue-5, $lightness: 3%),
+				color.adjust($blue-5, $lightness: -3%)
+			);
 			p {
 				@include paragraph;
 				color: white;
