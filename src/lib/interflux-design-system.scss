@@ -1,0 +1,201 @@
+// Interflux Design System (IFDS)
+
+@font-face {
+    font-family: 'Nunito Sans ExtraLight';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-ExtraLight.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans Light';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-Light.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans Regular';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans SemiBold';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-SemiBold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans Bold';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans ExtraBold';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-ExtraBold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans Black';
+    src: url('https://cdn.interflux.com/fonts/nunito-sans/NunitoSans-Black.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+
+    /* Interflux colours */
+
+    --blue-0: #3687d9;
+    --blue-1: #3077bf;
+    --blue-2: #2967a6;
+    --blue-3: #23578c;
+    --blue-4: #1d4773;
+    --blue-5: #163759;
+
+    --orange-0: #ff9d4d;
+    --orange-1: #ff8f33;
+    --orange-2: #ff8119;
+    --orange-3: #ff7300;
+    --orange-4: #e66800;
+    --orange-5: #cc5c00;
+
+    --grey-0: #f7f7f7;
+    --grey-1: #e7e7e9;
+    --grey-2: #cecfd2;
+    --grey-3: #b6b7bc;
+    --grey-4: #9d9fa5;
+    --grey-5: #85878f;
+    --grey-6: #6d6f78;
+    --grey-7: #3c3f4b;
+
+    --green-1: #52996f;
+    --green-2: #398451;
+    --green-3: #2e6b41;
+
+    --red-1: #fc5d5d;
+
+    /* easing functions */
+
+    --linear: cubic-bezier(0.25, 0.25, 0.75, 0.75);
+    --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-in: cubic-bezier(0.42, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.58, 1);
+    --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+    --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    --ease-in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+    --ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
+    --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    --ease-in-circ: cubic-bezier(0.6, 0.04, 0.98, 0.335);
+    --ease-in-back: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+    --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
+    --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+    --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+    --ease-in-out-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+    --ease-in-out-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    --ease-in-out-back: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+}
+
+body {
+    font-family: 'Nunito Sans Regular', sans-serif;
+    /* Important, we explicitly name fonts, no weights used */
+    font-style: normal;
+    /* Important, we use weightless fonts */
+    font-weight: normal;
+    /* Important, we use weightless fonts */
+    font-size: 16px;
+    line-height: 130%;
+    margin: 0;
+    background-color: white;
+    color: var(--grey-7);
+    -webkit-font-smoothing: antialiased;
+    /* Without it, fonts will look bloated Chrome and Safari */
+    -moz-osx-font-smoothing: grayscale;
+    /* Without it, fonts will look bloated Firefox */
+
+    width: 100%;
+    height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-family: 'Nunito Sans Bold', sans-serif;
+    /* More often than not, headings are one liners */
+    line-height: 100%;
+    /* Important, we explicitly name fonts, no weights used */
+    font-weight: normal;
+    /* Important, we use weightless fonts */
+}
+
+p {
+    font-family: 'Nunito Sans Regular', sans-serif;
+    /* Paragraphs are mostly multiline */
+    line-height: 180%;
+    /* Important, we explicitly name fonts, no weights used */
+    font-weight: normal;
+    /* Important, we use weightless fonts */
+    margin: 0;
+
+    a {
+        color: var(--blue-0);
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: var(--orange-3);
+        }
+    }
+}
+
+img {
+    display: block;
+    /* override browser default to resolves empty space below images */
+}
+
+a {
+    text-decoration: none;
+}
+
+// Headings
+
+.h {
+    &.primary.light {
+        font-family: 'Nunito Sans Light', sans-serif;
+        font-size: 32px;
+        line-height: 140%;
+    }
+
+    &.secondary.bold {
+        font-family: 'Nunito Sans Bold', sans-serif;
+        font-size: 20px;
+        line-height: 100%;
+    }
+}
+
+// Tiles

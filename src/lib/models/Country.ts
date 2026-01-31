@@ -1,5 +1,5 @@
 export default class Country {
-    constructor(data) {
+    constructor(data: any) {
         const { id, attributes } = data;
 
         this.id = id;
