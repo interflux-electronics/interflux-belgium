@@ -2,9 +2,39 @@
 	import { PUBLIC_CDN_HOST } from '$env/static/public';
 	import { m } from '$lib/paraglide/messages';
 	import { markdown } from '$lib/helpers';
-	import { Languages, Link, Svg } from '$lib/components';
+	import { Flag, Svg } from '$lib/components';
+	import { page } from '$app/state';
 
 	let currentYear = $derived(new Date().getFullYear());
+
+	let GB = { id: 'GB', nameNative: 'UK', nameEnglish: 'UK' };
+	let US = { id: 'US', nameNative: 'USA', nameEnglish: 'USA' };
+	let CA = { id: 'CA', nameNative: 'Canada', nameEnglish: 'Canada' };
+	let AU = { id: 'AU', nameNative: 'Australia', nameEnglish: 'Australia' };
+	let NZ = { id: 'NZ', nameNative: 'New Zealand', nameEnglish: 'New Zealand' };
+	let SG = { id: 'SG', nameNative: 'Singapore', nameEnglish: 'Singapore' };
+
+	// let CN = { id: 'CN', nameNative: '中国', nameEnglish: 'China' };
+	// let TW = { id: 'TW', nameNative: '臺灣', nameEnglish: 'Taiwan' };
+	// let HK = { id: 'HK', nameNative: '香港', nameEnglish: 'Hong Kong' };
+	// let MO = { id: 'MO', nameNative: '澳門', nameEnglish: 'Macau' };
+
+	let ES = { id: 'ES', nameNative: 'España', nameEnglish: 'Spain' };
+	let MX = { id: 'MX', nameNative: 'México', nameEnglish: 'Mexico' };
+	let AR = { id: 'AR', nameNative: 'Argentina', nameEnglish: 'Argentina' };
+	let CL = { id: 'CL', nameNative: 'Chile', nameEnglish: 'Chile' };
+	let CO = { id: 'CO', nameNative: 'Colombia', nameEnglish: 'Colombia' };
+	let PE = { id: 'PE', nameNative: 'Perú', nameEnglish: 'Peru' };
+
+	let DE = { id: 'DE', nameNative: 'Deutschland', nameEnglish: 'Germany' };
+	let AT = { id: 'AT', nameNative: 'Österreich', nameEnglish: 'Austria' };
+	let CH = { id: 'CH', nameNative: 'Schweiz', nameEnglish: 'Switzerland' };
+
+	let FR = { id: 'FR', nameNative: 'France', nameEnglish: 'France' };
+	let BE1 = { id: 'BE', nameNative: 'Belgique', nameEnglish: 'Belgium' };
+
+	// let BE2 = { id: 'BE', nameNative: 'België' };
+	// let NL = { id: 'NL', nameNative: 'Nederland' };
 </script>
 
 <footer>
@@ -41,7 +71,69 @@
 	<div id="languages">
 		<section>
 			<h3>{m.continue_in_your_language()}</h3>
-			<Languages />
+
+			<a href="https://interflux.com{page.url.pathname}">
+				<span>English<Svg name="arrow-right" /></span>
+				<div class="flags">
+					<Flag country={GB} />
+					<Flag country={US} />
+					<Flag country={CA} />
+					<Flag country={AU} />
+					<Flag country={NZ} />
+					<Flag country={SG} />
+				</div>
+			</a>
+
+			<!-- 
+				<a href='https://interflux.com.cn{page.url.pathname}'>
+				<span>中文<Svg name='arrow-right' /></span>
+				<div class='flags'>
+					<Flag country={CN} />
+					<Flag country={TW} />
+					<Flag country={HK} />
+					<Flag country={MO} />
+				</div>
+				</a> 
+			-->
+
+			<a href="https://interflux.es{page.url.pathname}">
+				<span>Español<Svg name="arrow-right" /></span>
+				<div class="flags">
+					<Flag country={ES} />
+					<Flag country={MX} />
+					<Flag country={AR} />
+					<Flag country={CL} />
+					<Flag country={CO} />
+					<Flag country={PE} />
+				</div>
+			</a>
+
+			<a href="https://interflux.de{page.url.pathname}">
+				<span>Deutsch<Svg name="arrow-right" /></span>
+				<div class="flags">
+					<Flag country={DE} />
+					<Flag country={AT} />
+					<Flag country={CH} />
+				</div>
+			</a>
+
+			<a href="https://interflux.fr{page.url.pathname}">
+				<span>français<Svg name="arrow-right" /></span>
+				<div class="flags">
+					<Flag country={FR} />
+					<Flag country={BE1} />
+				</div>
+			</a>
+
+			<!-- 
+				<a href='https://interflux.be{page.url.pathname}'>
+				<span>Nederlands<Svg name='arrow-right' /></span>
+				<div class='flags'>
+					<Flag country={NL} />
+					<Flag country={BE2} />
+				</div>
+				</a> 
+			-->
 		</section>
 	</div>
 
@@ -49,46 +141,46 @@
 		<section id="explore">
 			<h3>{m.explore_more()}</h3>
 
-			<Link url="https://lmpa-q.com">
+			<a href="https://lmpa-q.com" target="_blank">
 				<span>{m.LMPA_Q_solder_alloy()}<Svg name="arrow-right" /></span>
-			</Link>
+			</a>
 
-			<Link url="https://www.jetfluxer.com">
+			<a href="https://www.jetfluxer.com" target="_blank">
 				<span>{m.ICSF_jet_fluxer()}<Svg name="arrow-right" /></span>
-			</Link>
+			</a>
 		</section>
 
 		<section id="partners">
 			<h3>{m.partners()}</h3>
 
-			<Link url="https://interflux.group">
+			<a href="https://interflux.group" target="_blank">
 				<span>Interflux Group<Svg name="arrow-right" /></span>
-			</Link>
+			</a>
 
-			<Link url="https://www.interflux.dk">
+			<a href="https://www.interflux.dk" target="_blank">
 				<span>Interflux Scandinavia<Svg name="arrow-right" /></span>
-			</Link>
+			</a>
 
-			<Link url="https://www.interflux.pl">
+			<a href="https://www.interflux.pl" target="_blank">
 				<span>Interflux Poland<Svg name="arrow-right" /></span>
-			</Link>
+			</a>
 		</section>
 
 		<section id="social">
 			<h3>{m.follow_Interflux()}</h3>
 
 			<div class="horizontal">
-				<Link url="https://www.linkedin.com/company/interflux-electronics/">
+				<a href="https://www.linkedin.com/company/interflux-electronics/" target="_blank">
 					<Svg name="linkedin" />
-				</Link>
+				</a>
 
-				<Link url="https://twitter.com/interflux_elec">
+				<a href="https://twitter.com/interflux_elec" target="_blank">
 					<Svg name="x" />
-				</Link>
+				</a>
 
-				<Link url="https://www.youtube.com/@interfluxelectronicsnv1744">
+				<a href="https://www.youtube.com/@interfluxelectronicsnv1744" target="_blank">
 					<Svg name="youtube" />
-				</Link>
+				</a>
 			</div>
 		</section>
 
@@ -104,7 +196,7 @@
 	@import '$lib/styles/variables.scss';
 	@import '$lib/styles/mixins.scss';
 
-	:global(footer) {
+	footer {
 		@include widescreen {
 			display: flex;
 		}
@@ -226,7 +318,7 @@
 				p {
 					@include paragraph;
 					color: white;
-					a {
+					:global(a) {
 						font-family: $bold;
 						color: white;
 						background-color: transparent;
@@ -259,10 +351,6 @@
 				display: flex;
 				flex-direction: column;
 				align-items: flex-start;
-			}
-			p {
-				@include paragraph;
-				color: white;
 			}
 			h3 {
 				@include paragraph;
@@ -304,12 +392,11 @@
 				}
 				&:hover,
 				&:focus {
-					span,
-					.flags {
+					span {
 						background: $orange-2;
 						color: white;
 					}
-					svg.arrow-right {
+					:global(svg.arrow-right) {
 						opacity: 1;
 					}
 				}
@@ -329,7 +416,7 @@
 						padding: 0 2vw;
 					}
 				}
-				svg.arrow-right {
+				:global(svg.arrow-right) {
 					opacity: 0;
 					@include widescreen {
 						width: 4px;
@@ -371,9 +458,16 @@
 			}
 			a {
 				position: relative;
-				svg.arrow-right {
+				:global(svg.arrow-right) {
 					position: absolute;
 					right: 8px;
+				}
+				&:hover,
+				&:focus {
+					.flags {
+						background: $orange-2;
+						color: white;
+					}
 				}
 				.flags {
 					display: flex;
@@ -398,13 +492,13 @@
 						padding: 0 7vw 0 2vw;
 						height: 10vw;
 					}
-					.flag {
+					:global(.flag) {
 						outline: none;
-						&.nz {
-							// We hide the New Zealand flag between 1300px and 1200px because <a> is too wide
-							@media (max-width: 1300px) and (min-width: 1200px) {
-								display: none;
-							}
+					}
+					:global(.flag.nz) {
+						// We hide the New Zealand flag between 1300px and 1200px because <a> is too wide
+						@media (max-width: 1300px) and (min-width: 1200px) {
+							display: none;
 						}
 					}
 				}
@@ -414,6 +508,10 @@
 			grid-area: links;
 			background-color: $blue-5;
 			background: radial-gradient(at top left, lighten($blue-5, 3%), darken($blue-5, 3%));
+			p {
+				@include paragraph;
+				color: white;
+			}
 			#social {
 				.horizontal {
 					display: flex;
@@ -444,11 +542,11 @@
 					}
 					&:hover,
 					&:focus {
-						svg {
+						:global(svg) {
 							width: 100%;
 						}
 					}
-					svg {
+					:global(svg) {
 						width: 60%;
 						height: auto;
 						transition: width 300ms $easeOutExpo;

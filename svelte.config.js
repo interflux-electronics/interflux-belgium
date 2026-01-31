@@ -7,12 +7,19 @@ const config = {
         adapter: adapter()
     },
     preprocess: vitePreprocess({
-        scss: {
-            prependData: `
-                @import "$lib/styles/mixins.scss"; 
-                @import "$lib/styles/variables.scss";
-            `,
+        // style: {
+        //     scss: {
+        //         // This tells Sass to use the modern module system
+        //         api: 'modern',
 
+        //         // This line is the key — it prepends @use to every <style lang="scss"> block
+        //         prependData: `
+        //             @use '$lib/styles/variables.scss' as *;
+        //             @use '$lib/styles/mixins.scss' as *;
+        //         `
+        //     }
+        // },
+        scss: {
             // Resolve $lib in import paths
             // @import '$lib/styles/mixins.scss'; 
             // @import '$lib/styles/variables.scss';
