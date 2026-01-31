@@ -10,6 +10,17 @@ export default defineConfig({
 		devtoolsJson(),
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
 	],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern-compiler',
+				additionalData: `
+					@use '$lib/styles/variables.scss' as *;
+					@use '$lib/styles/mixins.scss' as *;
+				`
+			}
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

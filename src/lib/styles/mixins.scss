@@ -1,4 +1,5 @@
 @use "sass:math";
+@use '$lib/styles/variables.scss' as *;
 
 // Mixins for breaking the CSS into 4 breakpoints:
 //

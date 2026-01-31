@@ -193,9 +193,6 @@
 </footer>
 
 <style lang="scss">
-	@import '$lib/styles/variables.scss';
-	@import '$lib/styles/mixins.scss';
-
 	footer {
 		@include widescreen {
 			display: flex;
