@@ -4,49 +4,49 @@ import { playwright } from '@vitest/browser-playwright';
 import devtoolsJson from 'vite-plugin-devtools-json';
 import { sveltekit } from '@sveltejs/kit/vite';
 
-export default defineConfig({
-	plugins: [
-		sveltekit(),
-		devtoolsJson(),
-		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
-	],
-	css: {
-		preprocessorOptions: {
-			scss: {
-				api: 'modern-compiler',
-				additionalData: `
-					@use '$lib/styles/variables.scss' as *;
-					@use '$lib/styles/mixins.scss' as *;
-				`
-			}
-		}
-	},
-	test: {
-		expect: { requireAssertions: true },
-		projects: [
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'client',
-					browser: {
-						enabled: true,
-						provider: playwright(),
-						instances: [{ browser: 'chromium', headless: true }]
-					},
-					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
-					exclude: ['src/lib/server/**']
-				}
-			},
+const isDev = process.env.NODE_ENV === 'development';
 
-			{
-				extends: './vite.config.ts',
-				test: {
-					name: 'server',
-					environment: 'node',
-					include: ['src/**/*.{test,spec}.{js,ts}'],
-					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
-				}
-			}
-		]
-	}
+export default defineConfig({
+  plugins: [
+    sveltekit(),
+    devtoolsJson(),
+    paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
+  ],
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `
+  //         @use '$lib/styles/components' as *;
+  // 	    `
+  //     }
+  //   }
+  // },
+  test: {
+    expect: { requireAssertions: true },
+    projects: [
+      {
+        extends: './vite.config.ts',
+        test: {
+          name: 'client',
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium', headless: true }]
+          },
+          include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
+          exclude: ['src/lib/server/**']
+        }
+      },
+
+      {
+        extends: './vite.config.ts',
+        test: {
+          name: 'server',
+          environment: 'node',
+          include: ['src/**/*.{test,spec}.{js,ts}'],
+          exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+        }
+      }
+    ]
+  }
 });

@@ -1,0 +1,20 @@
+// Interflux Design System (IFDS)
+
+// Variables
+@forward 'variables/colors';
+@forward 'variables/fonts';
+@forward 'variables/easings';
+@forward 'variables/images';
+
+// Mixins
+@forward 'mixins/responsive';
+@forward 'mixins/browser-prefixes';
+@forward 'mixins/text';
+@forward 'mixins/other';
+
+// Fonts
+@forward 'fonts/nunito-sans';
+
+// Normalise
+@forward 'normalize/across-browsers';
+@forward 'normalize/across-interflux';

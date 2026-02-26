@@ -1,0 +1,189 @@
+<script lang="ts">
+  import { header } from '$lib/state/header.svelte';
+
+  let { id, children } = $props();
+  let isOpen = $derived(header.shownMenu === id);
+
+  function preventClose(event: MouseEvent | KeyboardEvent) {
+    event.stopPropagation();
+  }
+</script>
+
+<div {id} class="menu {isOpen ? 'open' : 'closed'}">
+  <div class="box" onclick={preventClose} onkeydown={preventClose} role="button" tabindex="0">
+    <div class="callout"></div>
+    {@render children()}
+  </div>
+</div>
+
+<style lang="scss">
+  @use '$lib/styles/components' as *;
+
+  .menu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    transition: all 400ms $easeOutExpo;
+    transition-property: opacity, transform;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(
+      to bottom,
+      rgba(black, 0.1),
+      rgba(black, 0.1) 90%,
+      rgba(black, 0) 100%
+    );
+    @include widescreen {
+      padding: 25px 0 60px;
+    }
+    @include desktop {
+      padding: vw(25px) 0 vw(60px);
+    }
+    &.open {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    &.closed {
+      opacity: 0;
+      transform: translateX(-30px);
+      pointer-events: none;
+    }
+    .box {
+      display: flex;
+      background: white;
+      position: relative;
+      @include widescreen {
+        border-radius: 5px;
+        box-shadow: 0 4px 4px rgba(black, 0.25);
+      }
+      @include desktop {
+        border-radius: vw(5px);
+        box-shadow: 0 vw(4px) vw(4px) rgba(black, 0.25);
+      }
+    }
+    .callout {
+      content: '';
+      position: absolute;
+      background-image: url('https://cdn.interflux.com/images/public/menu-top-arrow.svg');
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      @include widescreen {
+        background-size: 52px 16px;
+        height: 16px;
+        width: 52px;
+        top: -15px;
+      }
+      @include desktop {
+        background-size: vw(52px) vw(16px);
+        height: vw(16px);
+        width: vw(52px);
+        top: vw(-15px);
+      }
+    }
+    :global {
+      h2 {
+        font-family: $bold;
+        color: $grey-7;
+        line-height: 150%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include widescreen {
+          font-size: 15px;
+          padding: 10px 18px;
+        }
+        @include desktop {
+          font-size: vw(15px);
+          padding: vw(10px) vw(18px);
+        }
+      }
+      .links {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        text-align: left;
+        width: 100%;
+        overflow: hidden;
+        @include widescreen {
+          padding-bottom: 1px;
+          border-radius: 0 0 0 8px;
+        }
+        @include desktop {
+          padding-bottom: vw(1px);
+          border-radius: 0 0 0 vw(8px);
+        }
+        a {
+          box-sizing: border-box;
+          width: 100%;
+          color: white;
+          text-align: left;
+          border-top: 1px solid $grey-1;
+          color: $grey-7;
+          display: flex;
+          align-items: center;
+          @include widescreen {
+            height: 41px;
+            padding: 0 18px 0 1px;
+            font-size: 15px;
+          }
+          @include desktop {
+            height: vw(41px);
+            padding: 0 vw(18px) 0 vw(1px);
+            font-size: vw(15px);
+          }
+          &:first-child {
+            width: 66.66%;
+          }
+          &:hover,
+          &:focus {
+            span {
+              font-family: $semibold;
+              background: $orange-2;
+              color: white;
+            }
+          }
+          > img {
+            @include widescreen {
+              width: 40px;
+              height: 40px;
+            }
+            @include desktop {
+              width: vw(40px);
+              height: vw(40px);
+            }
+          }
+          span {
+            display: flex;
+            align-items: center;
+
+            @include widescreen {
+              line-height: 24px;
+              padding: 0 8px;
+              margin: 0 8px;
+            }
+            @include desktop {
+              line-height: vw(24px);
+              padding: 0 vw(8px);
+              margin: 0 vw(8px);
+            }
+          }
+          svg {
+            color: white;
+            @include widescreen {
+              width: 4px;
+              height: 6px;
+              margin-left: 8px;
+            }
+            @include desktop {
+              width: vw(4px);
+              height: vw(6px);
+              margin-left: vw(8px);
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
