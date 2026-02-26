@@ -29,11 +29,11 @@
 </script>
 
 <svelte:head>
-  <meta name='environment' content={mode} />
-  <meta name='built-by' content='Jan Werkhoven - jw@interflux.au' />
-  <meta name='built-with' content='Svelte Kit - https://svelte.dev/' />
-  <meta name='copyright' content='© since 1980 by Interflux Electronics NV ®' />
-  <meta name='theme-color' content='#23578c' />
+  <meta name="environment" content={mode} />
+  <meta name="built-by" content="Jan Werkhoven - jw@interflux.au" />
+  <meta name="built-with" content="Svelte Kit - https://svelte.dev/" />
+  <meta name="copyright" content="© since 1980 by Interflux Electronics NV ®" />
+  <meta name="theme-color" content="#23578c" />
 
   <link
     rel="icon"
@@ -45,22 +45,22 @@
   <!-- <meta name='git-branch' content={{this.model.gitBranch}} /> -->
   <!-- <meta name='git-revision' content={{this.model.gitRevision}} /> -->
 
-<!-- https://ogp.me/ -->
-<!-- https://developers.facebook.com/docs/sharing/webmasters/ -->
-<!-- https://developers.facebook.com/docs/sharing/best-practices#images -->
+  <!-- https://ogp.me/ -->
+  <!-- https://developers.facebook.com/docs/sharing/webmasters/ -->
+  <!-- https://developers.facebook.com/docs/sharing/best-practices#images -->
 
-<!-- SEO basics -->
+  <!-- SEO basics -->
 
-<!-- <title>{{this.model.title}}</title>
+  <!-- <title>{{this.model.title}}</title>
 <meta name='description' content='{{this.model.description}}' />
 <meta name='robots' content='index, follow' /> -->
 
-<!-- {{#if this.model.canonicalURL}}
+  <!-- {{#if this.model.canonicalURL}}
    <link rel='canonical' href='{{this.model.canonicalURL}}' />
 {{/if}} -->
 
-<!-- Open graph, for social media -->
-<!--
+  <!-- Open graph, for social media -->
+  <!--
 // <meta property='og:url' content={{this.model.canonicalURL}} />
 // <meta property='og:locale' content={{this.model.ogLocale}} />
 // <meta property='og:type' content={{this.model.ogType}} />
@@ -72,12 +72,12 @@
 // <meta property='og:image:alt' content={{this.model.ogImageAlt}} />
 -->
 
-<!-- Multilingual SEO -->
-<!-- https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites -->
-<!-- https://developers.google.com/search/docs/specialty/international/localized-versions -->
-<!-- http://www.lingoes.net/en/translator/langcode.htm -->
+  <!-- Multilingual SEO -->
+  <!-- https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites -->
+  <!-- https://developers.google.com/search/docs/specialty/international/localized-versions -->
+  <!-- http://www.lingoes.net/en/translator/langcode.htm -->
 
-<!-- // {{#let this.model.canonicalPath as |cp|}}
+  <!-- // {{#let this.model.canonicalPath as |cp|}}
 //   <link rel='alternate' hreflang='en' href='https://interflux.com{{cp}}' />
 //   <link rel='alternate' hreflang='de' href='https://interflux.de{{cp}}' />
 //   <link rel='alternate' hreflang='fr' href='https://interflux.fr{{cp}}' />
@@ -86,7 +86,7 @@
 //   <link rel='alternate' hreflang='es-MX' href='https://interflux.mx{{cp}}' />
 // {{/let}} -->
 
-<!-- // {{! Mapbox }}
+  <!-- // {{! Mapbox }}
 // {{! Only load the CSS and JS for mapbox if the router asked for it }}
 // {{#if this.model.loadMapBox}}
 //   <link
@@ -97,10 +97,9 @@
 //   </script>
 // {{/if}} -->
 
-<!-- // <script type='application/ld+json'>
+  <!-- // <script type='application/ld+json'>
 //   {{this.model.combinedMicroData}}
 // </script> -->
-
 </svelte:head>
 
 {#if page.showError}
@@ -155,11 +154,13 @@
       width: 100%;
       z-index: 1;
     }
-    :global(header),
-    :global(#breadcrumbs),
-    main,
-    :global(footer) {
-      flex-shrink: 0;
+    :global {
+      header,
+      #breadcrumbs,
+      main,
+      footer {
+        flex-shrink: 0;
+      }
     }
     main {
       // This prevents the blue footer from appearing when pages are loading.

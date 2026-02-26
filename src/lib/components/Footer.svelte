@@ -2,39 +2,9 @@
   import { PUBLIC_CDN_HOST } from '$env/static/public';
   import { m } from '$lib/paraglide/messages';
   import { markdown } from '$lib/helpers';
-  import { Flag, Svg, LanguageList } from '$lib/components';
-  import { page } from '$app/state';
+  import { Svg, LanguageList } from '$lib/components';
 
   let currentYear = $derived(new Date().getFullYear());
-
-  let GB = { id: 'GB', nameNative: 'UK', nameEnglish: 'UK' };
-  let US = { id: 'US', nameNative: 'USA', nameEnglish: 'USA' };
-  let CA = { id: 'CA', nameNative: 'Canada', nameEnglish: 'Canada' };
-  let AU = { id: 'AU', nameNative: 'Australia', nameEnglish: 'Australia' };
-  let NZ = { id: 'NZ', nameNative: 'New Zealand', nameEnglish: 'New Zealand' };
-  let SG = { id: 'SG', nameNative: 'Singapore', nameEnglish: 'Singapore' };
-
-  // let CN = { id: 'CN', nameNative: '中国', nameEnglish: 'China' };
-  // let TW = { id: 'TW', nameNative: '臺灣', nameEnglish: 'Taiwan' };
-  // let HK = { id: 'HK', nameNative: '香港', nameEnglish: 'Hong Kong' };
-  // let MO = { id: 'MO', nameNative: '澳門', nameEnglish: 'Macau' };
-
-  let ES = { id: 'ES', nameNative: 'España', nameEnglish: 'Spain' };
-  let MX = { id: 'MX', nameNative: 'México', nameEnglish: 'Mexico' };
-  let AR = { id: 'AR', nameNative: 'Argentina', nameEnglish: 'Argentina' };
-  let CL = { id: 'CL', nameNative: 'Chile', nameEnglish: 'Chile' };
-  let CO = { id: 'CO', nameNative: 'Colombia', nameEnglish: 'Colombia' };
-  let PE = { id: 'PE', nameNative: 'Perú', nameEnglish: 'Peru' };
-
-  let DE = { id: 'DE', nameNative: 'Deutschland', nameEnglish: 'Germany' };
-  let AT = { id: 'AT', nameNative: 'Österreich', nameEnglish: 'Austria' };
-  let CH = { id: 'CH', nameNative: 'Schweiz', nameEnglish: 'Switzerland' };
-
-  let FR = { id: 'FR', nameNative: 'France', nameEnglish: 'France' };
-  let BE1 = { id: 'BE', nameNative: 'Belgique', nameEnglish: 'Belgium' };
-
-  // let BE2 = { id: 'BE', nameNative: 'België' };
-  // let NL = { id: 'NL', nameNative: 'Nederland' };
 </script>
 
 <footer>
@@ -270,14 +240,16 @@
             width: 7vw;
           }
         }
-        p {
-          @include paragraph;
-          color: white;
-          :global(a) {
-            font-family: $bold;
+        :global {
+          p {
+            @include paragraph;
             color: white;
-            background-color: transparent;
-            text-decoration: none;
+            a {
+              font-family: $bold;
+              color: white;
+              background-color: transparent;
+              text-decoration: none;
+            }
           }
         }
       }
@@ -324,74 +296,76 @@
           margin-bottom: 1.8vw;
         }
       }
-      a {
-        @include paragraph;
-        display: flex;
-        align-items: center;
-        color: white;
-        @include widescreen {
-          margin-left: -8px;
-          line-height: 30px;
-        }
-        @include desktop {
-          margin-left: vw(-8px);
-          line-height: vw(30px);
-        }
-        @include tablet {
-          margin-left: -1vw;
-          line-height: 5vw;
-        }
-        @include mobile {
-          margin-left: -2vw;
-          line-height: 10vw;
-        }
-        &:hover,
-        &:focus {
-          span {
-            background: $orange-2;
-            color: white;
-          }
-          :global(svg.arrow-right) {
-            opacity: 1;
-          }
-        }
-        span {
+      :global {
+        a {
+          @include paragraph;
           display: flex;
           align-items: center;
+          color: white;
           @include widescreen {
-            padding: 0 8px;
+            margin-left: -8px;
+            line-height: 30px;
           }
           @include desktop {
-            padding: 0 vw(8px);
+            margin-left: vw(-8px);
+            line-height: vw(30px);
           }
           @include tablet {
-            padding: 0 1vw;
+            margin-left: -1vw;
+            line-height: 5vw;
           }
           @include mobile {
-            padding: 0 2vw;
+            margin-left: -2vw;
+            line-height: 10vw;
           }
-        }
-        :global(svg.arrow-right) {
-          opacity: 0;
-          @include widescreen {
-            width: 4px;
-            height: 6px;
-            margin-left: 8px;
+          &:hover,
+          &:focus {
+            span {
+              background: $orange-2;
+              color: white;
+            }
+            svg.arrow-right {
+              opacity: 1;
+            }
           }
-          @include desktop {
-            width: vw(4px);
-            height: vw(6px);
-            margin-left: vw(8px);
+          span {
+            display: flex;
+            align-items: center;
+            @include widescreen {
+              padding: 0 8px;
+            }
+            @include desktop {
+              padding: 0 vw(8px);
+            }
+            @include tablet {
+              padding: 0 1vw;
+            }
+            @include mobile {
+              padding: 0 2vw;
+            }
           }
-          @include tablet {
-            width: 0.75vw;
-            height: 1vw;
-            margin-left: 1vw;
-          }
-          @include mobile {
-            width: 1vw;
-            height: 1.5vw;
-            margin-left: 2vw;
+          svg.arrow-right {
+            opacity: 0;
+            @include widescreen {
+              width: 4px;
+              height: 6px;
+              margin-left: 8px;
+            }
+            @include desktop {
+              width: vw(4px);
+              height: vw(6px);
+              margin-left: vw(8px);
+            }
+            @include tablet {
+              width: 0.75vw;
+              height: 1vw;
+              margin-left: 1vw;
+            }
+            @include mobile {
+              width: 1vw;
+              height: 1.5vw;
+              margin-left: 2vw;
+            }
           }
         }
       }
@@ -427,49 +401,51 @@
           color.adjust($blue-4, $lightness: -3%)
         );
       }
-      a {
-        position: relative;
-        :global(svg.arrow-right) {
-          position: absolute;
-          right: 8px;
-        }
-        &:hover,
-        &:focus {
+      :global {
+        a {
+          position: relative;
+          svg.arrow-right {
+            position: absolute;
+            right: 8px;
+          }
+          &:hover,
+          &:focus {
+            .flags {
+              background: $orange-2;
+              color: white;
+            }
+          }
           .flags {
-            background: $orange-2;
-            color: white;
-          }
-        }
-        .flags {
-          display: flex;
-          height: 100%;
-          @include widescreen {
-            gap: 8px;
-            padding: 0 22px 0 6px;
-            height: 30px;
-          }
-          @include desktop {
-            gap: vw(8px);
-            padding: 0 vw(22px) 0 vw(6px);
-            height: vw(30px);
-          }
-          @include tablet {
-            gap: 0.6vw;
-            padding: 0 3vw 0 1vw;
-            height: 5vw;
-          }
-          @include mobile {
-            gap: 1.5vw;
-            padding: 0 7vw 0 2vw;
-            height: 10vw;
-          }
-          :global(.flag) {
-            outline: none;
-          }
-          :global(.flag.nz) {
-            // We hide the New Zealand flag between 1300px and 1200px because <a> is too wide
-            @media (max-width: 1300px) and (min-width: 1200px) {
-              display: none;
+            display: flex;
+            height: 100%;
+            @include widescreen {
+              gap: 8px;
+              padding: 0 22px 0 6px;
+              height: 30px;
+            }
+            @include desktop {
+              gap: vw(8px);
+              padding: 0 vw(22px) 0 vw(6px);
+              height: vw(30px);
+            }
+            @include tablet {
+              gap: 0.6vw;
+              padding: 0 3vw 0 1vw;
+              height: 5vw;
+            }
+            @include mobile {
+              gap: 1.5vw;
+              padding: 0 7vw 0 2vw;
+              height: 10vw;
+            }
+            .flag {
+              outline: none;
+              &.nz {
+                // We hide the New Zealand flag between 1300px and 1200px because <a> is too wide
+                @media (max-width: 1300px) and (min-width: 1200px) {
+                  display: none;
+                }
+              }
             }
           }
         }
@@ -491,40 +467,42 @@
         .horizontal {
           display: flex;
         }
-        a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          @include widescreen {
-            margin-left: -6px;
-            width: 40px;
-            height: 40px;
-          }
-          @include desktop {
-            margin-left: vw(-6px);
-            width: vw(40px);
-            height: vw(40px);
-          }
-          @include tablet {
-            margin-left: -1vw;
-            width: 6vw;
-            height: 6vw;
-          }
-          @include mobile {
-            margin-left: -1vw;
-            width: 11vw;
-            height: 11vw;
-          }
-          &:hover,
-          &:focus {
-            :global(svg) {
-              width: 100%;
+        :global {
+          a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            @include widescreen {
+              margin-left: -6px;
+              width: 40px;
+              height: 40px;
             }
-          }
-          :global(svg) {
-            width: 60%;
-            height: auto;
-            transition: width 300ms $easeOutExpo;
+            @include desktop {
+              margin-left: vw(-6px);
+              width: vw(40px);
+              height: vw(40px);
+            }
+            @include tablet {
+              margin-left: -1vw;
+              width: 6vw;
+              height: 6vw;
+            }
+            @include mobile {
+              margin-left: -1vw;
+              width: 11vw;
+              height: 11vw;
+            }
+            &:hover,
+            &:focus {
+              svg {
+                width: 100%;
+              }
+            }
+            svg {
+              width: 60%;
+              height: auto;
+              transition: width 300ms $easeOutExpo;
+            }
           }
         }
       }
