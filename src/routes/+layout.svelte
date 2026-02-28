@@ -3,19 +3,13 @@
 
   import '$lib/styles/app.scss';
 
-  import { page } from '$lib/state/page.svelte';
-  import { modal } from '$lib/state/modal.svelte';
-  import { main } from '$lib/state/main.svelte';
+  import { beforeNavigate, afterNavigate } from '$app/navigation';
   import { header, updateHeader } from '$lib/state/header.svelte';
+  import { main } from '$lib/state/main.svelte';
+  import { footer } from '$lib/state/footer.svelte';
+  import { modal } from '$lib/state/modal.svelte';
   import { isMobile, isTablet, isDesktop, isWidescreen } from '$lib/state/media.svelte';
-  import {
-    ErrorPage,
-    LoadingPage,
-    MobileHeader,
-    DesktopHeader,
-    Breadcrumbs,
-    Footer
-  } from '$lib/components';
+  import { MobileHeader, DesktopHeader, Breadcrumbs, Footer, LoadingCube } from '$lib/components';
 
   const mode = import.meta.env.MODE;
 
@@ -26,6 +20,26 @@
       shownMenu: 'none'
     });
   }
+
+  let isLoading = $state(false);
+
+  beforeNavigate(({ type }) => {
+    console.log('beforeNavigate');
+
+    // Prevents "Are you sure" dialogs
+    if (type === 'leave') {
+      return;
+    }
+
+    // Only for SPA navigations:
+    isLoading = true;
+  });
+
+  afterNavigate(({ type }) => {
+    console.log('afterNavigate');
+
+    isLoading = false;
+  });
 </script>
 
 <svelte:head>
@@ -102,44 +116,42 @@
 // </script> -->
 </svelte:head>
 
-{#if page.showError}
-  <ErrorPage />
-{:else if page.showLoading}
-  <LoadingPage />
-{:else}
-  {#if page.showHeader && (isMobile || isTablet)}
-    <MobileHeader />
-  {/if}
-
-  <div
-    id="page"
-    data-main={main.id}
-    class={modal.show ? 'prevent-scroll' : 'allow-scroll'}
-    style={modal.show ? `top: -${modal.scrollY}px` : null}
-    onclick={onPageClick}
-    onkeyup={onPageClick}
-    role="button"
-    tabindex="0"
-  >
-    {#if page.showHeader && (isDesktop || isWidescreen)}
-      <DesktopHeader />
-      {#if header.crumbs}
-        <Breadcrumbs />
-      {/if}
-    {/if}
-
-    <main id={main.id} class={main.class}>
-      {@render children()}
-    </main>
-
-    {#if page.showFooter}
-      <div class="spacer"></div>
-      <Footer />
-    {/if}
-  </div>
+{#if header.visible && (isMobile || isTablet)}
+  <MobileHeader />
 {/if}
 
-{#if modal.show}
+<div
+  id="page"
+  data-main={main.id}
+  class={modal.visible ? 'prevent-scroll' : 'allow-scroll'}
+  style={modal.visible ? `top: -${modal.scrollY}px` : null}
+  onclick={onPageClick}
+  onkeyup={onPageClick}
+  role="button"
+  tabindex="0"
+>
+  {#if header.visible && (isDesktop || isWidescreen)}
+    <DesktopHeader />
+    {#if header.crumbs}
+      <Breadcrumbs />
+    {/if}
+  {/if}
+
+  <main id={main.id} class={main.class}>
+    {#if isLoading}
+      <LoadingCube />
+    {:else}
+      {@render children()}
+    {/if}
+  </main>
+
+  {#if footer.visible}
+    <div class="spacer"></div>
+    <Footer />
+  {/if}
+</div>
+
+{#if modal.visible}
   <div id="modals"></div>
 {/if}
 
