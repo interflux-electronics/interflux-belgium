@@ -52,7 +52,7 @@
   <link
     rel="icon"
     type="image/svg+xml"
-    href="{PUBLIC_CDN_HOST}/images/logos/secondary-interflux-electronics-symbol-2.svg"
+    href="{PUBLIC_CDN_HOST}/images/logos/secondary-interflux-electronics-symbol-1.svg"
     sizes="any"
   />
   <!-- <meta name='build-timestamp' content={{this.model.buildTimestamp}} /> -->
