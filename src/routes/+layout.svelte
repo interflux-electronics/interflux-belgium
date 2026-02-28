@@ -176,7 +176,9 @@
     }
     main {
       // This prevents the blue footer from appearing when pages are loading.
-      min-height: 100vh;
+      // min-height: 100vh;
+      // When loading show top half of the footer
+      min-height: calc(100vh - 300px);
     }
     .spacer {
       height: 100%;
