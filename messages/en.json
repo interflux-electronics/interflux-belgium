@@ -49,5 +49,11 @@
   "dip_soldering": "Dip soldering",
   "cleaning": "Cleaning",
 
-  "choose_your_language": "Choose your language"
+  "choose_your_language": "Choose your language",
+
+  "search_document": "Search document",
+  "request_document": "Request document",
+  "request_document_text": "In case you are unable to find the document you need in the list above, then please contact our REACH officer.",
+  "show_all": "Show all",
+  "show_less": "Show less"
 }
