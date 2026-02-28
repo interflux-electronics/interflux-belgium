@@ -1,7 +1,7 @@
 <script lang="ts">
   import { PUBLIC_CDN_HOST } from '$env/static/public';
   import { downcase } from '$lib/helpers';
-  import type Country from '$lib/models/Country';
+  import type Country from '$lib/schemas/Country';
 
   export let country: Country;
 </script>
