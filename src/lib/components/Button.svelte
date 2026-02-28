@@ -3,9 +3,9 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
-    text?: string;
+    label?: string;
     icon?: string;
-    href?: string;
+    url?: string;
     onclick?: (event: MouseEvent) => void;
     id?: string;
     class?: string;
@@ -15,9 +15,9 @@
   }
 
   let {
-    text,
+    label,
     icon,
-    href,
+    url,
     onclick,
     id,
     class: classNamePassedIn = '',
@@ -31,8 +31,8 @@
   );
 </script>
 
-{#if href}
-  <a {href} {id} class={classNames}>
+{#if url}
+  <a href={url} class={classNames} {id}>
     {#if children}
       {@render children()}
     {/if}
@@ -43,8 +43,8 @@
       </div>
     {/if}
 
-    {#if text}
-      <span>{text}</span>
+    {#if label}
+      <span>{label}</span>
     {/if}
   </a>
 {:else}
@@ -59,8 +59,8 @@
       </div>
     {/if}
 
-    {#if text}
-      <span>{text}</span>
+    {#if label}
+      <span>{label}</span>
     {/if}
   </button>
 {/if}
