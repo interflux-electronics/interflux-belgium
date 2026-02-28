@@ -1,11 +1,12 @@
 import { type } from 'arktype';
-import { documentCategory } from './documentCategory.ts';
+import { DocumentCategory } from './DocumentCategory.ts';
 
-export const document = type({
+export const Document = type({
   id: 'string',
+  name: 'string',
   path: 'string',
-  variations: 'string'
-  // documentCategory: documentCategory
+  variations: 'string',
+  'document-category': DocumentCategory
 });
 
-export type Document = typeof document.infer;
+export type Document = typeof Document.infer;

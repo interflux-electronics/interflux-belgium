@@ -1,9 +1,9 @@
 import { type } from 'arktype';
 
-export const country = type({
+export const Country = type({
   id: 'string',
   nameEnglish: 'string',
   nameNative: 'string'
 });
 
-export type Country = typeof country.infer;
+export type Country = typeof Country.infer;

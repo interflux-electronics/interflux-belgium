@@ -1,3 +1,3 @@
-export * from './country.ts';
-export * from './document.ts';
-export * from './documentCategory.ts';
+export * from './Country.ts';
+export * from './Document.ts';
+export * from './DocumentCategory.ts';

@@ -1,8 +1,7 @@
 import { type } from 'arktype';
 
-export const documentCategory = type({
-  id: 'string',
-  name: 'string'
+export const DocumentCategory = type({
+  id: 'string'
 });
 
-export type DocumentCategory = typeof documentCategory.infer;
+export type DocumentCategory = typeof DocumentCategory.infer;
