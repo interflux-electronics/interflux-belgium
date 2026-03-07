@@ -1,17 +1,319 @@
 <script lang="ts">
+  import { TextInput } from '$lib/components';
+
   interface Props {
-    label?: string;
     query?: string;
-    onKeyUp: (event: KeyboardEvent) => void;
+    onKeyUp?: (event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void;
   }
 
-  let { label, query, onKeyUp }: Props = $props();
+  let { query, onKeyUp }: Props = $props();
 </script>
 
-<div class="pills">
-  {#if label}
-    <p>{label}</p>
-  {/if}
+<div class="search">
+  <div class="wrapper">
+    <TextInput type="search" icon="search" theme="classic" onKeyUp={(e) => onKeyUp?.(e)} />
 
-  <input type="search" value={query} onkeyup={(e) => onKeyUp(e)} />
+    <!-- TODO
+    <TextInput
+      @value={{this.value}}
+      @type='search'
+      @icon='search'
+      @theme='classic'
+      @onFocus={{this.onFocus}}
+      @onBlur={{this.onBlur}}
+      @onMouseOver={{this.onMouseOver}}
+      @onMouseOut={{this.onMouseOut}}
+      @onKeyDown={{this.onKeyDown}}
+      @onKeyUp={{this.onKeyUp}}
+    />
+
+    {{#if (eq @state 'idle')}}
+      <div class='icon'>
+        <Svg::Search />
+      </div>
+    {{/if}}
+
+    {{#unless @error}}
+      {{#if this.focus}}
+        {{#if this.isSearching}}
+          <p class='message searching'>Searching ...</p>
+        {{else}}
+          {{#if this.showResults}}
+            <div class='results'>
+
+              {{#each this.buttons as |btn i|}}
+                {{#if btn.shown}}
+                  <button
+                    type='button'
+                    class={{btn.classes}}
+                    {{on 'mouseover' (fn this.onMouseOverButton i)}}
+                    {{on 'mousedown' (fn this.onMouseDown btn.record)}}
+                  >
+                    {{btn.label}}
+                  </button>
+                {{/if}}
+              {{/each}}
+
+              {{#if this.error}}
+                <p class='message error'>Search broke</p>
+              {{else}}
+                <p class='message'>{{this.recordCount}} results</p>
+              {{/if}}
+            </div>
+          {{else}}
+            <p class='message'>{{this.keepTypingMessage}}</p>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    {{/unless}}
+
+    {{yield}} 
+    -->
+  </div>
 </div>
+
+<style lang="scss">
+  @use '$lib/styles/components' as *;
+
+  // The <Search> is nearly identical to the <Form::Input> and thus inherits all its styles.
+  // See the <Form::Input> CSS, except for these overwrites:
+
+  .search {
+    display: flex;
+    position: relative;
+    z-index: 1; // to make the results be on top of elements at z-index: 1
+    @include widescreen {
+      height: 40px;
+    }
+    @include desktop {
+      height: vw(40px);
+    }
+    @include tablet {
+      height: vw-tablet(40px);
+    }
+    @include mobile {
+      height: vw-mobile(40px);
+    }
+    &.hover {
+      .wrapper {
+        border-color: $blue-0;
+      }
+    }
+    &.focus {
+      .wrapper {
+        z-index: 0;
+        border-color: $blue-0;
+        @include widescreen {
+          box-shadow: 0 2px 10px rgba(black, 0.15);
+        }
+        @include desktop {
+          box-shadow: 0 vw(2px) vw(10px) rgba(black, 0.15);
+        }
+        @include tablet {
+          box-shadow: 0 vw-tablet(2px) vw-tablet(10px) rgba(black, 0.15);
+        }
+        @include mobile {
+          box-shadow: 0 vw-mobile(2px) vw-mobile(10px) rgba(black, 0.15);
+        }
+      }
+    }
+    .wrapper {
+      position: absolute;
+      background: white;
+      border-style: solid;
+      border-color: $grey-2;
+      transition: box-shadow 300ms $easeOutExpo;
+      overflow: hidden;
+      @include widescreen {
+        border-width: 1px;
+        border-radius: 3px;
+      }
+      @include desktop {
+        border-width: vw(1px);
+        border-radius: vw(3px);
+      }
+      @include tablet {
+        border-width: vw-tablet(1px);
+        border-radius: vw-tablet(3px);
+      }
+      @include mobile {
+        border-width: vw-mobile(1px);
+        border-radius: vw-mobile(3px);
+      }
+
+      input {
+        border-color: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0;
+        width: 100%;
+        @include widescreen {
+          height: 38px; // 2px smaller because we use wrapper border instead of input border
+        }
+        @include desktop {
+          height: vw(38px);
+        }
+        @include tablet {
+          height: vw-tablet(38px);
+        }
+        @include mobile {
+          height: vw-mobile(38px);
+        }
+
+        /* clears the 'X' from Internet Explorer */
+        &::-ms-clear,
+        &::-ms-reveal {
+          display: none;
+          width: 0;
+          height: 0;
+        }
+
+        /* clears the 'X' from Chrome */
+        &::-webkit-search-decoration,
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-results-button,
+        &::-webkit-search-results-decoration {
+          display: none;
+        }
+      }
+
+      .icon {
+        @include widescreen {
+          width: 38px;
+          height: 38px;
+        }
+        @include desktop {
+          width: vw(38px);
+          height: vw(38px);
+        }
+        @include tablet {
+          width: vw-tablet(38px);
+          height: vw-tablet(38px);
+        }
+        @include mobile {
+          width: vw-mobile(38px);
+          height: vw-mobile(38px);
+        }
+      }
+
+      .results {
+        padding-top: 1px;
+        background: $grey-2;
+        button {
+          background: white;
+          color: $grey-7;
+          border: 0;
+          display: block;
+          width: 100%;
+          text-align: left;
+          outline: 0;
+          @include widescreen {
+            font-size: 15px;
+            line-height: 36px;
+            padding: 0 15px;
+          }
+          @include desktop {
+            font-size: vw(15px);
+            line-height: vw(36px);
+            padding: 0 vw(15px);
+          }
+          @include tablet {
+            font-size: vw-tablet(15px);
+            line-height: vw-tablet(36px);
+            padding: 0 vw-tablet(15px);
+          }
+          @include mobile {
+            font-size: vw-mobile(15px);
+            line-height: vw-mobile(36px);
+            padding: 0 vw-mobile(15px);
+          }
+          &.highlight {
+            background: $blue-0;
+            box-shadow: $blue-0 0 0 0 1px;
+            color: white;
+          }
+          & + button {
+            margin-top: 1px;
+          }
+        }
+        p {
+          background: #eee;
+          color: $grey-7;
+          @include widescreen {
+            line-height: 28px;
+            font-size: 15px;
+            padding: 0 15px;
+          }
+          @include desktop {
+            line-height: vw(28px);
+            font-size: vw(15px);
+            padding: 0 vw(15px);
+          }
+          @include tablet {
+            line-height: vw-tablet(28px);
+            font-size: vw-tablet(15px);
+            padding: 0 vw-tablet(15px);
+          }
+          @include mobile {
+            line-height: vw-mobile(28px);
+            font-size: vw-mobile(15px);
+            padding: 0 vw-mobile(15px);
+          }
+        }
+        button + p {
+          margin-top: 1px;
+        }
+      }
+      p.message,
+      p.searching {
+        @include widescreen {
+          font-size: 16px;
+          line-height: 36px;
+          padding: 0 15px;
+        }
+        @include desktop {
+          font-size: vw(16px);
+          line-height: vw(36px);
+          padding: 0 vw(15px);
+        }
+        @include tablet {
+          font-size: vw-tablet(16px);
+          line-height: vw-tablet(36px);
+          padding: 0 vw-tablet(15px);
+        }
+        @include mobile {
+          font-size: vw-mobile(16px);
+          line-height: vw-mobile(36px);
+          padding: 0 vw-mobile(15px);
+        }
+      }
+      p.message {
+        background: #eee;
+        color: $grey-7;
+        a {
+          color: $grey-7;
+          text-decoration: underline;
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+      p.searching {
+        color: white;
+        background: $blue-0;
+        background-color: $blue-0;
+        background-image: url('https://cdn.interflux.com/images/admin/diagonals-blue.svg');
+        background-size: 31px 31px;
+        box-shadow: $blue-0 0 0 0 1px;
+        animation: translate-left-up 1400ms linear infinite;
+        @keyframes translate-left-up {
+          from {
+            background-position: 0;
+          }
+          to {
+            background-position: -30px -30px;
+          }
+        }
+      }
+    }
+  }
+</style>

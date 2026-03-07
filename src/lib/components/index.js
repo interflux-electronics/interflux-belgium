@@ -13,3 +13,7 @@ export { default as ProductsMenu } from './ProductsMenu.svelte';
 export { default as Svg } from './Svg.svelte';
 export { default as Search } from './Search.svelte';
 export { default as Pills } from './Pills.svelte';
+export { default as TextInput } from './TextInput.svelte';
+export { default as HeaderHero } from './HeaderHero.svelte';
+export { default as Modal } from './Modal.svelte';
+export { default as Page } from './Page.svelte';

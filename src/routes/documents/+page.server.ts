@@ -4,6 +4,7 @@ import { normalizeJsonApi } from '$lib/api/normalize';
 import { Document } from '$lib/schemas/Document';
 import type { PageServerLoad } from './$types';
 import { type } from 'arktype';
+import { updateHeader } from '$lib/state/header.svelte';
 
 export const load: PageServerLoad = async ({ fetch }) => {
   const response = await fetch(`${PUBLIC_API_HOST}/v1/public/documents`);
@@ -25,5 +26,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
     throw error(400, `Invalid documents data: ${validated.summary}`);
   }
 
-  return { documents: validated };
+  return {
+    documents: validated,
+    theme: 'blue overlap'
+  };
 };
