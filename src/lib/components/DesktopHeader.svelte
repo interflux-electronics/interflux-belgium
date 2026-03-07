@@ -3,8 +3,8 @@
   import { Svg, ProductsMenu, ProcessesMenu, LanguageMenu } from '$lib/components';
   import { m } from '$lib/paraglide/messages';
   import { markdown } from '$lib/helpers';
-  import { page } from '$lib/state/page.svelte';
   import { header } from '$lib/state/header.svelte';
+  import { page } from '$app/state';
 
   function closeMenu() {
     header.shownMenu = 'none';
@@ -38,7 +38,7 @@
   }
 </script>
 
-<header id="desktop" class={page.theme}>
+<header id="desktop" class={page.data.theme}>
   <nav>
     <div class="left">
       <a href="/" id="logo">

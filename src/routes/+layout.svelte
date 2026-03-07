@@ -1,45 +1,12 @@
 <script lang="ts">
   import { PUBLIC_CDN_HOST } from '$env/static/public';
+  import { MobileHeader, Page, Modal } from '$lib/components';
 
   import '$lib/styles/app.scss';
-
-  import { beforeNavigate, afterNavigate } from '$app/navigation';
-  import { header, updateHeader } from '$lib/state/header.svelte';
-  import { main } from '$lib/state/main.svelte';
-  import { footer } from '$lib/state/footer.svelte';
-  import { modal } from '$lib/state/modal.svelte';
-  import { isMobile, isTablet, isDesktop, isWidescreen } from '$lib/state/media.svelte';
-  import { MobileHeader, DesktopHeader, Breadcrumbs, Footer, LoadingCube } from '$lib/components';
 
   const mode = import.meta.env.MODE;
 
   let { children } = $props();
-
-  function onPageClick() {
-    updateHeader({
-      shownMenu: 'none'
-    });
-  }
-
-  let isLoading = $state(false);
-
-  beforeNavigate(({ type }) => {
-    console.log('beforeNavigate');
-
-    // Prevents "Are you sure" dialogs
-    if (type === 'leave') {
-      return;
-    }
-
-    // Only for SPA navigations:
-    isLoading = true;
-  });
-
-  afterNavigate(({ type }) => {
-    console.log('afterNavigate');
-
-    isLoading = false;
-  });
 </script>
 
 <svelte:head>
@@ -116,72 +83,10 @@
 // </script> -->
 </svelte:head>
 
-{#if header.visible && (isMobile || isTablet)}
-  <MobileHeader />
-{/if}
+<MobileHeader />
 
-<div
-  id="page"
-  data-main={main.id}
-  class={modal.visible ? 'prevent-scroll' : 'allow-scroll'}
-  style={modal.visible ? `top: -${modal.scrollY}px` : null}
-  onclick={onPageClick}
-  onkeyup={onPageClick}
-  role="button"
-  tabindex="0"
->
-  {#if header.visible && (isDesktop || isWidescreen)}
-    <DesktopHeader />
-    {#if header.crumbs}
-      <Breadcrumbs />
-    {/if}
-  {/if}
+<Page>
+  {@render children()}
+</Page>
 
-  <main id={main.id} class={main.class}>
-    {#if isLoading}
-      <LoadingCube />
-    {:else}
-      {@render children()}
-    {/if}
-  </main>
-
-  {#if footer.visible}
-    <div class="spacer"></div>
-    <Footer />
-  {/if}
-</div>
-
-{#if modal.visible}
-  <div id="modals"></div>
-{/if}
-
-<style lang="scss">
-  #page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    height: 100vh;
-    &.prevent-scroll {
-      position: fixed;
-      width: 100%;
-      z-index: 1;
-    }
-    :global {
-      header,
-      #breadcrumbs,
-      main,
-      footer {
-        flex-shrink: 0;
-      }
-    }
-    main {
-      // This prevents the blue footer from appearing when pages are loading.
-      // min-height: 100vh;
-      // When loading show top half of the footer
-      min-height: calc(100vh - 300px);
-    }
-    .spacer {
-      height: 100%;
-    }
-  }
-</style>
+<Modal />
