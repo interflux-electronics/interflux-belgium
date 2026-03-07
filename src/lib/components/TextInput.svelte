@@ -1,0 +1,204 @@
+<script lang="ts">
+  import { Svg } from '$lib/components';
+
+  interface Props {
+    id?: string;
+    value?: string;
+    type?: string;
+    placeholder?: string;
+    disabled?: boolean;
+    icon?: string;
+    theme?: string;
+    onKeyUp?: (event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void;
+  }
+
+  let {
+    id,
+    value,
+    type = 'text',
+    placeholder,
+    disabled = false,
+    icon = 'no-icon',
+    theme = 'no-theme',
+    onKeyUp
+  }: Props = $props();
+</script>
+
+<div class="text-input {theme} {icon}">
+  <input
+    {id}
+    {value}
+    {type}
+    {placeholder}
+    {disabled}
+    autocapitalize="off"
+    autocomplete="off"
+    autocorrect="off"
+    spellcheck="false"
+    onkeyup={(e) => onKeyUp?.(e)}
+  />
+
+  {#if icon}
+    <div class="icon">
+      <Svg name={icon} />
+    </div>
+  {/if}
+</div>
+
+<style lang="scss">
+  @use '$lib/styles/components' as *;
+
+  .text-input {
+    &.big.white.shadow {
+      p {
+        font-family: $bold;
+        font-size: 18px;
+        line-height: 48px;
+        padding: 0 28px;
+        border-radius: 4px;
+        border: 0;
+        outline: 0;
+        width: 100%; // Always be as wide as the parent
+        box-sizing: border-box;
+        background: white;
+        font-family: $bold;
+        color: $blue-3;
+        @include placeholder {
+          color: rgba(black, 0.3);
+        }
+        box-shadow: 0 2px 4px RGBA(0, 0, 0, 0.2);
+        @include placeholder {
+          color: rgba(white, 0.3);
+        }
+      }
+    }
+
+    &.classic {
+      position: relative;
+      display: flex;
+      max-width: 100%;
+      &.has-icon {
+        input {
+          padding-right: 40px;
+        }
+      }
+      input {
+        font-family: $semibold;
+        line-height: 100%;
+        max-width: 100%;
+        white-space: nowrap;
+        box-sizing: border-box;
+        color: $blue-0;
+        transition: box-shadow 200ms $easeOutExpo;
+        outline: 0;
+        background: white;
+        border-style: solid;
+        border-color: $grey-2;
+        @include widescreen {
+          font-size: 16px;
+          height: 40px;
+          min-width: 200px;
+          padding: 12px;
+          border-radius: 3px;
+          border-width: 1px;
+        }
+        @include desktop {
+          font-size: vw(16px);
+          height: vw(40px);
+          min-width: vw(200px);
+          padding: vw(12px);
+          border-radius: vw(3px);
+          border-width: vw(1px);
+        }
+        @include tablet {
+          font-size: vw-tablet(16px);
+          height: vw-tablet(40px);
+          min-width: vw-tablet(200px);
+          padding: vw-tablet(12px);
+          border-radius: vw-tablet(3px);
+          border-width: vw-tablet(1px);
+        }
+        @include mobile {
+          font-size: vw-mobile(16px);
+          height: vw-mobile(40px);
+          min-width: vw-mobile(200px);
+          padding: vw-mobile(12px);
+          border-radius: vw-mobile(3px);
+          border-width: vw-mobile(1px);
+        }
+        &:hover,
+        &:focus {
+          border-color: $blue-0;
+          box-shadow: 0 2px 4px rgba(black, 0.15);
+          & + .icon svg [fill] {
+            fill: $blue-0;
+          }
+        }
+      }
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        pointer-events: none;
+        @include widescreen {
+          width: 40px;
+          height: 40px;
+          margin-left: -40px;
+        }
+        @include desktop {
+          width: vw(40px);
+          height: vw(40px);
+          margin-left: vw(-40px);
+        }
+        @include tablet {
+          width: vw-tablet(40px);
+          height: vw-tablet(40px);
+          margin-left: vw-tablet(-40px);
+        }
+        @include mobile {
+          width: vw-mobile(40px);
+          height: vw-mobile(40px);
+          margin-left: vw-mobile(-40px);
+        }
+        svg.search {
+          height: auto;
+          @include widescreen {
+            width: 18px;
+          }
+          @include desktop {
+            width: vw(18px);
+          }
+          @include tablet {
+            width: vw-tablet(18px);
+          }
+          @include mobile {
+            width: vw-mobile(18px);
+          }
+        }
+      }
+    }
+
+    &.blue {
+      input {
+        background-color: $blue-3;
+        outline: 2px solid $blue-4;
+        color: white;
+        line-height: 40px;
+        padding: 0 13px;
+        border: 0;
+        border-radius: 3px;
+        font-family: $bold;
+        width: 180px;
+        &::placeholder {
+          font-family: $regular;
+          color: white;
+          opacity: 0.9;
+        }
+        &:focus {
+          outline: 2px solid $blue-0;
+        }
+      }
+    }
+  }
+</style>
