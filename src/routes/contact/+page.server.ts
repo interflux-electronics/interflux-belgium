@@ -1,6 +1,4 @@
 import { PUBLIC_API_HOST } from '$env/static/public';
-import { error } from '@sveltejs/kit';
-import { normalizeJsonApi } from '$lib/api/normalize';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
@@ -27,26 +25,6 @@ export const load: PageServerLoad = async ({ fetch }) => {
       return r.json();
     })
   ]);
-
-  // const payload = {
-  //   countries: this.store.findAll('country'),
-  //   markets: this.store.findAll('company-market'),
-  //   companies: this.store.query('company', {
-  //     filter: { shownOnMainWebsite: 'true' },
-  //     include: ['public_members', 'public_members.person'].join(',')
-  //   }),
-  //   events: this.store.query('event', {
-  //     include: 'country'
-  //   })
-  // };
-
-  // const json = await response.json();
-  // const nested = normalizeJsonApi(json);
-  // const validated = Document.array()(nested);
-
-  // if (validated instanceof type.errors) {
-  //   throw error(400, `Invalid documents data: ${validated.summary}`);
-  // }
 
   return {
     countries,

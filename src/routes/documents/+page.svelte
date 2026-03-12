@@ -1,13 +1,18 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import { Button, TextInput, Pills, HeaderHero, Svg } from '$lib/components';
-  import { m } from '$lib/paraglide/messages';
-  import { sortBy, mark } from '$lib/helpers';
   import { PUBLIC_CDN_HOST } from '$env/static/public';
-  import type { Option } from '$lib/components/Pills.svelte';
-  import { downcase } from '$lib/helpers';
   import { modal } from '$lib/state/modal.svelte';
+  import { sortBy, mark, downcase } from '$lib/helpers';
+  import { m } from '$lib/paraglide/messages';
+
+  import Svg from '$lib/components/Svg.svelte';
+  import HeaderHero from '$lib/components/HeaderHero.svelte';
+  import Pills from '$lib/components/Pills.svelte';
+  import TextInput from '$lib/components/TextInput.svelte';
+  import Button from '$lib/components/Button.svelte';
   import RequestDocumentModal from '$lib/components/RequestDocumentModal.svelte';
+
+  import type { PageProps } from './$types';
+  import type { Option } from '$lib/components/Pills.svelte';
   import type { Document, Product, File, Language, Category } from '$lib/types';
 
   let { data }: PageProps = $props();
