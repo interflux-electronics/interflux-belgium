@@ -8,15 +8,7 @@
   import { downcase } from '$lib/helpers';
   import { modal } from '$lib/state/modal.svelte';
   import RequestDocumentModal from '$lib/components/RequestDocumentModal.svelte';
-  import type { Product, File, Language, Category } from '$lib/types';
-
-  interface Document {
-    id: string;
-    name: string;
-    path: string;
-    variations: string;
-    'document-category': any;
-  }
+  import type { Document, Product, File, Language, Category } from '$lib/types';
 
   let { data }: PageProps = $props();
 
@@ -38,11 +30,18 @@
     { id: 'JA', label: m.japanese() }
   ];
 
+  // The filters as set by the users
   let query: string | '' = $state('');
   let category: Option | undefined = $state(undefined);
   let language: Option | undefined = $state(undefined);
 
-  let files = $derived.by(() => {
+  // Extend the list of Document records as served by the API:
+  //
+  // * Create 1 row per translation variant on Document record
+  // * Create 1 row per product for SDS
+  // * Create 1 row for REACH
+  //
+  let extendedDocs = $derived.by(() => {
     const english = languages.find((l) => l.id === 'EN');
     const sds = categories.find((c) => c.id === 'SDS');
     const reach = categories.find((c) => c.id === 'REACH');
@@ -86,9 +85,17 @@
     return list;
   });
 
-  let sorted = $derived(files.sort(sortBy('label')));
-  let filtered = $derived.by(() => {
-    let arr = sorted;
+  // The document list is always shown alphabetically
+  let sortedDocs = $derived(extendedDocs.sort(sortBy('label')));
+
+  // Remove documents which do not match the user inputs:
+  //
+  // * query
+  // * category
+  // * language
+  //
+  let filteredDocs = $derived.by(() => {
+    let arr = sortedDocs;
 
     if (query) {
       const regex = new RegExp(query.trim(), 'gi');
@@ -105,8 +112,8 @@
 
     return arr;
   });
-  let count = $derived(filtered.length);
 
+  let count = $derived(filteredDocs.length);
   let count_in_words = $derived.by(() => {
     if (count < 1) {
       return m.no_matches_for({ query });
@@ -119,20 +126,26 @@
     return m.many_documents({ count });
   });
 
+  // The amount of docs shown on page load
   const TRUNC = 12;
 
+  // Truncate the list on page load
   let showAll = $state(false);
-  let docsTruncated = $derived(showAll ? filtered : filtered.slice(0, TRUNC));
 
+  // The documents the user gets to see (after extend, sort, filter and truncate)
+  let shownDocs = $derived(showAll ? filteredDocs : filteredDocs.slice(0, TRUNC));
+
+  // As users apply filters, the available categories shrinks
   let categoryOptions: Option[] = $derived.by(() => {
     return categories.filter((cat) => {
-      return filtered.find((file: File) => file.category.id === cat.id);
+      return filteredDocs.find((file: File) => file.category.id === cat.id);
     });
   });
 
+  // As users apply filters, the available languages shrinks
   let languageOptions: Option[] = $derived.by(() => {
     return languages.filter((lang) => {
-      return filtered.find((file: File) => file.language.id === lang.id);
+      return filteredDocs.find((file: File) => file.language.id === lang.id);
     });
   });
 </script>
@@ -205,7 +218,7 @@
       <p class="count">{count_in_words}</p>
       {#if count > 0}
         <div class="documents">
-          {#each docsTruncated as doc}
+          {#each shownDocs as doc}
             {#if doc.url}
               <a href={doc.url} target="_blank" class="document">
                 {@render docLink(doc)}

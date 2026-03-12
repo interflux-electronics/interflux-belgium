@@ -22,3 +22,11 @@ export interface File {
 export interface Product {
   name: string;
 }
+
+export interface Document {
+  id: string;
+  name: string;
+  path: string;
+  variations: string;
+  'document-category': any;
+}
