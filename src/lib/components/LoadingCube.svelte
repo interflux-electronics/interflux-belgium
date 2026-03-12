@@ -103,12 +103,6 @@
       height: 100%;
       width: 100%;
     }
-    .icon {
-      picture {
-        height: 100%;
-        width: 100%;
-      }
-    }
     .scene {
       width: 200px;
       height: 200px;

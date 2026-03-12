@@ -52,29 +52,29 @@
   @use '$lib/styles/components' as *;
 
   .text-input {
-    &.big.white.shadow {
-      p {
-        font-family: $bold;
-        font-size: 18px;
-        line-height: 48px;
-        padding: 0 28px;
-        border-radius: 4px;
-        border: 0;
-        outline: 0;
-        width: 100%; // Always be as wide as the parent
-        box-sizing: border-box;
-        background: white;
-        font-family: $bold;
-        color: $blue-3;
-        @include placeholder {
-          color: rgba(black, 0.3);
-        }
-        box-shadow: 0 2px 4px RGBA(0, 0, 0, 0.2);
-        @include placeholder {
-          color: rgba(white, 0.3);
-        }
-      }
-    }
+    // &.big.white.shadow {
+    //   p {
+    //     font-family: $bold;
+    //     font-size: 18px;
+    //     line-height: 48px;
+    //     padding: 0 28px;
+    //     border-radius: 4px;
+    //     border: 0;
+    //     outline: 0;
+    //     width: 100%; // Always be as wide as the parent
+    //     box-sizing: border-box;
+    //     background: white;
+    //     font-family: $bold;
+    //     color: $blue-3;
+    //     @include placeholder {
+    //       color: rgba(black, 0.3);
+    //     }
+    //     box-shadow: 0 2px 4px RGBA(0, 0, 0, 0.2);
+    //     @include placeholder {
+    //       color: rgba(white, 0.3);
+    //     }
+    //   }
+    // }
 
     &.grey-border {
       position: relative;
@@ -223,19 +223,21 @@
           height: vw-mobile(40px);
           margin-left: vw-mobile(-40px);
         }
-        svg.search {
-          height: auto;
-          @include widescreen {
-            width: 18px;
-          }
-          @include desktop {
-            width: vw(18px);
-          }
-          @include tablet {
-            width: vw-tablet(18px);
-          }
-          @include mobile {
-            width: vw-mobile(18px);
+        :global {
+          svg.search {
+            height: auto;
+            @include widescreen {
+              width: 18px;
+            }
+            @include desktop {
+              width: vw(18px);
+            }
+            @include tablet {
+              width: vw-tablet(18px);
+            }
+            @include mobile {
+              width: vw-mobile(18px);
+            }
           }
         }
       }
