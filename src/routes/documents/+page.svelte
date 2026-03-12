@@ -97,9 +97,19 @@
   let filteredDocs = $derived.by(() => {
     let arr = sortedDocs;
 
+    // Split search queries in to words so that "pac mlf" would show "IF Pacific 2009MLF"
     if (query) {
-      const regex = new RegExp(query.trim(), 'gi');
-      arr = arr.filter((file: File) => regex.test(file.label));
+      const words = query.trim().split(' ');
+
+      // Filter the original list
+      arr = arr.filter((file: File) => {
+        // All words in the search query must match
+        return words.every((word) => {
+          const regex = new RegExp(word, 'gi');
+
+          return regex.test(file.label);
+        });
+      });
     }
 
     if (category) {
