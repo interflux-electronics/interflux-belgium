@@ -3,7 +3,7 @@
 
   "all_products": "All products",
   "auxiliaries": "Auxiliaries",
-  "back": "Back"
+  "back": "Back",
   "category": "Category",
   "certificate": "certificate",
   "choose_your_language": "Choose your language",
@@ -76,5 +76,5 @@
   "vapor_phase_soldering": "Vapor phase soldering",
   "wave_soldering": "Wave soldering",
   "webinar": "Webinar",
-  "webinars": "Webinars",
+  "webinars": "Webinars"
 }
