@@ -16,16 +16,6 @@
 
   let view = $state<View>('hamburger');
 
-  $effect(() => {
-    if (view === 'main') {
-      page.freeze();
-    }
-
-    if (view === 'hamburger') {
-      page.unfreeze();
-    }
-  });
-
   let topHeight = $state(0);
   let mainHeight = $state(0);
   let productsHeight = $state(0);

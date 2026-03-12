@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Svg } from '$lib/components';
+  import type { Icon } from '$lib/components/Svg.svelte';
 
   interface Props {
     id?: string;
@@ -7,8 +8,8 @@
     type?: string;
     placeholder?: string;
     disabled?: boolean;
-    icon?: string;
     theme?: string;
+    icon?: Icon;
     onKeyUp?: (event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void;
   }
 
@@ -18,13 +19,15 @@
     type = 'text',
     placeholder,
     disabled = false,
-    icon = 'no-icon',
-    theme = 'no-theme',
+    icon,
+    theme,
     onKeyUp
   }: Props = $props();
+
+  let classes = $derived([theme || 'no-theme', icon ? `has-icon ${icon}` : 'no-icon'].join(' '));
 </script>
 
-<div class="text-input {theme} {icon}">
+<div class="text-input {classes}">
   <input
     {id}
     {value}
@@ -73,65 +76,124 @@
       }
     }
 
-    &.classic {
+    &.grey-border {
       position: relative;
       display: flex;
       max-width: 100%;
+
+      &.medium {
+        input {
+          font-family: $semibold;
+
+          @include widescreen {
+            font-size: 16px;
+            height: 40px;
+            min-width: 200px;
+            padding: 12px;
+            border-radius: 3px;
+            border-width: 1px;
+          }
+          @include desktop {
+            font-size: vw(16px);
+            height: vw(40px);
+            min-width: vw(200px);
+            padding: vw(12px);
+            border-radius: vw(3px);
+            border-width: vw(1px);
+          }
+          @include tablet {
+            font-size: vw-tablet(16px);
+            height: vw-tablet(40px);
+            min-width: vw-tablet(200px);
+            padding: vw-tablet(12px);
+            border-radius: vw-tablet(3px);
+            border-width: vw-tablet(1px);
+          }
+          @include mobile {
+            font-size: vw-mobile(16px);
+            height: vw-mobile(40px);
+            min-width: vw-mobile(200px);
+            padding: vw-mobile(12px);
+            border-radius: vw-mobile(3px);
+            border-width: vw-mobile(1px);
+          }
+        }
+      }
+
+      &.large {
+        input {
+          font-family: $semibold;
+
+          @include widescreen {
+            font-size: 17px;
+            height: 50px;
+            min-width: 300px;
+            padding: 18px;
+            border-radius: 4px;
+            border-width: 1px;
+          }
+          @include desktop {
+            font-size: vw(17px);
+            height: vw(50px);
+            min-width: vw(300px);
+            padding: vw(18px);
+            border-radius: vw(4px);
+            border-width: vw(1px);
+          }
+          @include tablet {
+            font-size: vw-tablet(17px);
+            height: vw-tablet(50px);
+            min-width: vw-tablet(300px);
+            padding: vw-tablet(18px);
+            border-radius: vw-tablet(4px);
+            border-width: vw-tablet(1px);
+          }
+          @include mobile {
+            font-size: vw-mobile(17px);
+            height: vw-mobile(50px);
+            min-width: vw-mobile(300px);
+            padding: vw-mobile(18px);
+            border-radius: vw-mobile(4px);
+            border-width: vw-mobile(1px);
+          }
+        }
+        .icon {
+          width: 52px;
+          height: 52px;
+          margin-left: -52px;
+          transform: scale(1.3);
+        }
+      }
+
       &.has-icon {
         input {
           padding-right: 40px;
         }
       }
+
       input {
-        font-family: $semibold;
         line-height: 100%;
         max-width: 100%;
         white-space: nowrap;
         box-sizing: border-box;
         color: $blue-0;
-        transition: box-shadow 200ms $easeOutExpo;
+        transition: box-shadow 400ms $easeOutExpo;
         outline: 0;
         background: white;
         border-style: solid;
         border-color: $grey-2;
-        @include widescreen {
-          font-size: 16px;
-          height: 40px;
-          min-width: 200px;
-          padding: 12px;
-          border-radius: 3px;
-          border-width: 1px;
-        }
-        @include desktop {
-          font-size: vw(16px);
-          height: vw(40px);
-          min-width: vw(200px);
-          padding: vw(12px);
-          border-radius: vw(3px);
-          border-width: vw(1px);
-        }
-        @include tablet {
-          font-size: vw-tablet(16px);
-          height: vw-tablet(40px);
-          min-width: vw-tablet(200px);
-          padding: vw-tablet(12px);
-          border-radius: vw-tablet(3px);
-          border-width: vw-tablet(1px);
-        }
-        @include mobile {
-          font-size: vw-mobile(16px);
-          height: vw-mobile(40px);
-          min-width: vw-mobile(200px);
-          padding: vw-mobile(12px);
-          border-radius: vw-mobile(3px);
-          border-width: vw-mobile(1px);
-        }
+
         &:hover,
         &:focus {
           border-color: $blue-0;
-          box-shadow: 0 2px 4px rgba(black, 0.15);
-          & + .icon svg [fill] {
-            fill: $blue-0;
+          box-shadow:
+            0 0 0 1px $blue-0,
+            0 3px 6px rgba(black, 0.2);
+
+          :global {
+            & + .icon svg [fill] {
+              fill: $blue-0;
+            }
           }
         }
       }

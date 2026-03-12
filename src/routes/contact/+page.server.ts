@@ -1,10 +1,7 @@
 import { PUBLIC_API_HOST } from '$env/static/public';
 import { error } from '@sveltejs/kit';
 import { normalizeJsonApi } from '$lib/api/normalize';
-import { Document } from '$lib/schemas/Document';
 import type { PageServerLoad } from './$types';
-import { type } from 'arktype';
-import { updateHeader } from '$lib/state/header.svelte';
 
 export const load: PageServerLoad = async ({ fetch }) => {
   const [countries, markets, companies, events] = await Promise.all([

@@ -1,42 +1,35 @@
 import { page } from '$lib/state/page.svelte';
+import type { Component } from 'svelte';
 
 export const modal = $state({
   visible: false,
-  content: () => {},
-  theme: '',
-  contentID: '',
-  backURL: '',
-  isFetching: false,
-  fetchFailed: false,
+  // component: null as Component | null,
+  props: {} as Record<string, any>,
+  component: null as Component<any, {}, string> | null,
 
-  open() {
+  open(component: Component, props: Record<string, any> = {}) {
+    // Freezes <Page> below <Modal> with position: fixed
     page.freeze();
 
-    // Freezes <Page> below <Modal> with position: fixed.
-    // Shows <Modal> with position: relative.
+    // Set the component that needs to be rendered within the modal
+    this.component = component as Component<any>;
+
+    // Pass props to that component
+    this.props = props;
+
+    // Shows <Modal> with position: relative
     this.visible = true;
-
-    // // Remember the <Page> scroll position for later.
-    // page.scrollY = window.scrollY || document.documentElement.scrollTop;
-
-    // Instantly scroll to the top of <Modal>
-    window.scrollTo(0, 0);
   },
 
-  close(restoreScroll: boolean = false) {
+  close() {
+    // Make <Page> position: relative again
     page.unfreeze();
 
-    // // If route changed, scroll to top of viewport.
-    // // If same route, scroll <Page> below <Modal> back to original Y position.
-    // const scrollToY = restoreScroll ? page.scrollY : 0;
-
-    // Hides <Modal> and makes <Page> position: relative again.
+    // Hides <Modal>
     this.visible = false;
 
-    // Scroll the viewport
-    window.scrollTo(0, scrollToY);
-
     // Reset
-    page.scrollY = 0;
+    this.component = null;
+    this.props = {};
   }
 });

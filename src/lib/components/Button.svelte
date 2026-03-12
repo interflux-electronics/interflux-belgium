@@ -5,43 +5,56 @@
 
   interface Props {
     label?: string;
+    size?: 'medium' | 'large';
+    theme?: string;
     icon?: Icon;
+    iconPosition?: 'left' | 'right';
     url?: string;
     onClick?: (event: MouseEvent) => void;
     id?: string;
     class?: string;
-    theme?: string;
     isBusy?: boolean;
     children?: Snippet;
   }
 
   let {
     label,
+    size = 'medium',
+    theme = 'primary green',
     icon,
+    iconPosition = 'left',
     url,
     onClick,
     id,
     class: classNamePassedIn = '',
-    theme,
     isBusy,
     children
   }: Props = $props();
 
   let classNames = $derived(
-    `button ${theme || 'no-theme'} ${icon ? `has-icon ${icon}` : 'no-icon'} ${isBusy ? 'busy' : 'idle'} ${classNamePassedIn}`
+    [
+      'button',
+      size,
+      theme,
+      icon,
+      icon ? `has-icon` : 'no-icon',
+      `icon-${iconPosition}`,
+      isBusy ? 'busy' : 'idle',
+      classNamePassedIn
+    ].join(' ')
   );
 </script>
 
 {#if url}
   <a href={url} class={classNames} {id} onclick={onClick}>
-    {#if children}
-      {@render children()}
-    {/if}
-
     {#if icon}
       <div class="icon">
         <Svg name={icon} />
       </div>
+    {/if}
+
+    {#if children}
+      {@render children()}
     {/if}
 
     {#if label}
@@ -50,14 +63,14 @@
   </a>
 {:else}
   <button {id} onclick={onClick} class={classNames}>
-    {#if children}
-      {@render children()}
-    {/if}
-
     {#if icon}
       <div class="icon">
         <Svg name={icon} />
       </div>
+    {/if}
+
+    {#if children}
+      {@render children()}
     {/if}
 
     {#if label}
@@ -70,7 +83,9 @@
   @use '$lib/styles/components' as *;
 
   .button {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     background: none;
     border: 0;
@@ -82,6 +97,36 @@
     user-select: none;
     cursor: pointer;
 
+    // We generally avoid animations on buttons because they need to respond and feel snappy.
+    // The exception is the box shadow.
+    transition: box-shadow 200ms $easeOutExpo;
+
+    // All buttons slightly compress when clicked
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &.icon-left {
+      flex-direction: row;
+    }
+
+    &.icon-right {
+      flex-direction: row-reverse;
+    }
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      :global {
+        svg {
+          width: auto;
+          height: 100%;
+        }
+      }
+    }
+
     // Sizes
 
     &.large {
@@ -89,113 +134,62 @@
       border: 1px solid transparent;
 
       @include widescreen {
-        font-size: 16px;
-        line-height: 44px;
-        border-radius: 3px;
-        padding: 0 30px;
+        font-size: 18px;
+        line-height: 46px;
+        height: 46px;
+        border-radius: 4px;
+        padding: 0 22px;
       }
       @include desktop {
-        font-size: vw(16px);
-        line-height: vw(44px);
-        border-radius: vw(3px);
-        padding: 0 vw(30px);
+        font-size: vw(18px);
+        line-height: vw(46px);
+        height: vw(46px);
+        border-radius: vw(4px);
+        padding: 0 vw(22px);
       }
       @include tablet {
-        font-size: vw-tablet(16px);
-        line-height: vw-tablet(44px);
-        border-radius: vw-tablet(3px);
-        padding: 0 vw-tablet(39px);
+        font-size: vw-tablet(18px);
+        line-height: vw-tablet(46px);
+        height: vw-tablet(46px);
+        border-radius: vw-tablet(4px);
+        padding: 0 vw-tablet(22px);
       }
       @include mobile {
-        font-size: vw-mobile(16px);
-        line-height: vw-mobile(44px);
-        border-radius: vw-mobile(3px);
-        padding: 0 vw-mobile(39px);
+        font-size: vw-mobile(18px); // TODO: review
+        line-height: vw-mobile(46px); // TODO: review
+        height: vw-mobile(46px); // TODO: review
+        border-radius: vw-mobile(4px); // TODO: review
+        padding: 0 vw-mobile(22px); // TODO: review
+      }
+
+      .icon {
+        @include widescreen {
+          height: 18px;
+        }
+        @include desktop {
+          height: vw(18px);
+        }
+        @include tablet {
+          height: vw-tablet(18px);
+        }
+        @include mobile {
+          height: vw-mobile(18px); // TODO: review
+        }
       }
 
       &.has-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        &.icon-left {
-          .icon {
-            @include widescreen {
-              margin-right: 10px;
-            }
-            @include desktop {
-              margin-right: vw(10px);
-            }
-            @include tablet {
-              margin-right: vw-tablet(10px);
-            }
-            @include mobile {
-              margin-right: vw-mobile(10px);
-            }
-          }
+        @include widescreen {
+          gap: 12px;
         }
-        &.icon-floats-left {
-          position: relative;
-          padding: 0 46px;
-          .icon {
-            position: absolute;
-            width: 46px;
-            height: 100%;
-            left: 0;
-            top: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            :global {
-              svg {
-                max-width: 60%;
-                max-height: 60%;
-                height: auto;
-                &.truck {
-                  transform: translate(12%, 2%);
-                  width: 55%;
-                }
-                &.people {
-                  transform: translate(11%, 1%);
-                  width: 55%;
-                }
-              }
-            }
-          }
+        @include desktop {
+          gap: vw(12px);
         }
-      }
-    }
-
-    &.big {
-      font-family: $semibold;
-      border: 2px solid transparent;
-
-      @include widescreen {
-        font-size: 16px;
-        line-height: 38px;
-        height: 40px;
-        border-radius: 3px;
-        padding: 0 12px;
-      }
-      @include desktop {
-        font-size: vw(16px);
-        line-height: vw(38px);
-        height: vw(40px);
-        border-radius: vw(3px);
-        padding: 0 vw(12px);
-      }
-      @include tablet {
-        font-size: vw-tablet(16px); // TODO
-        line-height: vw-tablet(32px); // TODO
-        height: vw-tablet(32px); // TODO
-        border-radius: vw-tablet(3px); // TODO
-        padding: 0 vw-tablet(13px); // TODO
-      }
-      @include mobile {
-        font-size: vw-mobile(16px); // TODO
-        line-height: vw-mobile(40px); // TODO
-        height: vw-mobile(40px); // TODO
-        border-radius: vw-mobile(3px); // TODO
-        padding: 0 vw-mobile(15px); // TODO
+        @include tablet {
+          gap: vw-tablet(12px);
+        }
+        @include mobile {
+          gap: vw-mobile(12px); // TODO: review
+        }
       }
     }
 
@@ -205,474 +199,249 @@
 
       @include widescreen {
         font-size: 16px;
-        line-height: 32px;
-        height: 32px;
+        line-height: 34px;
+        height: 34px;
         border-radius: 3px;
-        padding: 0 13px;
+        padding: 0 16px;
       }
       @include desktop {
         font-size: vw(16px);
-        line-height: vw(32px);
-        height: vw(32px);
+        line-height: vw(34px);
+        height: vw(34px);
         border-radius: vw(3px);
-        padding: 0 vw(13px);
+        padding: 0 vw(16px);
       }
       @include tablet {
         font-size: vw-tablet(16px);
-        line-height: vw-tablet(32px);
-        height: vw-tablet(32px);
+        line-height: vw-tablet(34px);
+        height: vw-tablet(34px);
         border-radius: vw-tablet(3px);
-        padding: 0 vw-tablet(13px);
+        padding: 0 vw-tablet(16px);
       }
       @include mobile {
-        font-size: vw-mobile(16px);
-        line-height: vw-mobile(40px);
-        height: vw-mobile(40px);
-        border-radius: vw-mobile(3px);
-        padding: 0 vw-mobile(15px);
+        font-size: vw-mobile(16px); // TODO: verify
+        line-height: vw-mobile(34px); // TODO: verify
+        height: vw-mobile(34px); // TODO: verify
+        border-radius: vw-mobile(3px); // TODO: verify
+        padding: 0 vw-mobile(16px); // TODO: verify
       }
+
+      .icon {
+        @include widescreen {
+          height: 16px;
+        }
+        @include desktop {
+          height: vw(16px);
+        }
+        @include tablet {
+          height: vw-tablet(16px);
+        }
+        @include mobile {
+          height: vw-mobile(16px); // TODO: review
+        }
+      }
+
       &.has-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        &.icon-left {
-          .icon {
-            @include widescreen {
-              margin-right: 10px;
-            }
-            @include desktop {
-              margin-right: vw(10px);
-            }
-            @include tablet {
-              margin-right: vw-tablet(10px);
-            }
-            @include mobile {
-              margin-right: vw-mobile(10px);
-            }
-          }
+        @include widescreen {
+          gap: 10px;
         }
-        &.icon-right {
-          flex-direction: row-reverse;
-          .icon {
-            @include widescreen {
-              margin-left: 10px;
-            }
-            @include desktop {
-              margin-left: vw(10px);
-            }
-            @include tablet {
-              margin-left: vw-tablet(10px);
-            }
-            @include mobile {
-              margin-left: vw-mobile(10px);
-            }
-          }
+        @include desktop {
+          gap: vw(10px);
         }
-        &.arrow-down,
-        &.arrow-up {
-          :global {
-            svg {
-              height: auto;
-              @include widescreen {
-                width: 11px;
-              }
-              @include desktop {
-                width: vw(11px);
-              }
-              @include tablet {
-                width: vw-tablet(11px);
-              }
-              @include mobile {
-                width: vw-mobile(11px);
-              }
-            }
-          }
+        @include tablet {
+          gap: vw-tablet(10px);
         }
-        &.arrow-left,
-        &.arrow-right {
-          :global {
-            svg {
-              width: auto;
-              @include widescreen {
-                height: 11px;
-              }
-              @include desktop {
-                height: vw(11px);
-              }
-              @include tablet {
-                height: vw-tablet(11px);
-              }
-              @include mobile {
-                height: vw-mobile(11px);
-              }
-            }
-          }
-        }
-        &.lightbulb {
-          :global {
-            svg {
-              height: auto;
-              @include widescreen {
-                width: 15px;
-              }
-              @include desktop {
-                width: vw(15px);
-              }
-              @include tablet {
-                width: vw-tablet(15px);
-              }
-              @include mobile {
-                width: vw-mobile(15px);
-              }
-            }
-          }
-        }
-        &.email,
-        &.play,
-        &.close {
-          :global {
-            svg {
-              height: auto;
-              @include widescreen {
-                width: 20px;
-              }
-              @include desktop {
-                width: vw(20px);
-              }
-              @include tablet {
-                width: vw-tablet(20px);
-              }
-              @include mobile {
-                width: vw-mobile(20px);
-              }
-            }
-          }
-        }
-        &.cloud-download {
-          :global {
-            svg {
-              height: auto;
-              @include widescreen {
-                width: 24px;
-              }
-              @include desktop {
-                width: vw(24px);
-              }
-              @include tablet {
-                width: vw-tablet(24px);
-              }
-              @include mobile {
-                width: vw-mobile(24px);
-              }
-            }
-          }
-        }
-        &.expand {
-          :global {
-            svg {
-              height: auto;
-              @include widescreen {
-                width: 12px;
-              }
-              @include desktop {
-                width: vw(12px);
-              }
-              @include tablet {
-                width: vw-tablet(12px);
-              }
-              @include mobile {
-                width: vw-mobile(12px);
-              }
-            }
-          }
+        @include mobile {
+          gap: vw-mobile(10px); // TODO: review
         }
       }
     }
 
-    // &.small { }
-
     // Styles
 
     &.primary {
-      text-decoration: none;
       color: white;
 
       &.green {
         background: $green-1;
         border-color: $green-2;
-        color: white;
-        &:hover {
+
+        &:hover,
+        &:focus {
           background: $green-2;
           border-color: $green-3;
-        }
-        &:focus {
-          border-color: white;
-          // box-shadow: white 0 0 0 2px;
-        }
-        &.big {
-          border-width: 2px;
-          border-style: solid;
+          box-shadow:
+            0 0 0 1px $green-3,
+            0 3px 6px rgba(black, 0.2);
         }
       }
 
       &.orange {
         background: $orange-1;
-        border-color: $orange-1;
-        color: white;
-        &:hover {
-          background: $orange-3;
-          border-color: $orange-3;
-        }
+        border-color: $orange-3;
+
+        &:hover,
         &:focus {
+          background: $orange-2;
+          border-color: $orange-4;
           box-shadow:
-            white 0 0 0 2px,
-            0 0 0 4px $orange-1;
-          &:hover {
-            box-shadow:
-              white 0 0 0 2px,
-              0 0 0 4px $orange-3;
-          }
+            0 0 0 1px $orange-4,
+            0 3px 6px rgba(black, 0.2);
         }
       }
 
-      &.has-icon {
-        :global {
-          svg {
-            [fill] {
-              fill: white;
-            }
+      :global {
+        svg {
+          [fill] {
+            fill: white;
           }
         }
       }
     }
 
     &.secondary {
-      background: transparent;
-      text-decoration: none;
+      background: white;
+      border-color: $grey-2;
+      color: $grey-6;
 
-      &.grey-border {
-        border-color: $grey-2;
-        color: $grey-6;
-        :global {
-          svg {
-            [fill] {
-              fill: $grey-5;
-            }
-          }
-        }
+      &:hover,
+      &:focus {
+        color: $blue-0;
+        border-color: $blue-0;
+        box-shadow:
+          0 0 0 1px $blue-0,
+          0 3px 6px rgba(black, 0.2);
       }
 
-      &.white-border {
-        border-color: rgba(white, 0.5);
-        color: white;
-        :global {
-          svg {
-            [fill] {
-              fill: white;
-            }
-          }
-        }
-      }
+      // :global {
+      //   svg {
+      //     [fill] {
+      //       fill: $grey-5;
+      //     }
+      //   }
+      // }
 
-      &.white-text-on-blue {
-        color: white;
-        border-radius: 3px;
-        background-color: rgba($blue-5, 0.8);
-        border: 2px solid $blue-3;
-        &:hover,
-        &:focus {
-          background: rgba(white, 0.2);
-          border-color: white;
-          :global {
-            svg {
-              [fill] {
-                fill: white;
-              }
-            }
-          }
-        }
-        :global {
-          svg {
-            [fill] {
-              fill: white;
-            }
-          }
-        }
-      }
+      // &.white-border {
+      //   border-color: rgba(white, 0.5);
+      //   color: white;
+      //   :global {
+      //     svg {
+      //       [fill] {
+      //         fill: white;
+      //       }
+      //     }
+      //   }
+      // }
 
-      &.blue-focus {
-        &:hover,
-        &:focus {
-          color: $blue-0;
-          border-color: $blue-0;
-          box-shadow: inset 0 0 0 1px $blue-0;
-          :global {
-            svg {
-              [fill] {
-                fill: $blue-0;
-              }
-            }
-          }
-        }
-        &:focus {
-          box-shadow: 0 0 0 1px $blue-0 inset;
-        }
-      }
+      // &.white-text-on-blue {
+      //   color: white;
+      //   border-radius: 3px;
+      //   background-color: rgba($blue-5, 0.8);
+      //   border: 2px solid $blue-3;
+      //   &:hover,
+      //   &:focus {
+      //     background: rgba(white, 0.2);
+      //     border-color: white;
+      //     :global {
+      //       svg {
+      //         [fill] {
+      //           fill: white;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   :global {
+      //     svg {
+      //       [fill] {
+      //         fill: white;
+      //       }
+      //     }
+      //   }
+      // }
 
-      &.orange {
-        &:hover,
-        &:focus {
-          color: $orange-1;
-          border-color: $orange-1;
-          :global {
-            svg {
-              [fill] {
-                fill: $orange-1;
-              }
-            }
-          }
-        }
-        &:focus {
-          box-shadow: 0 0 0 1px $orange-1;
-        }
-      }
+      // &.blue-focus {
+      //   &:hover,
+      //   &:focus {
+      //     color: $blue-0;
+      //     border-color: $blue-0;
+      //     box-shadow: inset 0 0 0 1px $blue-0;
+      //     :global {
+      //       svg {
+      //         [fill] {
+      //           fill: $blue-0;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   &:focus {
+      //     box-shadow: 0 0 0 1px $blue-0 inset;
+      //   }
+      // }
+
+      // &.orange {
+      //   &:hover,
+      //   &:focus {
+      //     color: $orange-1;
+      //     border-color: $orange-1;
+      //     :global {
+      //       svg {
+      //         [fill] {
+      //           fill: $orange-1;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   &:focus {
+      //     box-shadow: 0 0 0 1px $orange-1;
+      //   }
+      // }
     }
 
     &.tertiary {
       padding: 0;
       transition: padding 300ms $easeOutExpo;
 
-      &.blue-text {
-        color: $blue-0;
-        &:focus,
-        &:hover {
-          outline: 2px solid $blue-0;
-          outline-offset: 2px;
-        }
-        :global {
-          svg {
-            [fill] {
-              fill: $blue-0;
-            }
-          }
-        }
-      }
+      // &.blue-text {
+      //   color: $blue-0;
+      //   &:focus,
+      //   &:hover {
+      //     outline: 2px solid $blue-0;
+      //     outline-offset: 2px;
+      //   }
+      //   :global {
+      //     svg {
+      //       [fill] {
+      //         fill: $blue-0;
+      //       }
+      //     }
+      //   }
+      // }
 
-      &.white-text {
+      &.ghost {
         color: white;
+
         &:hover,
         &:focus {
           background: rgba(white, 0.1);
+
           &.medium {
             @include widescreen {
-              padding: 0 8px;
+              padding: 0 10px;
             }
             @include desktop {
-              padding: 0 vw(8px);
+              padding: 0 vw(10px);
             }
             @include tablet {
-              padding: 0 8px; // TODO
+              padding: 0 vw-tablet(10px);
             }
             @include mobile {
-              padding: 0 8px; // TODO
+              padding: 0 vw-mobile(10px); // TODO: review
             }
           }
         }
-        &:focus {
-          border-color: white;
-          box-shadow: 0 0 0 1px white inset;
-        }
-        :global {
-          svg {
-            [fill] {
-              fill: white;
-            }
-          }
-        }
-      }
-    }
 
-    &.pill {
-      font-family: $regular;
-      line-height: 100%;
-      border: 1px solid $grey-2;
-      box-sizing: border-box;
-      color: $grey-7;
-      transition: background-color 200ms $easeOutExpo;
-      box-sizing: border-box;
-      @include widescreen {
-        font-size: 16px;
-        border-radius: 18px;
-        padding: 8px 12px;
-      }
-      @include desktop {
-        font-size: vw(16px);
-        border-radius: vw(18px);
-        padding: vw(8px) vw(12px);
-      }
-      @include tablet {
-        font-size: vw-tablet(16px);
-        border-radius: vw-tablet(18px);
-        padding: vw-tablet(8px) vw-tablet(12px);
-      }
-      @include mobile {
-        font-size: vw-mobile(16px);
-        border-radius: vw-mobile(18px);
-        padding: vw-mobile(8px) vw-mobile(12px);
-      }
-      &:hover,
-      &:focus {
-        border-color: $green-1;
-        box-shadow:
-          0 0 0 1px $green-1,
-          0 3px 6px rgba(black, 0.2);
-      }
-      &.selected {
-        font-family: $semibold;
-        background-color: $green-1;
-        border: 2px solid $green-2;
-        color: white;
-        &:hover,
-        &:focus {
-          background-color: $green-2;
-          border-color: $green-3;
-          box-shadow: 0 3px 6px rgba(black, 0.2);
-        }
-      }
-      &.has-icon {
-        display: flex;
-        flex-direction: row-reverse;
-        align-items: center;
-        @include widescreen {
-          gap: 6px;
-        }
-        @include desktop {
-          gap: vw(6px);
-        }
-        @include tablet {
-          gap: vw-tablet(6px);
-        }
-        @include mobile {
-          gap: vw-mobile(6px);
-        }
         :global {
           svg {
-            @include widescreen {
-              width: 12px;
-              height: 12px;
-            }
-            @include desktop {
-              width: vw(12px);
-              height: vw(12px);
-            }
-            @include tablet {
-              width: vw-tablet(12px);
-              height: vw-tablet(12px);
-            }
-            @include mobile {
-              width: vw-mobile(12px);
-              height: vw-mobile(12px);
-            }
             [fill] {
               fill: white;
             }
@@ -703,7 +472,7 @@
         border-radius: 1vw;
       }
       color: white;
-      transition: background $easeOutExpo 300ms;
+      transition: background-color $easeOutExpo 300ms;
       &:hover,
       &:focus {
         box-shadow: 0 0 0 1px white;
@@ -768,6 +537,7 @@
     }
 
     // For mobile hamburger navigation
+    // TODO: move to <MobileHeader>
     &.stacked {
       display: flex;
       justify-content: center;
@@ -851,7 +621,6 @@
             }
           }
         }
-
         &:hover,
         &:focus {
           box-shadow: inset 0 0 0 2px white;
