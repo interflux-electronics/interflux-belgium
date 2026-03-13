@@ -1,0 +1,19 @@
+[Unit]
+Description=Svelte Kit prototype.interflux.com
+After=network.target
+
+[Service]
+Type=simple
+User=interflux
+WorkingDirectory=/var/www/prototype.interflux.com
+Environment=NODE_ENV=production
+Environment=PORT=3000
+ExecStart=/home/interflux/.nvm/versions/node/v24.14.0/bin/node build/index.js
+ExecReload=/bin/kill -TSTP $MAINPID
+Restart=always
+KillMode=process
+StandardOutput=append:/var/log/prototype.interflux.com/systemd-stdout.log
+StandardError=append:/var/log/prototype.interflux.com/systemd-stderr.log
+
+[Install]
+WantedBy=multi-user.target
