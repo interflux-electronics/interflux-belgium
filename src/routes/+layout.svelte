@@ -5,26 +5,43 @@
   import '$lib/styles/app.scss';
 
   const mode = import.meta.env.MODE;
+  const gitBranch = import.meta.env.BUILD_GIT_BRANCH;
+  const gitRevision = import.meta.env.BUILD_GIT_COMMIT;
+  const buildTime = import.meta.env.BUILD_TIME;
 
   let { children } = $props();
 </script>
 
 <svelte:head>
+  <!-- Build -->
   <meta name="environment" content={mode} />
+  <meta name="git-branch" content={gitBranch} />
+  <meta name="git-revision" content={gitRevision} />
+  <meta name="build-time" content={buildTime} />
+  <meta name="built-with" content="Svelte Kit 5 - https://svelte.dev/" />
   <meta name="built-by" content="Jan Werkhoven - jw@interflux.au" />
-  <meta name="built-with" content="Svelte Kit - https://svelte.dev/" />
   <meta name="copyright" content="© since 1980 by Interflux Electronics NV ®" />
-  <meta name="theme-color" content="#23578c" />
 
+  <!-- Favicon -->
   <link
     rel="icon"
     type="image/svg+xml"
     href="{PUBLIC_CDN_HOST}/images/logos/secondary-interflux-electronics-symbol-1.svg"
     sizes="any"
   />
-  <!-- <meta name='build-timestamp' content={{this.model.buildTimestamp}} /> -->
-  <!-- <meta name='git-branch' content={{this.model.gitBranch}} /> -->
-  <!-- <meta name='git-revision' content={{this.model.gitRevision}} /> -->
+
+  <!-- SEO -->
+  <!-- Sensible fallbacks -->
+  <!-- Each route should set their own -->
+  <title>Interflux Electronics</title>
+  <meta
+    name="description"
+    content="Soldering fluxes, solder pastes, solder wire, solder alloys and auxiliaries for electronics manufacturers."
+  />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Browser theme -->
+  <meta name="theme-color" content="#23578c" />
 
   <!-- https://ogp.me/ -->
   <!-- https://developers.facebook.com/docs/sharing/webmasters/ -->

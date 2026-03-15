@@ -3,6 +3,10 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import devtoolsJson from 'vite-plugin-devtools-json';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { execSync } from 'node:child_process';
+
+const commit = execSync('git rev-parse --short HEAD').toString().trim();
+const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -12,6 +16,19 @@ export default defineConfig({
     devtoolsJson(),
     paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
   ],
+
+  // Global constants defined at build time
+  define: {
+    'import.meta.env.BUILD_GIT_COMMIT': JSON.stringify(commit),
+    'import.meta.env.BUILD_GIT_BRANCH': JSON.stringify(branch),
+    'import.meta.env.BUILD_TIME': JSON.stringify(new Date().toISOString())
+  },
+
+  // Make sure builds are not cached unnecessarily when git info changes
+  build: {
+    sourcemap: true
+  },
+
   // css: {
   //   preprocessorOptions: {
   //     scss: {
