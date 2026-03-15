@@ -17,7 +17,7 @@ echo "----------"
 
 sudo systemctl restart prototype.interflux.com
 
-sudo systemctl status prototype.interflux.com
+sudo systemctl status prototype.interflux.com --no-pager
 
 echo "----------"
 echo "✅ Daemon restarted"
