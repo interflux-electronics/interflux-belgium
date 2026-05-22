@@ -1,30 +1,17 @@
-import { PUBLIC_API_HOST as api } from '$env/static/public';
-import { normalizeJsonApi } from '$lib/api/normalize';
+import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
+import { normalizeJsonApi, getJson } from '$lib/helpers';
 import { getOptions } from '$lib/state/headers.svelte';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
-  const getJson = (response: Response) => {
-    if (response.status !== 200) {
-      throw new Error('Fetch failed');
-    }
-    return response.json();
-  };
-
-  const normalize = (json: any) => {
-    return normalizeJsonApi(json);
-  };
+  console.log('⛵️ /documents');
 
   const [documents, products] = await Promise.all([
-    fetch(`${api}/v1/public/documents`, getOptions).then(getJson).then(normalize),
-    fetch(`${api}/v1/public/products`, getOptions).then(getJson).then(normalize)
+    fetch(`${apiHost}/v1/public/documents`, getOptions).then(getJson).then(normalizeJsonApi),
+    fetch(`${apiHost}/v1/public/products`, getOptions).then(getJson).then(normalizeJsonApi)
   ]);
 
-  // TODO?
-  // const [documents, products] = await Promise.all([
-  //   findAll('documents'),
-  //   findAll('products')
-  // ]);
+  console.log('✅ /documents', documents.length, products.length);
 
   return {
     documents,

@@ -17,6 +17,12 @@
 
   let { data }: PageProps = $props();
 
+  let documents: Document[] = $derived(data.documents);
+  let products: Product[] = $derived(data.products);
+
+  console.log('✅ /documents');
+  console.log({ documents, products });
+
   const categories: Category[] = [
     { id: 'TD', label: 'TD', long: m.td(), icon: 'file-spreadsheet' },
     { id: 'SDS', label: 'SDS', long: m.sds(), icon: 'file-medical' },
@@ -62,9 +68,10 @@
           }
 
           return {
+            id: `${doc.id}-${language?.id}`,
             label: doc.name,
             language,
-            category: categories.find((c) => c.id === doc['document-category'].id),
+            category: categories.find((c) => c.id === doc.documentCategory.id),
             url: `${PUBLIC_CDN_HOST}/${doc.path}-${ext}`
           };
         });
@@ -73,6 +80,7 @@
 
     data.products.forEach((p: Product) => {
       list.push({
+        id: p.id,
         label: `SDS ${p.name}`,
         language: english,
         category: sds,
@@ -81,6 +89,7 @@
     });
 
     list.push({
+      id: 'reach',
       label: m.reach_related_docs(),
       language: english,
       category: reach,
@@ -169,7 +178,7 @@
   <div class="labels">
     <div class="left">
       <p>
-        {@html query ? mark(file.label, query) : file.label}
+        {@html mark(file.label, query)}
       </p>
     </div>
 
@@ -233,8 +242,9 @@
       <p class="count">{count_in_words}</p>
       {#if count > 0}
         <div class="documents">
-          {#each shownDocs as doc}
+          {#each shownDocs as doc (doc.id)}
             {#if doc.url}
+              <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
               <a href={doc.url} target="_blank" class="document">
                 {@render docLink(doc)}
               </a>
