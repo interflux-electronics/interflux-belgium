@@ -130,9 +130,6 @@
   // }
 
   // async renderMap() {
-  //   // window.mapboxgl.accessToken = 'pk.eyJ1IjoianctZmxvYXRwbGFuZS1kZXYiLCJhIjoiY2s4bW02N3UyMG93MTNycGduNzJqOGt6OCJ9.PHUKAn3CMmN73tmJXpa0ug';
-  //   window.mapboxgl.accessToken = 'pk.eyJ1IjoianctZmxvYXRwbGFuZS1kZXYiLCJhIjoiY21sMHI4Mm5zMGdnNjNkb2p6ZnJhc3lyMCJ9.v2VgcAOoelkCwc2mpk79rQ';
-
   //   const { company, companies } = this;
   //   const { ipCountry } = this.session;
 
