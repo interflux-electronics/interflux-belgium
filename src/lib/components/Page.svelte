@@ -3,13 +3,22 @@
   import { main } from '$lib/state/main.svelte';
   import { footer } from '$lib/state/footer.svelte';
   import { page } from '$lib/state/page.svelte';
-  import { desktop, widescreen } from '$lib/state/media.svelte';
-  import { DesktopHeader, Breadcrumbs, Footer, LoadingCube } from '$lib/components';
+  import { mobile, tablet } from '$lib/state/media.svelte';
+  import { MobileHeader, DesktopHeader, Breadcrumbs, Footer, LoadingCube } from '$lib/components';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
+  import { browser } from '$app/environment';
+  import type { Device } from '$lib/types';
+  import type { Snippet } from 'svelte';
 
-  let { children } = $props();
+  let { device, children }: { device: Device; children: Snippet } = $props();
 
   let isLoading = $state(false);
+
+  // During SSR, use the user agent to detect mobile / desktop
+  // During CSR, use screen width to detect mobile / desktop
+  let isMobile = $derived(browser ? mobile.current : device.type === 'mobile');
+  let isTablet = $derived(browser ? tablet.current : device.type === 'tablet');
+  let narrowView = $derived(isMobile || isTablet);
 
   beforeNavigate(({ type }) => {
     // Prevents "Are you sure" dialogs
@@ -30,6 +39,10 @@
   }
 </script>
 
+{#if header.visible && narrowView}
+  <MobileHeader />
+{/if}
+
 <div
   id="page"
   data-main={main.id}
@@ -40,7 +53,7 @@
   role="button"
   tabindex="0"
 >
-  {#if header.visible && (desktop.current || widescreen.current)}
+  {#if header.visible && !narrowView}
     <DesktopHeader />
     {#if header.crumbs}
       <Breadcrumbs />

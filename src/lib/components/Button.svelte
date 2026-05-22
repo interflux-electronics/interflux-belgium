@@ -3,10 +3,12 @@
   import type { Snippet } from 'svelte';
   import type { Icon } from '$lib/components/Svg.svelte';
 
+  // legacy tertiary orange
+
   interface Props {
     label?: string;
-    size?: 'medium' | 'large';
-    theme?: string;
+    size?: 'medium' | 'large' | 'no-size';
+    theme?: 'primary green' | 'primary orange' | 'secondary ghost' | 'tertiary ghost' | 'no-theme';
     icon?: Icon;
     iconPosition?: 'left' | 'right';
     url?: string;
@@ -19,8 +21,8 @@
 
   let {
     label,
-    size = 'medium',
-    theme = 'primary green',
+    size = 'no-size',
+    theme = 'no-theme',
     icon,
     iconPosition = 'left',
     url,
@@ -36,9 +38,7 @@
       'button',
       size,
       theme,
-      icon,
-      icon ? `has-icon` : 'no-icon',
-      `icon-${iconPosition}`,
+      icon ? `has-icon icon-${iconPosition} ${icon}` : 'no-icon',
       isBusy ? 'busy' : 'idle',
       classNamePassedIn
     ].join(' ')
@@ -333,31 +333,31 @@
       //   }
       // }
 
-      // &.white-text-on-blue {
-      //   color: white;
-      //   border-radius: 3px;
-      //   background-color: rgba($blue-5, 0.8);
-      //   border: 2px solid $blue-3;
-      //   &:hover,
-      //   &:focus {
-      //     background: rgba(white, 0.2);
-      //     border-color: white;
-      //     :global {
-      //       svg {
-      //         [fill] {
-      //           fill: white;
-      //         }
-      //       }
-      //     }
-      //   }
-      //   :global {
-      //     svg {
-      //       [fill] {
-      //         fill: white;
-      //       }
-      //     }
-      //   }
-      // }
+      &.ghost {
+        color: white;
+        border-radius: 3px;
+        background-color: rgba($blue-5, 0.8);
+        border: 2px solid $blue-3;
+        &:hover,
+        &:focus {
+          background: rgba(white, 0.2);
+          border-color: white;
+          :global {
+            svg {
+              [fill] {
+                fill: white;
+              }
+            }
+          }
+        }
+        :global {
+          svg {
+            [fill] {
+              fill: white;
+            }
+          }
+        }
+      }
 
       // &.blue-focus {
       //   &:hover,

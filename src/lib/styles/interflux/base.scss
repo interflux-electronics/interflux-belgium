@@ -1,4 +1,3 @@
-
 @use '../variables/colors' as *;
 @use '../variables/fonts' as *;
 @use '../mixins/text' as *;
@@ -69,5 +68,14 @@ button {
 
 // We use font-families instead of weights
 th {
-  font-weight: normal; 
+  font-weight: normal;
+}
+
+// A common pattern for page layouts
+section {
+  .liner {
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
 }

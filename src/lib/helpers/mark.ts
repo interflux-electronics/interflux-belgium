@@ -1,4 +1,8 @@
 export function mark(phrase: string, query: string) {
+  if (!query || query === '') {
+    return phrase;
+  }
+
   let str = phrase;
 
   // Break the query down

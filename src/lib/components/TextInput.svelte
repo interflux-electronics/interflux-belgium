@@ -3,24 +3,48 @@
   import type { Icon } from '$lib/components/Svg.svelte';
 
   interface Props {
-    id?: string;
+    // bindables
+    inputRef?: HTMLInputElement;
     value?: string;
-    type?: string;
+
+    // appearance
+    type?: 'text' | 'search' | 'email' | 'password' | 'date';
     placeholder?: string;
     disabled?: boolean;
     theme?: string;
     icon?: Icon;
+    id?: string;
+
+    // events
+    onFocus?: (event: FocusEvent & { currentTarget: HTMLInputElement }) => void;
+    onBlur?: (event: FocusEvent & { currentTarget: HTMLInputElement }) => void;
+    onMouseOver?: (event: MouseEvent & { currentTarget: HTMLInputElement }) => void;
+    onMouseOut?: (event: MouseEvent & { currentTarget: HTMLInputElement }) => void;
+    onKeyDown?: (event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void;
     onKeyUp?: (event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void;
   }
 
   let {
-    id,
-    value,
+    // allow parent to interact with <input>
+    inputRef = $bindable(),
+
+    // two way binding of value shown in <input>, always start value, default ''
+    value = $bindable(''),
+
+    // appearance
     type = 'text',
     placeholder,
     disabled = false,
-    icon,
     theme,
+    icon,
+    id,
+
+    // events
+    onFocus,
+    onBlur,
+    onMouseOver,
+    onMouseOut,
+    onKeyDown,
     onKeyUp
   }: Props = $props();
 
@@ -29,16 +53,22 @@
 
 <div class="text-input {classes}">
   <input
-    {id}
-    {value}
+    bind:this={inputRef}
+    bind:value
     {type}
     {placeholder}
     {disabled}
+    {id}
+    onfocus={(e) => onFocus?.(e)}
+    onblur={(e) => onBlur?.(e)}
+    onmouseover={(e) => onMouseOver?.(e)}
+    onmouseout={(e) => onMouseOut?.(e)}
+    onkeydown={(e) => onKeyDown?.(e)}
+    onkeyup={(e) => onKeyUp?.(e)}
     autocapitalize="off"
     autocomplete="off"
     autocorrect="off"
     spellcheck="false"
-    onkeyup={(e) => onKeyUp?.(e)}
   />
 
   {#if icon}

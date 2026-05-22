@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { Button } from '$lib/components';
-
   export interface Option {
     id: string;
     label: string;
   }
 
   interface Props {
-    layout?: string;
+    layout?: 'horizontal' | 'vertical';
     options: Option[];
     selected?: Option;
     onSelect: (option: Option | undefined) => void;
@@ -30,7 +28,7 @@
       {selected.label}
     </button>
   {:else}
-    {#each options as option}
+    {#each options as option (option.id)}
       <button class="pill idle" onclick={() => select(option)}>
         {option.label}
       </button>

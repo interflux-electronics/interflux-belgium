@@ -1,11 +1,7 @@
-export const footer = $state({
-  visible: true
-});
-
-export interface FooterProps {
+interface Props {
   visible?: boolean;
 }
 
-export function updateFooter(props: Partial<FooterProps>) {
-  Object.assign(footer, props);
-}
+export const footer: Props = $state({
+  visible: true
+});

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Svg } from '$lib/components';
+  import { delay } from '$lib/helpers';
 
   interface Props {
     message?: string;
@@ -40,16 +41,6 @@
 
     loop();
   });
-
-  function shuffle(list: string[]) {
-    return list.sort(function () {
-      return 0.5 - Math.random();
-    });
-  }
-
-  function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 </script>
 
 <div class="loading-cube {fixed ? 'fixed' : 'inline'}">

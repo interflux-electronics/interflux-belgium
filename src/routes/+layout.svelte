@@ -1,6 +1,8 @@
 <script lang="ts">
   import { PUBLIC_CDN_HOST } from '$env/static/public';
-  import { MobileHeader, Page, Modal } from '$lib/components';
+  import { Page, Modal } from '$lib/components';
+  import type { LayoutData } from './$types';
+  import type { Snippet } from 'svelte';
 
   import '$lib/styles/app.scss';
 
@@ -9,7 +11,7 @@
   const gitRevision = import.meta.env.BUILD_GIT_COMMIT;
   const buildTime = import.meta.env.BUILD_TIME;
 
-  let { children } = $props();
+  let { data, children }: { data: LayoutData; children: Snippet } = $props();
 </script>
 
 <svelte:head>
@@ -100,9 +102,7 @@
 // </script> -->
 </svelte:head>
 
-<MobileHeader />
-
-<Page>
+<Page device={data.device}>
   {@render children()}
 </Page>
 

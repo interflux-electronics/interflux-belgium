@@ -1,4 +1,10 @@
-export { markdown } from './markdown.ts';
+export { delay } from './delay.ts';
+export { detectDevice } from './detectDevice.ts';
 export { downcase } from './downcase.ts';
-export { sortBy } from './sortBy.ts';
+export { getJson } from './getJson.ts';
 export { mark } from './mark.ts';
+export { markdown } from './markdown.ts';
+export { normalizeJsonApi } from './normalizeJsonApi.ts';
+export { shuffle } from './shuffle.ts';
+export { sortBy } from './sortBy.ts';
+export { spanEachWord } from './spanEachWord.ts';

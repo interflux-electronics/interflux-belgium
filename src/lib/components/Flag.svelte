@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { PUBLIC_CDN_HOST } from '$env/static/public';
+  import { PUBLIC_CDN_HOST as cdnHost } from '$env/static/public';
   import { downcase } from '$lib/helpers';
-  import type Country from '$lib/schemas/Country';
+  import type { Country } from '$lib/types';
 
   export let country: Country;
 </script>
 
 <img
-  src="{PUBLIC_CDN_HOST}/images/flags/{country.id}.svg"
+  src="{cdnHost}/images/flags/{country.id}.svg"
   alt="{country.nameNative} ({country.nameEnglish})"
   class="flag {downcase(country.id)}"
   width="32"
