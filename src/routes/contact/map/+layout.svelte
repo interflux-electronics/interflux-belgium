@@ -1,0 +1,953 @@
+<script lang="ts">
+  import { m } from '$lib/paraglide/messages';
+  import Button from '$lib/components/Button.svelte';
+  import MapMarker from '$lib/components/MapMarker.svelte';
+  import { mount, unmount, onMount } from 'svelte';
+  import mapboxgl from 'mapbox-gl';
+  import 'mapbox-gl/dist/mapbox-gl.css';
+  import { PUBLIC_MAPBOX_ACCESSS_TOKEN } from '$env/static/public';
+  import type { LayoutProps } from './$types';
+
+  let { children, data }: LayoutProps = $props();
+
+  let companies = $derived(data.companies);
+  // let isLoading = $derived(!!companies);
+
+  let mapContainer: HTMLDivElement;
+  let map;
+  let markers = [];
+  let todo = $state(true);
+
+  $effect(() => {
+    console.log('🐝', !!companies, !!mapContainer);
+    if (companies && mapContainer && todo) {
+      console.log('🍯');
+      mapboxgl.accessToken = PUBLIC_MAPBOX_ACCESSS_TOKEN;
+
+      map = new mapboxgl.Map({
+        // container: 'mapbox',
+        container: mapContainer,
+        style: 'mapbox://styles/jw-floatplane-dev/ck8mcsfr50uwe1iohs6xv6n0d',
+        center: [120, 30],
+        zoom: 2,
+        maxZoom: 16,
+        minZoom: 2,
+        pitchWithRotate: false,
+        touchPitch: false,
+        touchZoomRotate: true,
+        dragRotate: false,
+        language: 'en' // TODO: allow translations
+      });
+
+      companies.forEach((company: Company) => {
+        const div = document.createElement('div');
+        div.id = `marker-for-${company.slug}`;
+        div.className = 'icon';
+
+        const component = mount(MapMarker, {
+          target: div,
+          props: {
+            company,
+            active: false
+          }
+        });
+
+        new mapboxgl.Marker({
+          element: div,
+          anchor: 'bottom'
+        })
+          .setLngLat([company.longitude, company.latitude])
+          .addTo(map);
+
+        markers.push(component);
+
+        todo = false;
+      });
+    }
+  });
+
+  // onMount(() => {
+
+  //   return () => {
+  //     markers.forEach((marker) => {
+  //       unmount(marker);
+  //     });
+  //     map.remove();
+  //   };
+  // });
+
+  // get countries() {
+  //   return this.args.countries;
+  // }
+
+  // get companies() {
+  //   return this.args.companies;
+  // }
+
+  // get company() {
+  //   return this.args.show
+  //     ? this.companies.find((c) => c.slug === this.args.show)
+  //     : null;
+  // }
+
+  // @action
+  // hideCompany() {
+  //   this.zoomOutFromCompany(this.company);
+  //   this.router.transitionTo('partners.map', {
+  //     queryParams: { show: null }
+  //   });
+  // }
+
+  // @action
+  // onInsertMap() {
+  //   this.waitForMapBoxReady();
+  // }
+
+  // @action
+  // onMarkerClick(company, event) {
+  //   this.centerOnCompanyAndZoomIn(company);
+  //   this.router.transitionTo('partners.map', {
+  //     queryParams: { show: company.slug }
+  //   });
+
+  //   // Prevents map clicks from hiding the company before it showed.
+  //   event.stopPropagation();
+  // }
+
+  // async waitForMapBoxReady() {
+  //   let ready = false;
+
+  //   while (!ready) {
+  //     if (window.mapboxgl) {
+  //       ready = true;
+  //       this.renderMap();
+  //       if (this.company) {
+  //         this.centerOnCompanyAndZoomIn(this.company, true);
+  //       }
+  //     }
+  //     await this.window.delay(100);
+  //   }
+  // }
+
+  // async renderMap() {
+  //   // window.mapboxgl.accessToken = 'pk.eyJ1IjoianctZmxvYXRwbGFuZS1kZXYiLCJhIjoiY2s4bW02N3UyMG93MTNycGduNzJqOGt6OCJ9.PHUKAn3CMmN73tmJXpa0ug';
+  //   window.mapboxgl.accessToken = 'pk.eyJ1IjoianctZmxvYXRwbGFuZS1kZXYiLCJhIjoiY21sMHI4Mm5zMGdnNjNkb2p6ZnJhc3lyMCJ9.v2VgcAOoelkCwc2mpk79rQ';
+
+  //   const { company, companies } = this;
+  //   const { ipCountry } = this.session;
+
+  //   const center = company
+  //     ? { lon: company.longitude, lat: company.latitude }
+  //     : ipCountry
+  //     ? { lon: ipCountry.longitude, lat: ipCountry.latitude }
+  //     : { lon: 120, lat: 30 };
+
+  //   const map = new window.mapboxgl.Map({
+  //     container: 'mapbox',
+  //     style: 'mapbox://styles/jw-floatplane-dev/ck8mcsfr50uwe1iohs6xv6n0d',
+  //     center,
+  //     zoom: 2,
+  //     maxZoom: 16,
+  //     minZoom: 2,
+  //     pitchWithRotate: false,
+  //     touchPitch: false,
+  //     touchZoomRotate: true,
+  //     dragRotate: false
+  //   });
+
+  //   // disable map rotation using touch rotation gesture
+  //   map.touchZoomRotate.disableRotation();
+
+  //   this.mapbox.map = map;
+
+  //   const nav = new window.mapboxgl.NavigationControl({
+  //     visualizePitch: false,
+  //     showCompass: false,
+  //     showZoom: true
+  //   });
+  //   this.mapbox.map.addControl(nav, 'bottom-right');
+
+  //   companies.map((company) => {
+  //     const marker = document.querySelector(`#marker-for-${company.slug}`);
+  //     const shadow = document.querySelector(`#shadow-for-${company.slug}`);
+
+  //     new window.mapboxgl.Marker({ anchor: 'bottom', element: shadow })
+  //       .setLngLat({ lon: company.longitude, lat: company.latitude })
+  //       .addTo(this.mapbox.map);
+
+  //     new window.mapboxgl.Marker({ anchor: 'bottom', element: marker })
+  //       .setLngLat({ lon: company.longitude, lat: company.latitude })
+  //       .addTo(this.mapbox.map);
+  //   });
+  // }
+
+  // @tracked doneAnimating = false;
+
+  // async centerOnCompanyAndZoomIn(company, instant) {
+  //   const ms = instant ? 0 : 2000;
+
+  //   this.mapbox.map.easeTo({
+  //     center: { lon: company.longitude, lat: company.latitude },
+  //     zoom: 11,
+  //     duration: ms,
+  //     offset: this.markerOffset
+  //   });
+
+  //   await this.window.delay(ms);
+
+  //   this.doneAnimating = true;
+  // }
+
+  // zoomOutFromCompany(company) {
+  //   this.doneAnimating = false;
+
+  //   this.mapbox.map.easeTo({
+  //     center: { lon: company.longitude, lat: company.latitude },
+  //     zoom: 5,
+  //     duration: 2000
+  //   });
+  // }
+
+  // get markerOffset() {
+  //   let x = 0;
+  //   let y = 0;
+
+  //   if (this.media.isWidescreen) {
+  //     x = 150;
+  //   }
+
+  //   if (this.media.isDesktop) {
+  //     x = (150 / 1200) * window.innerWidth;
+  //   }
+
+  //   if (this.media.isTablet) {
+  //     x = (330 / 1200) * window.innerWidth;
+  //   }
+
+  //   if (this.media.isMobile) {
+  //     y = -(window.innerHeight / 4);
+  //   }
+
+  //   return [x, y];
+  // }
+</script>
+
+<section id="contact-map">
+  <Button
+    url="/contact"
+    label={m.back()}
+    icon="arrow-left"
+    theme="tertiary medium white-text icon-right back"
+  />
+
+  <h1>{m.interflux_worldwide()}</h1>
+
+  <!-- {#if isLoading}
+    <div class="loading">
+      <p>{m.loading()}</p>
+      <div class="preload"></div>
+    </div>
+  {:else} -->
+
+  <div id="mapbox" class="map" bind:this={mapContainer}></div>
+
+  {@render children()}
+
+  <!-- {/if} -->
+
+  <Button
+    url="/contact"
+    label={m.close()}
+    icon="close"
+    theme="tertiary medium white-text icon-right close"
+  />
+</section>
+
+<style lang="scss">
+  @use '$lib/styles/components' as *;
+
+  section#contact-map {
+    position: relative;
+    min-height: 100vh;
+    background: $blue-4;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @include mobile {
+      justify-content: flex-start;
+    }
+    :global {
+      .button.back {
+        position: fixed;
+        z-index: 3;
+
+        @include widescreen {
+          left: 20px;
+          top: 12px;
+        }
+        @include desktop {
+          left: vw(20px);
+          top: vw(12px);
+        }
+        @include tablet {
+          left: vw-tablet(20px);
+          top: vw-tablet(12px);
+        }
+        @include mobile {
+          display: none;
+        }
+      }
+      .button.close {
+        position: fixed;
+        z-index: 3;
+        @include widescreen {
+          right: 20px;
+          top: 12px;
+        }
+        @include desktop {
+          right: vw(20px);
+          top: vw(12px);
+        }
+        @include tablet {
+          right: vw-tablet(20px);
+          top: vw-tablet(12px);
+        }
+        @include mobile {
+          right: vw-mobile(20px);
+          top: vw-mobile(12px);
+        }
+      }
+    }
+    h1 {
+      position: fixed;
+      z-index: 2;
+      top: 20px;
+      left: 0;
+      width: 100vw;
+      text-align: center;
+      font-family: $extrabold;
+      line-height: 100%;
+      color: white;
+      @include widescreen {
+        font-size: 26px;
+      }
+      @include desktop {
+        font-size: vw(26px);
+      }
+      @include tablet {
+        font-size: vw-tablet(26px);
+      }
+      @include mobile {
+        font-size: vw-mobile(22px);
+        top: vw-mobile(10px);
+        left: vw-mobile(20px);
+        line-height: vw-mobile(42px);
+        width: auto;
+      }
+    }
+    #mapbox {
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      transition: transform 5000ms $easeOutExpo;
+    }
+    aside {
+      background: white;
+      position: relative;
+      z-index: 3;
+      box-sizing: border-box;
+      transition: transform 5000ms $easeOutExpo;
+      display: flex;
+      flex-direction: column;
+      transition: all 1000ms $easeOutExpo;
+      transition-property: opacity, transform;
+      @include widescreen {
+        width: 400px;
+        padding: 30px 30px 0;
+        border-radius: 5px;
+        margin: 80px 0;
+      }
+      @include desktop {
+        width: vw(400px);
+        padding: vw(30px) vw(30px) 0;
+        border-radius: vw(5px);
+        margin: vw(80px) 0;
+      }
+      @include tablet {
+        width: vw-tablet(400px);
+        padding: vw-tablet(30px) vw-tablet(30px) 0;
+        border-radius: vw-tablet(5px);
+        margin: vw-tablet(80px) 0;
+      }
+      @include mobile {
+        width: 90vw;
+        padding: vw-mobile(30px) vw-mobile(30px) 0;
+        border-radius: vw-mobile(5px);
+        margin: 50vh 5vw 10vh;
+      }
+      &.show {
+        opacity: 1;
+        @include widescreen {
+          transform: translateX(-50%);
+        }
+        @include desktop {
+          transform: translateX(-50%);
+        }
+        @include tablet {
+          transform: translateX(-20vw);
+        }
+        @include mobile {
+          transform: translateY(0);
+        }
+      }
+      &.hide {
+        opacity: 0;
+        @include widescreen {
+          transform: translateX(-60%);
+        }
+        @include desktop {
+          transform: translateX(-60%);
+        }
+        @include tablet {
+          transform: translateX(-30vw);
+        }
+        @include mobile {
+          transform: translateY(10vh);
+        }
+      }
+      h2 {
+        font-family: $extrabold;
+        line-height: 150%;
+        @include widescreen {
+          font-size: 26px;
+        }
+        @include desktop {
+          font-size: vw(26px);
+        }
+        @include tablet {
+          font-size: vw-tablet(26px);
+        }
+        @include mobile {
+          font-size: vw-mobile(26px);
+        }
+      }
+      .description {
+        @include widescreen {
+          margin: 24px 0 30px;
+        }
+        @include desktop {
+          margin: vw(24px) 0 vw(30px);
+        }
+        @include tablet {
+          margin: vw-tablet(24px) 0 vw-tablet(30px);
+        }
+        @include mobile {
+          margin: vw-mobile(24px) 0 vw-mobile(30px);
+        }
+      }
+      h2 + p,
+      h2 + .description {
+        @include widescreen {
+          margin-top: 30px;
+        }
+        @include desktop {
+          margin-top: vw(30px);
+        }
+        @include tablet {
+          margin-top: vw-tablet(30px);
+        }
+        @include mobile {
+          margin-top: vw-mobile(30px);
+        }
+      }
+      p.address,
+      p.website,
+      p.email,
+      p.phone,
+      p.fax {
+        position: relative;
+        @include widescreen {
+          padding-left: 40px;
+        }
+        @include desktop {
+          padding-left: vw(40px);
+        }
+        @include tablet {
+          padding-left: vw-tablet(40px);
+        }
+        @include mobile {
+          padding-left: vw-mobile(40px);
+        }
+        &:before {
+          content: '';
+          position: absolute;
+          left: 0;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          @include widescreen {
+            top: 6px;
+            width: 20px;
+            height: 20px;
+          }
+          @include desktop {
+            top: vw(6px);
+            width: vw(20px);
+            height: vw(20px);
+          }
+          @include tablet {
+            top: vw-tablet(6px);
+            width: vw-tablet(20px);
+            height: vw-tablet(20px);
+          }
+          @include mobile {
+            top: vw-mobile(6px);
+            width: vw-mobile(20px);
+            height: vw-mobile(20px);
+          }
+        }
+      }
+      p {
+        line-height: 150%;
+        span {
+          display: flex;
+          align-items: center;
+        }
+        img.flag {
+          width: auto;
+          @include widescreen {
+            margin-left: 8px;
+            height: 20px;
+          }
+          @include desktop {
+            margin-left: vw(8px);
+            height: vw(20px);
+          }
+          @include tablet {
+            margin-left: vw-tablet(8px);
+            height: vw-tablet(20px);
+          }
+          @include mobile {
+            margin-left: vw-mobile(8px);
+            height: vw-mobile(20px);
+          }
+        }
+        & + p {
+          @include widescreen {
+            margin-top: 8px;
+          }
+          @include desktop {
+            margin-top: vw(8px);
+          }
+          @include tablet {
+            margin-top: vw-tablet(8px);
+          }
+          @include mobile {
+            margin-top: vw-mobile(8px);
+          }
+        }
+      }
+      p.address:before {
+        background-image: url('#{$cdn}/images/public/icons/marker.svg');
+      }
+      p.website:before {
+        background-image: url('#{$cdn}/images/public/icons/globe.svg');
+      }
+      p.email:before {
+        background-image: url('#{$cdn}/images/public/icons/envelope.svg');
+      }
+      p.phone:before {
+        background-image: url('#{$cdn}/images/public/icons/phone.svg');
+      }
+      p.fax:before {
+        background-image: url('#{$cdn}/images/public/icons/fax.svg');
+      }
+      ul.members {
+        @include widescreen {
+          margin: 30px -30px 0 -30px;
+        }
+        @include desktop {
+          margin: vw(30px) vw(-30px) vw(0) vw(-30px);
+        }
+        @include tablet {
+          margin: vw-tablet(30px) vw-tablet(-30px) vw-tablet(0) vw-tablet(-30px);
+        }
+        @include mobile {
+          margin: vw-mobile(30px) vw-mobile(-30px) vw-mobile(0) vw-mobile(-30px);
+        }
+        li {
+          display: flex;
+          align-items: center;
+          border-top: 1px solid $grey-1;
+          @include widescreen {
+            padding: 20px;
+          }
+          @include desktop {
+            padding: vw(20px);
+          }
+          @include tablet {
+            padding: vw-tablet(20px);
+          }
+          @include mobile {
+            padding: vw-mobile(20px);
+          }
+          .avatar {
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            @include widescreen {
+              width: 72px;
+              height: 72px;
+              margin-right: 20px;
+            }
+            @include desktop {
+              width: vw(72px);
+              height: vw(72px);
+              margin-right: vw(20px);
+            }
+            @include tablet {
+              width: vw-tablet(72px);
+              height: vw-tablet(72px);
+              margin-right: vw-tablet(20px);
+            }
+            @include mobile {
+              width: vw-mobile(72px);
+              height: vw-mobile(72px);
+              margin-right: vw-mobile(20px);
+            }
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            h3 {
+              font-family: $bold;
+              color: $grey-7;
+              line-height: 180%;
+              @include widescreen {
+                font-size: 16px;
+              }
+              @include desktop {
+                font-size: vw(16px);
+              }
+              @include tablet {
+                font-size: vw-tablet(16px);
+              }
+              @include mobile {
+                font-size: vw-mobile(16px);
+              }
+            }
+            p + p {
+              margin-top: 0;
+            }
+          }
+        }
+      }
+    }
+    #arrow {
+      position: fixed;
+      z-index: 3;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      display: flex;
+      align-items: center;
+      transition: all 1000ms $easeOutExpo;
+      transition-property: opacity, transform;
+      @include mobile {
+        position: absolute;
+        top: 50vh;
+      }
+      &.show {
+        opacity: 1;
+        @include widescreen {
+          transform: translateX(0);
+        }
+        @include desktop {
+          transform: translateX(0);
+        }
+        @include tablet {
+          transform: translateX(5vw);
+        }
+        @include mobile {
+          transform: translateY(0);
+        }
+      }
+      &.hide {
+        opacity: 0;
+        @include widescreen {
+          transform: translateX(-40px); // 10% of <aside> width
+        }
+        @include desktop {
+          transform: translateX(-3.333vw); // 10% of <aside> width
+        }
+        @include tablet {
+          transform: translateX(-5vw); // minus 10vw
+        }
+        @include mobile {
+          transform: translateY(10vh); // plus 10vh
+        }
+      }
+      svg {
+        position: absolute;
+        height: auto;
+        @include widescreen {
+          width: 32px;
+          transform: translateX(-8px);
+        }
+        @include desktop {
+          width: 2.666vw;
+          transform: translateX(-0.666vw);
+        }
+        @include tablet {
+          width: 3vw;
+          transform: translateX(-0.8vw);
+        }
+        @include mobile {
+          width: 8vw;
+          transform: translateY(2vw) rotate(-90deg);
+          transform-origin: left;
+        }
+        [fill] {
+          fill: white;
+        }
+      }
+    }
+    #overlay {
+      position: fixed;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+    #markers {
+      display: none;
+    }
+    .mapboxgl-marker {
+      width: 0;
+      height: 0;
+      &.shadow {
+        z-index: 1;
+        svg {
+          @include widescreen {
+            width: 28px;
+            height: 10px;
+            transform: translate(-14px, 3px) scale(0.9);
+          }
+          @include desktop {
+            width: vw(28px);
+            height: vw(10px);
+            transform: translate(-1.166vw, 0.25vw) scale(0.9);
+          }
+          @include tablet {
+            width: vw-tablet(28px);
+            height: vw-tablet(10px);
+            transform: translate(-1.75vw, 0.375vw) scale(0.9);
+          }
+          @include mobile {
+            width: vw-mobile(28px);
+            height: vw-mobile(10px);
+            transform: translate(-3.5vw, 0.75vw) scale(0.9);
+          }
+        }
+      }
+      &.icon {
+        z-index: 3;
+        &:hover {
+          z-index: 4;
+        }
+        button {
+          width: 70px;
+          height: 70px;
+          padding-bottom: 10px;
+          box-sizing: border-box;
+          transform: translate(-50%, -80%);
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          transition: all $easeOutExpo 2000ms;
+          transition-property: top, left;
+          left: 0;
+          top: 0;
+          @include widescreen {
+            width: 70px;
+            height: 70px;
+          }
+          @include desktop {
+            width: vw(70px);
+            height: vw(70px);
+          }
+          @include tablet {
+            width: vw-tablet(70px);
+            height: vw-tablet(70px);
+          }
+          @include mobile {
+            width: vw-mobile(70px);
+            height: vw-mobile(70px);
+          }
+          &.active {
+            height: 100px;
+            width: 100px;
+            @include widescreen {
+              height: 100px;
+              width: 100px;
+            }
+            @include desktop {
+              height: vw(100px);
+              width: vw(100px);
+            }
+            @include tablet {
+              height: vw-tablet(100px);
+              width: vw-tablet(100px);
+            }
+            @include mobile {
+              height: vw-mobile(100px);
+              width: vw-mobile(100px);
+            }
+            svg.marker,
+            svg.star-marker {
+              height: 80%;
+              .border {
+                opacity: 1;
+              }
+            }
+          }
+          &:hover:not(.active) {
+            svg.marker,
+            svg.star-marker {
+              height: 80%;
+              .border {
+                opacity: 1;
+              }
+            }
+            p {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          svg.marker,
+          svg.star-marker {
+            transition: all 300ms $easeOutExpo;
+            height: 60%;
+            width: auto;
+            .border {
+              transition: opacity 300ms $easeOutExpo;
+              opacity: 0;
+            }
+          }
+          p {
+            position: absolute;
+            bottom: 100%;
+            font-family: $regular;
+            line-height: 175%;
+            background: white;
+            white-space: nowrap;
+            color: $grey-7;
+            opacity: 0;
+            transition: all 300ms $easeOutExpo;
+            transition-property: opacity, transform;
+            @include widescreen {
+              font-size: 16px;
+              height: 28px;
+              left: 11px;
+              padding: 0 8px;
+              border-radius: 2px;
+              transform: translateY(20px);
+            }
+            @include desktop {
+              font-size: vw(16px);
+              height: vw(28px);
+              left: vw(11px);
+              padding: 0 vw(8px);
+              border-radius: vw(2px);
+              transform: translateY(1.666vw);
+            }
+            @include tablet {
+              font-size: vw-tablet(16px);
+              height: vw-tablet(28px);
+              left: vw-tablet(11px);
+              padding: 0 vw-tablet(8px);
+              border-radius: vw-tablet(2px);
+              transform: translateY(2.5vw);
+            }
+            @include mobile {
+              font-size: vw-mobile(16px);
+              height: vw-mobile(28px);
+              left: vw-mobile(11px);
+              padding: 0 vw-mobile(8px);
+              border-radius: vw-mobile(2px);
+              transform: translateY(5vw);
+            }
+            svg.arrow-down {
+              position: absolute;
+              height: auto;
+              @include widescreen {
+                bottom: -8px;
+                left: 12.5px;
+                width: 22px;
+              }
+              @include desktop {
+                bottom: vw(-8px);
+                left: vw(12.5px);
+                width: vw(22px);
+              }
+              @include tablet {
+                bottom: vw-tablet(-8px);
+                left: vw-tablet(12.5px);
+                width: vw-tablet(22px);
+              }
+              @include mobile {
+                bottom: vw-mobile(-8px);
+                left: vw-mobile(12.5px);
+                width: vw-mobile(22px);
+              }
+              [fill] {
+                fill: white;
+              }
+            }
+          }
+        }
+      }
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @include mobile {
+        margin-top: 50vw;
+      }
+      p {
+        color: white;
+        position: relative;
+        z-index: 1;
+      }
+      .preload {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('data:image/webp;base64,#{$interflux-network-map}');
+        background-size: cover;
+        filter: blur(15px);
+      }
+    }
+    .mapboxgl-ctrl-bottom-left,
+    .mapboxgl-ctrl-bottom-right {
+      z-index: 3; // to appear above the markers
+    }
+  }
+</style>
