@@ -76,5 +76,91 @@
   "vapor_phase_soldering": "Vapor phase soldering",
   "wave_soldering": "Wave soldering",
   "webinar": "Webinar",
-  "webinars": "Webinars"
+  "webinars": "Webinars",
+
+  "contact_map_1": "We offer support worldwide",
+  "contact_map_2": "The Interflux Network consists of 40 partners worldwide and is located in key regions for the electronics manufacturing industry. That means there is good chance someone near you can deliver Interflux products and localised support.",
+  "contact_map_3": "Expand map",
+
+  "triage_1": "Who to contact?",
+
+  "triage_2": "What do you want to do?",
+  "triage_3": "order products",
+  "triage_4": "request technical support",
+  "triage_5": "request a document",
+
+  "triage_order_1": "To which country?",
+  "triage_order_2": "Please send your order to one of the following:",
+  "triage_order_3": "Please send your order to:",
+
+  "triage_support_1": "Please email us and we'll connect you to an expert.",
+  "triage_support_2": "To let us help you faster, please describe:",
+  "triage_support_3": "What you are trying to do",
+  "triage_support_4": "Which Interflux products are involved",
+  "triage_support_5": "Observed issues",
+  "triage_support_6": "Desired outcomes",
+
+  "triage_doc_1": "What type of document?",
+  "triage_doc_2": "Please email our REACH coordinator on:",
+  "triage_doc_3": "Are you able to find the document in our library?",
+  "triage_doc_4": "Great!",
+  "triage_doc_5": "Please email us and we'll find it for you:",
+
+  "triage_other_1": "Ask us anything.",
+  "triage_other_2": "We typically respond within 12 hours, except on weekends.",
+
+  "contact_network_1": "Search our network",
+  "contact_network_2": "Enter the name of a company, person or country.",
+
+  "contact_partner_1": "Become an Interflux Partner",
+  "contact_partner_2": "Gain access to our worldwide distribution network, exclusivity to distribute Interflux products in your region and some of the best soldering chemistry your customers have ever tried.",
+
+  "something_else": "something else",
+
+  "type_to_search": "Type to search",
+  "type_more": "Keep typing ({n}/{max})",
+  "searching": "Searching ...",
+  "search_error": "Error",
+  "search_count": "{n} results",
+
+  "recommended": "recommended",
+
+  "yes": "yes",
+  "no": "no",
+
+  "loading": "Loading ...",
+
+  "download_full_size": "Download full size",
+
+  "australia": "Australia",
+  "belgium": "Belgium",
+  "singapore": "Singapore",
+  "japan": "Japan",
+
+  "interflux_worldwide": "Interflux worldwide",
+
+  "why_interflux": "Why Interflux?",
+  "ask_interflux": "Ask Interflux.",
+  "what_we_do_h": "What we do",
+  "what_we_do_p": "We research & develop the **chemistry** needed for soldering **electronics**.",
+  "our_best_selling": "Our best-selling products",
+  "our_newest": "Our newest inventions",
+  "see_all_products": "See all products",
+  "learn_more": "Learn more",
+  "trusted_by": "Trusted by",
+
+  "carousel_lead": "Yes, you can solder electronics ...",
+  "carousel_1": "with ***zero defects***",
+  "carousel_2": "with ***lead-free*** alloys",
+  "carousel_3": "with high ***reliability***",
+  "carousel_4": "with ***zero residue***",
+  "carousel_5": "with ***No Clean***",
+  "carousel_6": "at ***low temperatures***",
+  "carousel_7": "***VOC-free***",
+  "carousel_8": "***0.00% halides***",
+
+  "we_are_pioneers": "We've been pioneering soldering chemistry since 1980. That's **{yearCount} years** of accumulated experience in soldering electronics.",
+
+  "meet_interflux": "Meet Interflux and partners at ...",
+  "no_upcoming_events": "No upcoming events."
 }
