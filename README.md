@@ -1,6 +1,8 @@
-# Interflux Electronics
+# Interflux Belgium
 
-This Svelte Kit app is the front end for [interflux.com](https://interflux.com).
+This codebase builds the frontend of the website of the Belgian company Interflux Electronics.
+
+[interflux.com](https://interflux.com)
 
 # Development
 
