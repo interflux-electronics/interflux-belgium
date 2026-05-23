@@ -8,3 +8,4 @@ export { normalizeJsonApi } from './normalizeJsonApi.ts';
 export { shuffle } from './shuffle.ts';
 export { sortBy } from './sortBy.ts';
 export { spanEachWord } from './spanEachWord.ts';
+export { findGCD } from './findGCD.ts';

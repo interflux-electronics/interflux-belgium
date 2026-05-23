@@ -25,13 +25,14 @@ export interface File {
   category: Category;
 }
 
-type ImageSize = `${number}x${number}`;
-type ImageExtension = 'webp' | 'jpg' | 'png' | 'svg';
+export type ImageSize = `${number}x${number}`;
+export type ImageExtension = 'webp' | 'jpg' | 'png' | 'svg' | 'mp4' | 'webm' | 'ogg';
 export type Variation = `@${ImageSize}.${ImageExtension}`;
 export type VariationList =
   | Variation
   | `${Variation},${Variation}`
-  | `${Variation},${Variation},${Variation}`;
+  | `${Variation},${Variation},${Variation}`
+  | `${Variation},${Variation},${Variation},${Variation}`;
 
 export interface Product {
   id: string;
@@ -79,7 +80,11 @@ export interface Document {
   name: string;
   path: string;
   variations: string;
-  documentCategory: any;
+  documentCategory: DocumentCategory;
+}
+
+export interface DocumentCategory {
+  id: string;
 }
 
 interface JsonApiResource<Attributes = Record<string, unknown>> {
