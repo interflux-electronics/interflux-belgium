@@ -2,10 +2,6 @@
 
 set -eou pipefail
 
-echo "----------"
-echo "⛵️ deploying ..."
-echo "----------"
-
 cd /var/www/prototype.interflux.com
 sudo -u interflux bash -lc "git pull"
 

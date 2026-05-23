@@ -3,11 +3,13 @@
 set -eou pipefail
 
 echo "----------"
-echo "Deploying ..."
+echo "⛵️ deploying ..."
 echo "----------"
 scp bin/deploy-remote.sh frankfurt:~/
 echo "----------"
+echo "✅ scp"
+echo "----------"
 ssh -t frankfurt "~/deploy-remote.sh"
 echo "----------"
-echo "Deploy complete ⛵️"
+echo "✅ deploy complete"
 echo "----------"
