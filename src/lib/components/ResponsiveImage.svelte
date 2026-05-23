@@ -8,7 +8,7 @@
 
   interface Props {
     path: string;
-    variations?: VariationList | '';
+    variations: VariationList | '';
     caption?: string;
     alt?: string;
   }
@@ -46,8 +46,12 @@
     variations.split(',').filter((v) => v.split('.')[1] === fileType)
   );
 
+  let variationsWithSize = $derived(
+    variationsForFileType.filter((v) => /^@\d{2,4}x\d{2,4}\.(jpg|webp|png)$/.test(v))
+  );
+
   let subset = $derived(
-    variationsForFileType.map((variation) => {
+    variationsWithSize.map((variation) => {
       if (!variation.split('x')[1]) {
         console.log('🔥');
         console.log({ path, variations });
@@ -75,7 +79,7 @@
   let smallest = $derived(subset.find((s) => s.width === smallestWidth));
   let closest = $derived(subset.find((s) => s.width === closestWidth));
 
-  let closestURL = $derived(`${cdnHost}/${path}${closest?.suffix || ''}`);
+  let closestURL = $derived(`${cdnHost}/${path}${closest?.suffix || `.${fileType}`}`);
   let smallestURL = $derived(`${cdnHost}/${path}${smallest?.suffix || ''}`);
   let largestURL = $derived(`${cdnHost}/${path}${largest?.suffix || ''}`);
 
@@ -102,6 +106,12 @@
   function onError() {
     isLoading = false;
   }
+
+  $effect(() => {
+    if (variationsWithSize.length < 1) {
+      console.warn(`⚠️ no sizes for ${closestURL}`);
+    }
+  });
 </script>
 
 {#if path}
