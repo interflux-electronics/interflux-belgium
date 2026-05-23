@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
     )
       .then(getJson)
       .then(normalizeJsonApi),
-    fetch(`${apiHost}/v1/public/events?include=country`, getOptions)
+    fetch(`${apiHost}/v1/public/events?include=country&upcoming=true`, getOptions)
       .then(getJson)
       .then(normalizeJsonApi)
   ]);
