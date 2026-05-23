@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Svg } from '$lib/components';
   import type { Snippet } from 'svelte';
-  import type { Icon } from '$lib/components/Svg.svelte';
+  import type { Icon } from '$lib/types';
 
   // legacy tertiary orange
 

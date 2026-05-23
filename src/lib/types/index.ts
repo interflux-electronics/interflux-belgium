@@ -1,5 +1,3 @@
-import type { Icon } from '$lib/components/Svg.svelte';
-
 export interface Country {
   id: string;
   nameNative: string;
@@ -145,3 +143,50 @@ export interface Company {
 export interface Device {
   type: string;
 }
+
+const AVAILABLE_ICONS = [
+  'arrow-down',
+  'arrow-left',
+  'arrow-right',
+  'chemistry',
+  'chevron-left',
+  'chevron-down',
+  'circuit1',
+  'close',
+  'document',
+  'email',
+  'error',
+  'expand',
+  'file-certificate',
+  'file-medical',
+  'file-spreadsheet',
+  'flask-potion',
+  'flask',
+  'hamburger',
+  'interflux',
+  'leaves',
+  'lightbulb',
+  'linkedin',
+  'map-marker-1',
+  'map-marker-2',
+  'map-marker-shadow',
+  'megaphone',
+  'microchip',
+  'podcast',
+  'prescription-bottle',
+  'presentation',
+  'primary-interflux-logo',
+  'search',
+  'street-view',
+  'strong',
+  'translation',
+  'thumbs-up',
+  'video',
+  'wave-soldering',
+  'x',
+  'youtube'
+] as const;
+
+export { AVAILABLE_ICONS };
+
+export type Icon = (typeof AVAILABLE_ICONS)[number];
