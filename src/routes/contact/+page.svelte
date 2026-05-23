@@ -39,7 +39,8 @@
           url="/contact/map"
           label={m.contact_map_3()}
           icon="expand"
-          theme="large secondary ghost"
+          size="large"
+          theme="secondary ghost"
         />
       {/if}
     </div>
@@ -201,11 +202,12 @@
             }
           }
         }
+        a.expand {
+          position: relative;
+          z-index: 1;
+        }
       }
-      a.expand {
-        position: relative;
-        z-index: 1;
-      }
+
       .preload {
         position: absolute;
         z-index: 0;
@@ -233,10 +235,12 @@
         position: relative;
         z-index: 1;
       }
-      button {
-        position: absolute;
-        z-index: 2;
-        color: white;
+      :global {
+        button {
+          position: absolute;
+          z-index: 2;
+          color: white;
+        }
       }
     }
   }
