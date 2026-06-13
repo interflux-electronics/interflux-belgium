@@ -9,7 +9,7 @@ echo "----------"
 echo "✅ git pull"
 echo "----------"
 
-sudo -u interflux bash -lc "npm install"
+sudo -u interflux bash -lc "nvm install"
 
 echo "----------"
 echo "✅ nvm install"
