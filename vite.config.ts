@@ -8,8 +8,6 @@ import { execSync } from 'node:child_process';
 const commit = execSync('git rev-parse --short HEAD').toString().trim();
 const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
-const isDev = process.env.NODE_ENV === 'development';
-
 export default defineConfig({
   plugins: [
     sveltekit(),
@@ -38,6 +36,7 @@ export default defineConfig({
   //     }
   //   }
   // },
+
   test: {
     expect: { requireAssertions: true },
     projects: [
