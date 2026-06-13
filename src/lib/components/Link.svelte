@@ -10,8 +10,7 @@
   let { url, label, children }: Props = $props();
 </script>
 
-<!-- eslint-disable svelte/no-navigation-without-resolve  -->
-<a href={url} target="_blank" rel="noopener noreferrer">
+<a href={url} target="_blank" rel="external noopener noreferrer">
   {#if children}
     {@render children()}
   {:else if label}
