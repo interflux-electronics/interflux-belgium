@@ -4,6 +4,29 @@ This codebase builds the frontend of the website of the Belgian company Interflu
 
 [interflux.com](https://interflux.com)
 
+Tech stack:
+
+- Svelte Kit 5 ❤️
+- Typescript
+- SASS
+- Prettier
+- ES Lint
+- Debian
+- Nginx
+- NVM
+- Node
+- Figma ⭐️
+
+Contributors:
+
+- Jan Werkhoven 岩 🇦🇺
+- Steven Teliszewski 🇧🇪
+- Wim Van Riet 🇸🇬
+
+Questions?
+
+Ask Jan on [jw@interflux.au](mailto:jw@interflux.au)
+
 # Development
 
 ```sh
