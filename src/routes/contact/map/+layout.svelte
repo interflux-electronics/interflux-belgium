@@ -3,7 +3,7 @@
   import Button from '$lib/components/Button.svelte';
   import MapMarker from '$lib/components/MapMarker.svelte';
   import { mount, unmount, onMount } from 'svelte';
-  import mapboxgl from 'mapbox-gl';
+  import mapboxgl, { type Map } from 'mapbox-gl';
   import 'mapbox-gl/dist/mapbox-gl.css';
   import { PUBLIC_MAPBOX_ACCESSS_TOKEN } from '$env/static/public';
   import type { LayoutProps } from './$types';
@@ -14,7 +14,7 @@
   // let isLoading = $derived(!!companies);
 
   let mapContainer: HTMLDivElement;
-  let map;
+  let map: Map;
   let markers = [];
   let todo = $state(true);
 
