@@ -163,7 +163,7 @@
           height: 800%;
           max-width: none;
           max-height: none;
-          transition: transform 1200ms $easeOutExpo;
+          transition: transform 1200ms var(--ease-out-expo);
         }
       }
     }

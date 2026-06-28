@@ -29,9 +29,9 @@
       .bg {
         :global {
           .word {
-            color: $blue-3;
+            color: var(--blue-3);
             &:after {
-              background-color: $blue-3;
+              background-color: var(--blue-3);
             }
           }
         }
@@ -41,9 +41,9 @@
       .bg {
         :global {
           .word {
-            color: $orange-2;
+            color: var(--orange-2);
             &:after {
-              background-color: $orange-2;
+              background-color: var(--orange-2);
             }
           }
         }
@@ -51,7 +51,7 @@
     }
     .p {
       color: white;
-      font-family: $bold;
+      font-family: var(--bold);
       margin: 0;
       :global {
         nobr {

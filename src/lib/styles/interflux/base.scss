@@ -1,18 +1,17 @@
-@use '../variables/colors' as *;
-@use '../variables/fonts' as *;
-@use '../mixins/text' as *;
-@use '../mixins/responsive' as *;
+// @use '../variables/colors' as *;
+// @use '../variables/fonts' as *;
+// @use '../mixins/responsive' as *;
 
 // All headings, paragraphs and buttons will inherit these font styles from the <body>
 body {
-  font-family: $regular; // Important, we explicitly name fonts, no weights used
+  font-family: var(--regular); // Important, we explicitly name fonts, no weights used
   font-style: normal; // Important, we use weightless fonts
   font-weight: normal; // Important, we use weightless fonts
   font-size: 16px;
   line-height: 130%;
   margin: 0;
   background-color: white;
-  color: $grey-7;
+  color: var(--grey-7);
   -webkit-font-smoothing: antialiased; // Without it, fonts will look bloated Chrome and Safari
   -moz-osx-font-smoothing: grayscale; // Without it, fonts will look bloated Firefox
 

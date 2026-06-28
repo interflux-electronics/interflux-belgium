@@ -99,7 +99,7 @@
 
     // We generally avoid animations on buttons because they need to respond and feel snappy.
     // The exception is the box shadow.
-    transition: box-shadow 200ms $easeOutExpo;
+    transition: box-shadow 200ms var(--ease-out-expo);
 
     // All buttons slightly compress when clicked
     &:active {
@@ -130,7 +130,7 @@
     // Sizes
 
     &.large {
-      font-family: $bold;
+      font-family: var(--bold);
       border: 1px solid transparent;
 
       @include widescreen {
@@ -194,7 +194,7 @@
     }
 
     &.medium {
-      font-family: $semibold;
+      font-family: var(--semi-bold);
       border: 1px solid transparent;
 
       @include widescreen {
@@ -263,29 +263,29 @@
       color: white;
 
       &.green {
-        background: $green-1;
-        border-color: $green-2;
+        background: var(--green-1);
+        border-color: var(--green-2);
 
         &:hover,
         &:focus {
-          background: $green-2;
-          border-color: $green-3;
+          background: var(--green-2);
+          border-color: var(--green-3);
           box-shadow:
-            0 0 0 1px $green-3,
+            0 0 0 1px var(--green-3),
             0 3px 6px rgba(black, 0.2);
         }
       }
 
       &.orange {
-        background: $orange-1;
-        border-color: $orange-3;
+        background: var(--orange-1);
+        border-color: var(--orange-3);
 
         &:hover,
         &:focus {
-          background: $orange-2;
-          border-color: $orange-4;
+          background: var(--orange-2);
+          border-color: var(--orange-4);
           box-shadow:
-            0 0 0 1px $orange-4,
+            0 0 0 1px var(--orange-4),
             0 3px 6px rgba(black, 0.2);
         }
       }
@@ -301,22 +301,22 @@
 
     &.secondary {
       background: white;
-      border-color: $grey-2;
-      color: $grey-6;
+      border-color: var(--grey-2);
+      color: var(--grey-6);
 
       &:hover,
       &:focus {
-        color: $blue-0;
-        border-color: $blue-0;
+        color: var(--blue-0);
+        border-color: var(--blue-0);
         box-shadow:
-          0 0 0 1px $blue-0,
+          0 0 0 1px var(--blue-0),
           0 3px 6px rgba(black, 0.2);
       }
 
       // :global {
       //   svg {
       //     [fill] {
-      //       fill: $grey-5;
+      //       fill: var(--grey-5);
       //     }
       //   }
       // }
@@ -336,8 +336,8 @@
       &.ghost {
         color: white;
         border-radius: 3px;
-        background-color: rgba($blue-5, 0.8);
-        border: 2px solid $blue-3;
+        background-color: rgba(var(--blue-5), 0.8);
+        border: 2px solid var(--blue-3);
         &:hover,
         &:focus {
           background: rgba(white, 0.2);
@@ -362,56 +362,56 @@
       // &.blue-focus {
       //   &:hover,
       //   &:focus {
-      //     color: $blue-0;
-      //     border-color: $blue-0;
-      //     box-shadow: inset 0 0 0 1px $blue-0;
+      //     color: var(--blue-0);
+      //     border-color: var(--blue-0);
+      //     box-shadow: inset 0 0 0 1px var(--blue-0);
       //     :global {
       //       svg {
       //         [fill] {
-      //           fill: $blue-0;
+      //           fill: var(--blue-0);
       //         }
       //       }
       //     }
       //   }
       //   &:focus {
-      //     box-shadow: 0 0 0 1px $blue-0 inset;
+      //     box-shadow: 0 0 0 1px var(--blue-0) inset;
       //   }
       // }
 
       // &.orange {
       //   &:hover,
       //   &:focus {
-      //     color: $orange-1;
-      //     border-color: $orange-1;
+      //     color: var(--orange-1);
+      //     border-color: var(--orange-1);
       //     :global {
       //       svg {
       //         [fill] {
-      //           fill: $orange-1;
+      //           fill: var(--orange-1);
       //         }
       //       }
       //     }
       //   }
       //   &:focus {
-      //     box-shadow: 0 0 0 1px $orange-1;
+      //     box-shadow: 0 0 0 1px var(--orange-1);
       //   }
       // }
     }
 
     &.tertiary {
       padding: 0;
-      transition: padding 300ms $easeOutExpo;
+      transition: padding 300ms var(--ease-out-expo);
 
       // &.blue-text {
-      //   color: $blue-0;
+      //   color: var(--blue-0);
       //   &:focus,
       //   &:hover {
-      //     outline: 2px solid $blue-0;
+      //     outline: 2px solid var(--blue-0);
       //     outline-offset: 2px;
       //   }
       //   :global {
       //     svg {
       //       [fill] {
-      //         fill: $blue-0;
+      //         fill: var(--blue-0);
       //       }
       //     }
       //   }
@@ -472,7 +472,7 @@
         border-radius: 1vw;
       }
       color: white;
-      transition: background-color $easeOutExpo 300ms;
+      transition: background-color var(--ease-out-expo) 300ms;
       &:hover,
       &:focus {
         box-shadow: 0 0 0 1px white;
@@ -608,7 +608,7 @@
       }
       &.white {
         color: white;
-        transition: all $easeOutExpo 400ms;
+        transition: all var(--ease-out-expo) 400ms;
         border-top: 1px solid rgba(white, 0.2);
         border-radius: 0;
         &:last-of-type {

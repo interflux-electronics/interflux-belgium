@@ -160,7 +160,7 @@
     }
     p {
       line-height: 100%;
-      color: $grey-7;
+      color: var(--grey-7);
       @include widescreen {
         font-size: 16px;
       }

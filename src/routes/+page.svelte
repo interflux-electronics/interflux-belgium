@@ -319,14 +319,14 @@
   #hero {
     position: relative;
     overflow: hidden;
-    background-color: $blue-4;
+    background-color: var(--blue-4);
     &:after {
       content: '';
       position: absolute;
       left: 0;
       bottom: 0;
       width: 100%;
-      background: rgba($blue-4, 0.7);
+      background: rgba(var(--blue-4), 0.7);
       @include widescreen {
         height: 25px;
       }
@@ -350,13 +350,13 @@
       z-index: 1;
       h1 {
         line-height: 100%;
-        font-family: $bold;
+        font-family: var(--bold);
         text-align: center;
         color: white;
         display: flex;
         flex-direction: column;
         small {
-          font-family: $semibold;
+          font-family: var(--semi-bold);
           @include widescreen {
             font-size: 20px;
           }
@@ -372,7 +372,7 @@
         }
         strong {
           display: block;
-          font-family: $extrabold;
+          font-family: var(--extra-bold);
           @include widescreen {
             font-size: 48px;
             margin: 40px 0;
@@ -397,7 +397,7 @@
               &:after {
                 content: '';
                 position: absolute;
-                background: $orange-1;
+                background: var(--orange-1);
                 z-index: -1;
                 @include widescreen {
                   height: 48px;
@@ -467,8 +467,8 @@
   }
   h2 {
     text-align: center;
-    font-family: $semibold;
-    color: $grey-7;
+    font-family: var(--semi-bold);
+    color: var(--grey-7);
     @include widescreen {
       font-size: 20px;
     }
@@ -484,22 +484,22 @@
   }
   #what-we-do,
   #why {
-    background: $blue-5;
+    background: var(--blue-5);
     @include widescreen {
-      border-bottom: 25px solid $blue-4;
-      border-top: 25px solid $blue-4;
+      border-bottom: 25px solid var(--blue-4);
+      border-top: 25px solid var(--blue-4);
     }
     @include desktop {
-      border-bottom: vw(25px) solid $blue-4;
-      border-top: vw(25px) solid $blue-4;
+      border-bottom: vw(25px) solid var(--blue-4);
+      border-top: vw(25px) solid var(--blue-4);
     }
     @include tablet {
-      border-bottom: 3vw solid $blue-4;
-      border-top: 3vw solid $blue-4;
+      border-bottom: 3vw solid var(--blue-4);
+      border-top: 3vw solid var(--blue-4);
     }
     @include mobile {
-      border-bottom: 5vw solid $blue-4;
-      border-top: 5vw solid $blue-4;
+      border-bottom: 5vw solid var(--blue-4);
+      border-top: 5vw solid var(--blue-4);
     }
     .liner {
       @include widescreen {
@@ -531,7 +531,7 @@
       }
     }
     blockquote {
-      font-family: $regular;
+      font-family: var(--regular);
       text-align: center;
       color: white;
       line-height: 150%;
@@ -550,7 +550,7 @@
       }
       :global {
         strong {
-          font-family: $extrabold;
+          font-family: var(--extra-bold);
         }
       }
     }
@@ -634,7 +634,7 @@
       }
     }
     h3 {
-      font-family: $extrabold;
+      font-family: var(--extra-bold);
       color: white;
       line-height: 160%;
       @include widescreen {
@@ -655,7 +655,7 @@
           &:after {
             content: '';
             position: absolute;
-            background: $blue-3;
+            background: var(--blue-3);
             z-index: -1;
             @include widescreen {
               height: calc(100% + 4px);
@@ -686,7 +686,7 @@
       }
     }
     h4 {
-      font-family: $regular;
+      font-family: var(--regular);
       color: white;
       line-height: 160%;
       @include tablet {
@@ -707,7 +707,7 @@
           &:after {
             content: '';
             position: absolute;
-            background: $blue-0;
+            background: var(--blue-0);
             z-index: -1;
             @include widescreen {
               height: calc(100% + 4px);
@@ -766,11 +766,11 @@
         max-width: 900px;
       }
       @include tablet {
-        background: $grey-1;
+        background: var(--grey-1);
         padding: 1px 0;
       }
       @include mobile {
-        background: $grey-1;
+        background: var(--grey-1);
         padding: 1px 0;
       }
       &.two-columns {
@@ -797,7 +797,7 @@
         &.loading {
           :global {
             svg {
-              background-color: $grey-0;
+              background-color: var(--grey-0);
               width: 100vw;
               height: 100vw;
               max-width: 100%;
@@ -839,7 +839,7 @@
             &:focus {
               box-shadow:
                 0 0 0 4px white,
-                0 0 0 6px $blue-0;
+                0 0 0 6px var(--blue-0);
               img {
                 transform: scale(1.1);
               }
@@ -866,7 +866,7 @@
           }
           :global {
             img {
-              transition: transform 300ms $easeOutExpo;
+              transition: transform 300ms var(--ease-out-expo);
             }
           }
         }

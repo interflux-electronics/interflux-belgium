@@ -159,7 +159,7 @@
     margin: 0;
     max-width: 100%;
     max-height: 100%;
-    background: $grey-0;
+    background: var(--grey-0);
     overflow: hidden; // To hide alt text from breaking out of the <figure> frame
     position: relative; // So the error and loading states don't got beyond <figure>
     &.landscape {

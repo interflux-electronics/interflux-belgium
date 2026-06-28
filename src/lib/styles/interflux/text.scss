@@ -1,7 +1,5 @@
-
 @use '../variables/colors' as *;
 @use '../variables/fonts' as *;
-@use '../mixins/text' as *;
 @use '../mixins/responsive' as *;
 
 h1,
@@ -12,7 +10,7 @@ h5,
 h6,
 strong {
   font-weight: normal; // We use font-families instead of weights
-  font-family: $bold;
+  font-family: var(--bold);
 }
 
 h1,
@@ -23,55 +21,7 @@ h5,
 h6 {
   line-height: 100%;
   margin: 0; // Counter the browser defaults
-  color: $blue-3;
-}
-
-p {
-  @include paragraph;
-  margin: 0; // Counter the browser defaults
-
-  a {
-    text-decoration: underline;
-    color: $blue-0;
-    background: white;
-    outline: 0;
-    border-radius: 3px;
-
-    &:hover {
-      color: $orange-3;
-    }
-
-    &:focus {
-      color: $blue-0;
-      box-shadow: white 0 0 0 1px, 0 0 0 3px $blue-0;
-    }
-  }
-}
-
-p+p {
-  @include widescreen {
-    margin-top: 16px;
-  }
-
-  @include desktop {
-    margin-top: 1.333vw;
-  }
-
-  @include tablet {
-    margin-top: 2.2vw;
-  }
-
-  @include mobile {
-    margin-top: 5vw;
-  }
-}
-
-dl {
-  margin: 0; // Undo the browser default
-
-  dd {
-    margin: 0; // Undo the browser default
-  }
+  color: var(--blue-3);
 }
 
 .h1 {
@@ -79,9 +29,9 @@ dl {
 }
 
 .h2 {
-  font-family: $light;
+  font-family: var(--light);
   line-height: 140%;
-  color: $grey-7;
+  color: var(--grey-7);
 
   @include widescreen {
     font-size: 32px;
@@ -101,9 +51,9 @@ dl {
 }
 
 .h3 {
-  font-family: $bold;
+  font-family: var(--bold);
   line-height: 150%;
-  color: $grey-7;
+  color: var(--grey-7);
 
   @include widescreen {
     font-size: 17px;
@@ -122,33 +72,9 @@ dl {
   }
 }
 
-.label {
-  font-family: $bold;
-  line-height: 150%;
-  color: $grey-7;
-
-  @include widescreen {
-    font-size: 15px;
-  }
-
-  @include desktop {
-    font-size: vw(15px);
-  }
-
-  @include tablet {
-    font-size: vw-tablet(15px);
-  }
-
-  @include mobile {
-    font-size: vw-mobile(15px);
-  }
-}
-
+p,
 .p {
-  font-family: $regular;
-  color: $grey-7;
-  line-height: 180%;
-  margin: 0;
+  margin: 0; // Counter the browser defaults
 
   @include widescreen {
     font-size: 16px;
@@ -165,22 +91,72 @@ dl {
   @include mobile {
     font-size: vw-mobile(16px);
   }
+
+  & + p,
+  & + .p {
+    @include widescreen {
+      margin-top: 16px;
+    }
+
+    @include desktop {
+      margin-top: 1.333vw;
+    }
+
+    @include tablet {
+      margin-top: 2.2vw;
+    }
+
+    @include mobile {
+      margin-top: 5vw;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+    color: var(--blue-0);
+    background: white;
+    outline: 0;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--orange-3);
+    }
+
+    &:focus {
+      color: var(--blue-0);
+      box-shadow:
+        white 0 0 0 1px,
+        0 0 0 3px var(--blue-0);
+    }
+  }
 }
 
-.p+.p {
+dl {
+  margin: 0; // Undo the browser default
+
+  dd {
+    margin: 0; // Undo the browser default
+  }
+}
+
+.label {
+  font-family: var(--bold);
+  line-height: 150%;
+  color: var(--grey-7);
+
   @include widescreen {
-    margin: 16px 0 0;
+    font-size: 15px;
   }
 
   @include desktop {
-    margin: vw(16px) 0 0;
+    font-size: vw(15px);
   }
 
   @include tablet {
-    margin: vw-tablet(16px) 0 0;
+    font-size: vw-tablet(15px);
   }
 
   @include mobile {
-    margin: vw-mobile(16px) 0 0;
+    font-size: vw-mobile(15px);
   }
 }

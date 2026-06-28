@@ -23,7 +23,7 @@
   #hero {
     position: relative;
     overflow: hidden;
-    background-color: $blue-4;
+    background-color: var(--blue-4);
     @include widescreen {
       height: 320px;
     }
@@ -118,12 +118,12 @@
       }
     }
     h1 {
-      font-family: $extrabold;
+      font-family: var(--extra-bold);
       color: white;
       line-height: 100%;
       text-align: center;
       position: relative;
-      background-color: $blue-4;
+      background-color: var(--blue-4);
       transform: translateY(40px);
       @include widescreen {
         font-size: 40px;

@@ -331,7 +331,7 @@
     }
 
     .results {
-      background-color: $grey-0;
+      background-color: var(--grey-0);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -356,17 +356,17 @@
             border-radius: 3px;
             outline: 0;
             .labels {
-              border-color: $green-1;
-              box-shadow: 0 0 0 1px $green-1;
+              border-color: var(--green-1);
+              box-shadow: 0 0 0 1px var(--green-1);
             }
             .icon {
-              border-color: $green-1;
-              box-shadow: 0 0 0 1px $green-1;
+              border-color: var(--green-1);
+              box-shadow: 0 0 0 1px var(--green-1);
             }
           }
           .labels {
             background-color: white;
-            border: 1px solid $grey-2;
+            border: 1px solid var(--grey-2);
             border-right: 0;
             border-radius: 3px 0 0 3px;
             display: flex;
@@ -376,7 +376,7 @@
             box-sizing: border-box;
             width: 100%;
             min-height: 50px;
-            transition: box-shadow 400ms $easeOutExpo;
+            transition: box-shadow 400ms var(--ease-out-expo);
             .left {
               display: flex;
               gap: 12px;
@@ -392,7 +392,7 @@
               gap: 20px;
               p {
                 font-size: 15px;
-                color: $grey-5;
+                color: var(--grey-5);
                 margin: 0;
               }
             }
@@ -400,8 +400,8 @@
 
           .icon {
             width: 50px;
-            background-color: $green-1;
-            border: 1px solid $green-2;
+            background-color: var(--green-1);
+            border: 1px solid var(--green-2);
             border-radius: 0 5px 5px 0;
             display: flex;
             justify-content: center;

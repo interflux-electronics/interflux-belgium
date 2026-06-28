@@ -140,7 +140,7 @@
       position: relative;
       overflow: hidden;
       grid-area: image;
-      background-color: $blue-2;
+      background-color: var(--blue-2);
       @include mobile {
         height: 120vw;
       }
@@ -160,29 +160,29 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: $blue-3;
+      background-color: var(--blue-3);
       @include widescreen {
         gap: 50px;
         background: radial-gradient(
           at top right,
-          color.adjust($blue-3, $lightness: 3%),
-          color.adjust($blue-3, $lightness: -3%)
+          color.adjust(#23578c, $lightness: 3%),
+          color.adjust(#23578c, $lightness: -3%)
         );
       }
       @include desktop {
         gap: vw(50px);
         background: radial-gradient(
           at bottom right,
-          color.adjust($blue-3, $lightness: 3%),
-          color.adjust($blue-3, $lightness: -3%)
+          color.adjust(#23578c, $lightness: 3%),
+          color.adjust(#23578c, $lightness: -3%)
         );
       }
       @include tablet {
         gap: 5vw;
         background: radial-gradient(
           at bottom right,
-          color.adjust($blue-3, $lightness: 3%),
-          color.adjust($blue-3, $lightness: -3%)
+          color.adjust(#23578c, $lightness: 3%),
+          color.adjust(#23578c, $lightness: -3%)
         );
       }
       @include mobile {
@@ -190,8 +190,8 @@
         padding: 25vw 0;
         background: radial-gradient(
           at center,
-          color.adjust($blue-3, $lightness: 3%),
-          color.adjust($blue-3, $lightness: -3%)
+          color.adjust(#23578c, $lightness: 3%),
+          color.adjust(#23578c, $lightness: -3%)
         );
       }
       img#electronics {
@@ -245,7 +245,7 @@
             @include paragraph;
             color: white;
             a {
-              font-family: $bold;
+              font-family: var(--bold);
               color: white;
               background-color: transparent;
               text-decoration: none;
@@ -282,7 +282,7 @@
       h3 {
         @include paragraph;
         color: white;
-        font-family: $bold;
+        font-family: var(--bold);
         @include widescreen {
           margin-bottom: 8px;
         }
@@ -321,7 +321,7 @@
           &:hover,
           &:focus {
             span {
-              background: $orange-2;
+              background: var(--orange-2);
               color: white;
             }
             svg.arrow-right {
@@ -372,33 +372,33 @@
     }
     #languages {
       grid-area: languages;
-      background-color: $blue-4;
+      background-color: var(--blue-4);
       @include widescreen {
         background: radial-gradient(
           at top left,
-          color.adjust($blue-4, $lightness: 3%),
-          color.adjust($blue-4, $lightness: -3%)
+          color.adjust(#1d4672, $lightness: 3%),
+          color.adjust(#1d4672, $lightness: -3%)
         );
       }
       @include desktop {
         background: radial-gradient(
           at top right,
-          color.adjust($blue-4, $lightness: 3%),
-          color.adjust($blue-4, $lightness: -3%)
+          color.adjust(#1d4672, $lightness: 3%),
+          color.adjust(#1d4672, $lightness: -3%)
         );
       }
       @include tablet {
         background: radial-gradient(
           at top right,
-          color.adjust($blue-4, $lightness: 3%),
-          color.adjust($blue-4, $lightness: -3%)
+          color.adjust(#1d4672, $lightness: 3%),
+          color.adjust(#1d4672, $lightness: -3%)
         );
       }
       @include mobile {
         background: radial-gradient(
           at bottom left,
-          color.adjust($blue-4, $lightness: 3%),
-          color.adjust($blue-4, $lightness: -3%)
+          color.adjust(#1d4672, $lightness: 3%),
+          color.adjust(#1d4672, $lightness: -3%)
         );
       }
       :global {
@@ -411,7 +411,7 @@
           &:hover,
           &:focus {
             .flags {
-              background: $orange-2;
+              background: var(--orange-2);
               color: white;
             }
           }
@@ -453,11 +453,11 @@
     }
     #links {
       grid-area: links;
-      background-color: $blue-5;
+      background-color: var(--blue-5);
       background: radial-gradient(
         at top left,
-        color.adjust($blue-5, $lightness: 3%),
-        color.adjust($blue-5, $lightness: -3%)
+        color.adjust(#16385a, $lightness: 3%),
+        color.adjust(#16385a, $lightness: -3%)
       );
       p {
         @include paragraph;
@@ -501,7 +501,7 @@
             svg {
               width: 60%;
               height: auto;
-              transition: width 300ms $easeOutExpo;
+              transition: width 300ms var(--ease-out-expo);
             }
           }
         }

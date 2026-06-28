@@ -1,2 +1,16 @@
-// $cdn: 'http://localhost:9000';
+// CSS variables cannot be used in @font-face
+// CSS variables cannot be used in background-image
+//
+// :root {
+//   --cdn: 'https://cdn.interflux.com';
+// }
+//
+// background-image: url('var(--cdn)/images/hero.jpg');
+//
+// The above does not work 🔥
+//
+// Always use SASS variable
+
 $cdn: 'https://cdn.interflux.com';
+
+// $cdn: 'http://localhost:9000';

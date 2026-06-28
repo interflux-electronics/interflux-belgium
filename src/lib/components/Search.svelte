@@ -387,13 +387,13 @@
     }
     &.hover {
       .wrapper {
-        border-color: $blue-0;
+        border-color: var(--blue-0);
       }
     }
     &.focus {
       .wrapper {
         z-index: 0;
-        border-color: $blue-0;
+        border-color: var(--blue-0);
         @include widescreen {
           box-shadow: 0 2px 10px rgba(black, 0.15);
         }
@@ -412,8 +412,8 @@
       position: absolute;
       background: white;
       border-style: solid;
-      border-color: $grey-2;
-      transition: box-shadow 300ms $easeOutExpo;
+      border-color: var(--grey-2);
+      transition: box-shadow 300ms var(--ease-out-expo);
       overflow: hidden;
       @include widescreen {
         border-width: 1px;
@@ -489,10 +489,10 @@
 
       .results {
         padding-top: 1px;
-        background: $grey-2;
+        background: var(--grey-2);
         button {
           background: white;
-          color: $grey-7;
+          color: var(--grey-7);
           border: 0;
           display: block;
           width: 100%;
@@ -519,8 +519,8 @@
             padding: 0 vw-mobile(15px);
           }
           &.highlight {
-            background: $blue-0;
-            box-shadow: $blue-0 0 0 0 1px;
+            background: var(--blue-0);
+            box-shadow: var(--blue-0) 0 0 0 1px;
             color: white;
           }
           & + button {
@@ -529,7 +529,7 @@
         }
         p {
           background: #eee;
-          color: $grey-7;
+          color: var(--grey-7);
           @include widescreen {
             line-height: 28px;
             font-size: 15px;
@@ -580,9 +580,9 @@
       }
       p.message {
         background: #eee;
-        color: $grey-7;
+        color: var(--grey-7);
         a {
-          color: $grey-7;
+          color: var(--grey-7);
           text-decoration: underline;
           &:hover {
             text-decoration: none;
@@ -591,11 +591,11 @@
       }
       p.searching {
         color: white;
-        background: $blue-0;
-        background-color: $blue-0;
+        background: var(--blue-0);
+        background-color: var(--blue-0);
         background-image: url('#{$cdn}/images/admin/diagonals-blue.svg');
         background-size: 31px 31px;
-        box-shadow: $blue-0 0 0 0 1px;
+        box-shadow: var(--blue-0) 0 0 0 1px;
         animation: translate-left-up 1400ms linear infinite;
         @keyframes translate-left-up {
           from {

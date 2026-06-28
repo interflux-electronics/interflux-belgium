@@ -45,7 +45,7 @@
 
     .overlay {
       position: fixed;
-      background: rgba($blue-5, 0.97);
+      background: rgba(var(--blue-5), 0.97);
       top: 0; // using width and height instead breaks when scrolling
       bottom: 0;
       left: 0;

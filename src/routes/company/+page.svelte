@@ -132,7 +132,7 @@
     .text {
       :global {
         h2 {
-          font-family: $extrabold;
+          font-family: var(--extra-bold);
           line-height: 150%;
           @include widescreen {
             margin-bottom: px(1.666vw);
@@ -171,7 +171,7 @@
     }
     .liner {
       position: relative;
-      background: $blue-3;
+      background: var(--blue-3);
       @include widescreen {
         padding: px(4.1666vw);
         min-height: 261px;

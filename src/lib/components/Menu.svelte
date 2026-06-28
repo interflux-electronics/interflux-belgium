@@ -24,7 +24,7 @@
     left: 0;
     top: 100%;
     width: 100%;
-    transition: all 400ms $easeOutExpo;
+    transition: all 400ms var(--ease-out-expo);
     transition-property: opacity, transform;
     display: flex;
     justify-content: center;
@@ -84,8 +84,8 @@
     }
     :global {
       h2 {
-        font-family: $bold;
-        color: $grey-7;
+        font-family: var(--bold);
+        color: var(--grey-7);
         line-height: 150%;
         white-space: nowrap;
         overflow: hidden;
@@ -119,8 +119,8 @@
           width: 100%;
           color: white;
           text-align: left;
-          border-top: 1px solid $grey-1;
-          color: $grey-7;
+          border-top: 1px solid var(--grey-1);
+          color: var(--grey-7);
           display: flex;
           align-items: center;
           @include widescreen {
@@ -139,8 +139,8 @@
           &:hover,
           &:focus {
             span {
-              font-family: $semibold;
-              background: $orange-2;
+              font-family: var(--semi-bold);
+              background: var(--orange-2);
               color: white;
             }
           }

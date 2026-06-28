@@ -69,12 +69,12 @@
     white-space: nowrap;
     user-select: none;
     cursor: pointer;
-    font-family: $regular;
+    font-family: var(--regular);
     line-height: 100%;
-    border: 1px solid $grey-2;
+    border: 1px solid var(--grey-2);
     box-sizing: border-box;
-    color: $grey-7;
-    transition: background-color 400ms $easeOutExpo;
+    color: var(--grey-7);
+    transition: background-color 400ms var(--ease-out-expo);
     @include widescreen {
       font-size: 16px;
       border-radius: 18px;
@@ -97,20 +97,20 @@
     }
     &:hover,
     &:focus {
-      border-color: $green-1;
+      border-color: var(--green-1);
       box-shadow:
-        0 0 0 1px $green-1,
+        0 0 0 1px var(--green-1),
         0 3px 6px rgba(black, 0.2);
     }
     &.selected {
-      font-family: $semibold;
-      background-color: $green-1;
-      border: 2px solid $green-2;
+      font-family: var(--semi-bold);
+      background-color: var(--green-1);
+      border: 2px solid var(--green-2);
       color: white;
       &:hover,
       &:focus {
-        background-color: $green-2;
-        border-color: $green-3;
+        background-color: var(--green-2);
+        border-color: var(--green-3);
         box-shadow: 0 3px 6px rgba(black, 0.2);
       }
     }

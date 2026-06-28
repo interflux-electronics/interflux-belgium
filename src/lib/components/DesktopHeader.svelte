@@ -39,6 +39,8 @@
 </script>
 
 <header id="desktop" class={app.data.theme}>
+  <div class="bg"></div>
+
   <nav>
     <div class="left">
       <a href="/" id="logo">
@@ -135,8 +137,8 @@
 
   header {
     position: relative;
-    background: rgba($blue-5, 100%);
-    transition: all 400ms $easeOutExpo;
+    background: rgba(var(--blue-5), 100%);
+    transition: all 400ms var(--ease-out-expo);
     z-index: 3;
 
     // Rather than not rendering the HTML with Ember responsive, we render the
@@ -155,10 +157,16 @@
       box-shadow: 0 vw(2px) vw(2px) rgba(black, 0.1);
     }
     &.blue {
-      background: rgba($blue-4, 90%);
+      .bg {
+        background-color: var(--blue-4);
+        opacity: 90%;
+      }
     }
     &.green {
-      background: rgba($green-3, 70%);
+      .bg {
+        background-color: var(--green-3);
+        opacity: 90%;
+      }
     }
     &.overlap {
       @include widescreen {
@@ -174,6 +182,8 @@
       height: 100%;
       margin: 0 auto;
       box-sizing: border-box;
+      z-index: 1;
+      position: relative;
       @include widescreen {
         padding: 0 0 0 36px;
       }
@@ -181,12 +191,20 @@
         padding: 0 0 0 vw(36px);
       }
     }
+    .bg {
+      position: absolute;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+    }
     .left {
       a#logo {
         display: flex;
         align-items: center;
         height: 100%;
-        transition: transform 400ms $easeOutExpo;
+        transition: transform 400ms var(--ease-out-expo);
         &:focus,
         &:hover {
           transform: scale(1.1);
@@ -212,7 +230,7 @@
         & > a {
           height: 100%;
           color: white;
-          font-family: $bold;
+          font-family: var(--bold);
           display: flex;
           align-items: center;
           // display: inline-block;
@@ -249,7 +267,7 @@
               content: '';
               background: white;
               position: absolute;
-              transition: transform 400ms $easeOutExpo;
+              transition: transform 400ms var(--ease-out-expo);
               transform: scaleX(0);
               @include widescreen {
                 width: calc(100% + 10px);
@@ -309,12 +327,12 @@
 
         .clip {
           overflow: hidden;
-          transition: width 400ms $easeOutExpo;
+          transition: width 400ms var(--ease-out-expo);
           display: flex;
           width: 0;
           span {
             color: white;
-            font-family: $bold;
+            font-family: var(--bold);
             @include widescreen {
               font-size: 16px;
             }
@@ -345,7 +363,7 @@
             background-color: transparent;
             color: white;
             text-decoration: none;
-            font-family: $bold;
+            font-family: var(--bold);
             white-space: nowrap;
             &:hover,
             &:focus {

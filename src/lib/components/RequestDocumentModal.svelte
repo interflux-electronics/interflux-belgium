@@ -35,8 +35,8 @@
 
   h2 {
     font-size: 22px;
-    font-family: $extrabold;
-    color: $grey-7;
+    font-family: var(--extra-bold);
+    color: var(--grey-7);
   }
 
   .buttons {

@@ -101,8 +101,8 @@
   @use '$lib/styles/components' as *;
 
   #events {
-    background-color: $grey-0;
-    border-top: 1px solid $grey-1;
+    background-color: var(--grey-0);
+    border-top: 1px solid var(--grey-1);
     .liner {
       @include widescreen {
         padding: 80px 50px;
@@ -153,7 +153,7 @@
         gap: 10vw;
       }
       details {
-        transition: all 400ms $easeOutExpo;
+        transition: all 400ms var(--ease-out-expo);
         border-radius: 3px;
         @include mobile {
           width: 100%;
@@ -189,7 +189,7 @@
             :global {
               svg {
                 [fill] {
-                  fill: $blue-0;
+                  fill: var(--blue-0);
                 }
               }
             }
@@ -271,7 +271,7 @@
             }
             svg {
               transform: rotate(0deg);
-              transition: all 400ms $easeOutExpo;
+              transition: all 400ms var(--ease-out-expo);
               height: auto;
               @include widescreen {
                 width: 12px;
@@ -286,8 +286,8 @@
                 width: vw-mobile(12px);
               }
               [fill] {
-                transition: fill 400ms $easeOutExpo;
-                fill: $grey-3;
+                transition: fill 400ms var(--ease-out-expo);
+                fill: var(--grey-3);
               }
             }
           }

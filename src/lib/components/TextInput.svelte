@@ -84,7 +84,7 @@
   .text-input {
     // &.big.white.shadow {
     //   p {
-    //     font-family: $bold;
+    //     font-family: var(--bold);
     //     font-size: 18px;
     //     line-height: 48px;
     //     padding: 0 28px;
@@ -94,8 +94,8 @@
     //     width: 100%; // Always be as wide as the parent
     //     box-sizing: border-box;
     //     background: white;
-    //     font-family: $bold;
-    //     color: $blue-3;
+    //     font-family: var(--bold);
+    //     color: var(--blue-3);
     //     @include placeholder {
     //       color: rgba(black, 0.3);
     //     }
@@ -113,7 +113,7 @@
 
       &.medium {
         input {
-          font-family: $semibold;
+          font-family: var(--semi-bold);
 
           @include widescreen {
             font-size: 16px;
@@ -152,7 +152,7 @@
 
       &.large {
         input {
-          font-family: $semibold;
+          font-family: var(--semi-bold);
 
           @include widescreen {
             font-size: 17px;
@@ -206,23 +206,23 @@
         max-width: 100%;
         white-space: nowrap;
         box-sizing: border-box;
-        color: $blue-0;
-        transition: box-shadow 400ms $easeOutExpo;
+        color: var(--blue-0);
+        transition: box-shadow 400ms var(--ease-out-expo);
         outline: 0;
         background: white;
         border-style: solid;
-        border-color: $grey-2;
+        border-color: var(--grey-2);
 
         &:hover,
         &:focus {
-          border-color: $blue-0;
+          border-color: var(--blue-0);
           box-shadow:
-            0 0 0 1px $blue-0,
+            0 0 0 1px var(--blue-0),
             0 3px 6px rgba(black, 0.2);
 
           :global {
             & + .icon svg [fill] {
-              fill: $blue-0;
+              fill: var(--blue-0);
             }
           }
         }
@@ -275,22 +275,22 @@
 
     &.blue {
       input {
-        background-color: $blue-3;
-        outline: 2px solid $blue-4;
+        background-color: var(--blue-3);
+        outline: 2px solid var(--blue-4);
         color: white;
         line-height: 40px;
         padding: 0 13px;
         border: 0;
         border-radius: 3px;
-        font-family: $bold;
+        font-family: var(--bold);
         width: 180px;
         &::placeholder {
-          font-family: $regular;
+          font-family: var(--regular);
           color: white;
           opacity: 0.9;
         }
         &:focus {
-          outline: 2px solid $blue-0;
+          outline: 2px solid var(--blue-0);
         }
       }
     }

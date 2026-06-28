@@ -1,28 +1,42 @@
-$blue-0: #3687d9; // hyperlinks
-$blue-1: #3077bf;
-$blue-2: #2967a6;
-$blue-3: #23578c; // Interflux logo
-$blue-4: #1d4773;
-$blue-5: #163759;
+// Interflux brand colours
 
-$orange-0: #ff9d4d;
-$orange-1: #ff8f33;
-$orange-2: #ff8119;
-$orange-3: #ff7300; // LMPA logo
-$orange-4: #e66800;
-$orange-5: #cc5c00;
+:root {
+  --blue-0: #3687d9; // hyperlinks
+  --blue-1: #3077bf;
+  --blue-2: #2967a6;
+  --blue-3: #23578c; // Interflux logo
+  --blue-4: #1d4672;
+  --blue-5: #16385a;
 
-$grey-0: #f7f7f7; // backgrounds, borders
-$grey-1: #e7e7e9; // borders
-$grey-2: #cecfd2;
-$grey-3: #b6b7bc;
-$grey-4: #9d9fa5;
-$grey-5: #85878f;
-$grey-6: #6d6f78;
-$grey-7: #3c3f4b; // paragraphs
+  --orange-0: #ff9d4d;
+  --orange-1: #ff8f33;
+  --orange-2: #ff8119;
+  --orange-3: #ff7300; // LMPA logo
+  --orange-4: #e66800;
+  --orange-5: #cc5c00;
 
-$green-1: #52996f; // CTA & buttons
-$green-2: #398451;
-$green-3: #2e6b41;
+  --grey-0: #f7f7f7; // backgrounds, borders
+  --grey-1: #e7e7e9; // borders
+  --grey-2: #cecfd2;
+  --grey-3: #b6b7bc;
+  --grey-4: #9d9fa5;
+  --grey-5: #85878f;
+  --grey-6: #6d6f78;
+  --grey-7: #3c3f4b; // paragraphs
 
-$red-1: #fc5d5d; // errors
+  --green-1: #52996f;
+  --green-2: #398451; // CTA & buttons
+  --green-3: #2e6b41;
+
+  --red-1: #fc5d5d; // errors
+
+  // HSL conversions for adding transparency
+
+  --blue-4-hsl: hsl(211, 59%, 28%);
+  --blue-5-hsl: hsl(210, 61%, 22%);
+  --green-3-hsl: hsl(139, 40%, 30%);
+
+  // RGB conversions for adding transparency
+
+  --blue-5-rgb: 22 56 90;
+}

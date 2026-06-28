@@ -337,14 +337,14 @@
       &.green {
         &.collapsed {
           #top {
-            background: rgba($green-3, 0.95);
+            background: rgba(var(--green-3), 0.95);
           }
         }
       }
 
       nav {
-        transition: all $easeOutExpo 800ms;
-        background: rgba($blue-5, 0.95);
+        transition: all var(--ease-out-expo) 800ms;
+        background: rgba(var(--blue-5), 0.95);
         width: 100vw;
         overflow: hidden;
         position: fixed;
@@ -364,14 +364,14 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-          transition: all $easeOutExpo 800ms;
+          transition: all var(--ease-out-expo) 800ms;
           transition-property: background, transform;
           position: relative;
           z-index: 1; // to raise the logo on top #mid
 
           #logo {
             position: absolute;
-            transition: all $easeOutExpo 800ms;
+            transition: all var(--ease-out-expo) 800ms;
             @include tablet {
               margin: 0;
               width: 9vw;
@@ -387,7 +387,7 @@
               overflow: hidden;
               background: white;
               z-index: 1;
-              transition: all $easeOutExpo 800ms;
+              transition: all var(--ease-out-expo) 800ms;
               top: 0;
               left: 0;
               @include tablet {
@@ -400,7 +400,7 @@
               }
               svg {
                 height: auto;
-                transition: all $easeOutExpo 800ms;
+                transition: all var(--ease-out-expo) 800ms;
                 @include tablet {
                   width: 44vw;
                   transform: translate(-5.8vw, 0.3vw);
@@ -414,11 +414,11 @@
           }
 
           .back.button {
-            transition: all $easeOutExpo 800ms;
+            transition: all var(--ease-out-expo) 800ms;
           }
 
           h1 {
-            font-family: $extrabold;
+            font-family: var(--extra-bold);
             color: white;
             line-height: 120%;
             text-align: center;
@@ -447,7 +447,7 @@
             width: 100vw;
             display: flex;
             flex-direction: column;
-            transition: all $easeOutExpo 800ms;
+            transition: all var(--ease-out-expo) 800ms;
             &#main {
               padding-top: 30vw; // to allow logo to show
             }

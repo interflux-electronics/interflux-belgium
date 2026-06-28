@@ -143,7 +143,7 @@
   @use '$lib/styles/components' as *;
 
   #search {
-    background-color: $grey-0;
+    background-color: var(--grey-0);
 
     .liner {
       display: flex;
@@ -201,9 +201,9 @@
     }
 
     h3 {
-      font-family: $bold;
+      font-family: var(--bold);
       color: white;
-      background-color: $blue-3;
+      background-color: var(--blue-3);
       line-height: 135%;
 
       white-space: nowrap;
@@ -255,7 +255,7 @@
       a {
         background: white;
         border-radius: 3px;
-        border: 1px solid $grey-1;
+        border: 1px solid var(--grey-1);
         display: flex;
         align-items: center;
         transition: box-shadow 200ms ease;
@@ -282,11 +282,11 @@
         }
         &:hover,
         &:focus {
-          border-color: $blue-0;
+          border-color: var(--blue-0);
           box-shadow: 0 2px 4px rgba(black, 0.15);
           :global {
             [fill] {
-              fill: $blue-0;
+              fill: var(--blue-0);
             }
           }
         }
@@ -406,7 +406,7 @@
             height: vw-mobile(10px);
           }
           [fill] {
-            fill: $grey-5;
+            fill: var(--grey-5);
           }
         }
       }

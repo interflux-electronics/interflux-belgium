@@ -6,8 +6,8 @@
 // @include paragraph;
 // @include paragraph(0.8);
 @mixin paragraph() {
-  font-family: $regular;
-  color: $grey-7;
+  font-family: var(--regular);
+  color: var(--grey-7);
   line-height: 180%;
   margin: 0;
 
@@ -32,8 +32,8 @@
 // @include light-font;
 // @include light-font(0.8);
 @mixin light-font($scale: 1) {
-  font-family: $light;
-  color: $grey-7;
+  font-family: var(--light);
+  color: var(--grey-7);
   line-height: 150%;
   text-align: center;
 
@@ -55,7 +55,7 @@
   }
 
   strong {
-    font-family: $regular;
+    font-family: var(--regular);
   }
 }
 
@@ -63,8 +63,8 @@
 // @include bold-sub-heading;
 // @include bold-sub-heading(0.8);
 @mixin bold-sub-heading($scale: 1) {
-  font-family: $bold;
-  color: $grey-7;
+  font-family: var(--bold);
+  color: var(--grey-7);
   line-height: 150%;
   text-align: left;
 
@@ -90,9 +90,9 @@
 // @include white-on-blue-text;
 // @include white-on-blue-text(0.8);
 @mixin white-on-blue-text($scale: 1) {
-  font-family: $extrabold;
+  font-family: var(--extra-bold);
   color: white;
-  background: $blue-3;
+  background: var(--blue-3);
   line-height: 100%;
 
   @include widescreen {

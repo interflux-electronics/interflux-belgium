@@ -266,7 +266,7 @@
   section#contact-map {
     position: relative;
     min-height: 100vh;
-    background: $blue-4;
+    background: var(--blue-4);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -324,7 +324,7 @@
       left: 0;
       width: 100vw;
       text-align: center;
-      font-family: $extrabold;
+      font-family: var(--extra-bold);
       line-height: 100%;
       color: white;
       @include widescreen {
@@ -351,17 +351,17 @@
       right: 0;
       bottom: 0;
       width: 100vw;
-      transition: transform 5000ms $easeOutExpo;
+      transition: transform 5000ms var(--ease-out-expo);
     }
     aside {
       background: white;
       position: relative;
       z-index: 3;
       box-sizing: border-box;
-      transition: transform 5000ms $easeOutExpo;
+      transition: transform 5000ms var(--ease-out-expo);
       display: flex;
       flex-direction: column;
-      transition: all 1000ms $easeOutExpo;
+      transition: all 1000ms var(--ease-out-expo);
       transition-property: opacity, transform;
       @include widescreen {
         width: 400px;
@@ -418,7 +418,7 @@
         }
       }
       h2 {
-        font-family: $extrabold;
+        font-family: var(--extra-bold);
         line-height: 150%;
         @include widescreen {
           font-size: 26px;
@@ -580,7 +580,7 @@
         li {
           display: flex;
           align-items: center;
-          border-top: 1px solid $grey-1;
+          border-top: 1px solid var(--grey-1);
           @include widescreen {
             padding: 20px;
           }
@@ -629,8 +629,8 @@
             flex-direction: column;
             justify-content: center;
             h3 {
-              font-family: $bold;
-              color: $grey-7;
+              font-family: var(--bold);
+              color: var(--grey-7);
               line-height: 180%;
               @include widescreen {
                 font-size: 16px;
@@ -661,7 +661,7 @@
       height: 0;
       display: flex;
       align-items: center;
-      transition: all 1000ms $easeOutExpo;
+      transition: all 1000ms var(--ease-out-expo);
       transition-property: opacity, transform;
       @include mobile {
         position: absolute;
@@ -775,7 +775,7 @@
           display: flex;
           justify-content: center;
           align-items: flex-end;
-          transition: all $easeOutExpo 2000ms;
+          transition: all var(--ease-out-expo) 2000ms;
           transition-property: top, left;
           left: 0;
           top: 0;
@@ -837,24 +837,24 @@
           }
           svg.marker,
           svg.star-marker {
-            transition: all 300ms $easeOutExpo;
+            transition: all 300ms var(--ease-out-expo);
             height: 60%;
             width: auto;
             .border {
-              transition: opacity 300ms $easeOutExpo;
+              transition: opacity 300ms var(--ease-out-expo);
               opacity: 0;
             }
           }
           p {
             position: absolute;
             bottom: 100%;
-            font-family: $regular;
+            font-family: var(--regular);
             line-height: 175%;
             background: white;
             white-space: nowrap;
-            color: $grey-7;
+            color: var(--grey-7);
             opacity: 0;
-            transition: all 300ms $easeOutExpo;
+            transition: all 300ms var(--ease-out-expo);
             transition-property: opacity, transform;
             @include widescreen {
               font-size: 16px;

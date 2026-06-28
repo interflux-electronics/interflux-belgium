@@ -428,7 +428,7 @@
           gap: vw-mobile(16px);
         }
         p.recommended {
-          background: $orange-3;
+          background: var(--orange-3);
           color: white;
           display: flex;
           margin: 0;
@@ -475,7 +475,7 @@
     .links {
       display: flex;
       flex-direction: column;
-      border: 1px dashed $grey-1;
+      border: 1px dashed var(--grey-1);
       @include widescreen {
         padding: 20px 24px;
         margin: 30px 0;
@@ -538,7 +538,7 @@
           width: vw-tablet(18px);
         }
         [fill] {
-          fill: $grey-7;
+          fill: var(--grey-7);
         }
       }
     }

@@ -139,7 +139,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: $blue-4;
+      background-color: var(--blue-4);
       @include widescreen {
         border-radius: 10px;
         max-width: 1000px;
