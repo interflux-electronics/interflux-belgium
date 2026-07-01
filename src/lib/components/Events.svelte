@@ -6,7 +6,8 @@
   import Tag from '$lib/components/Tag.svelte';
   import Flag from '$lib/components/Flag.svelte';
   import { m } from '$lib/paraglide/messages';
-  import { markdown, sortBy } from '$lib/helpers';
+  import { markdown } from '$lib/helpers';
+  import chain from '$lib/helpers/chain';
 
   interface Props {
     events?: Event[];
@@ -39,7 +40,7 @@
   }
 
   let filteredEvents = $derived(events ? events.filter((e) => !e.hasEnded) : []);
-  let sortedEvents = $derived(filteredEvents.sort(sortBy('startDate')));
+  let sortedEvents = $derived(chain(filteredEvents).sortBy('startDate').toArray());
 </script>
 
 <section id="events">
