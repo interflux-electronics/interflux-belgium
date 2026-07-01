@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
   return {
     products,
     events,
-    theme: 'blue overlap' // configured per route
+    headerTheme: 'blue overlap' // configured per route
   };
 };
 

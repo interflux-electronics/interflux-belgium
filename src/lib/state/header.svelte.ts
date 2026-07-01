@@ -6,7 +6,7 @@ export const header = $state({
   backPath: '/',
   visible: true,
   shownMenu: 'none',
-  theme: 'blue'
+  headerTheme: 'blue'
 });
 
 export interface HeaderProps {
