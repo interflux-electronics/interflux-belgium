@@ -1,7 +1,8 @@
 <script lang="ts">
   import { PUBLIC_CDN_HOST } from '$env/static/public';
   import { modal } from '$lib/state/modal.svelte';
-  import { sortBy, mark, downcase } from '$lib/helpers';
+  import { mark, downcase } from '$lib/helpers';
+  import chain from '$lib/helpers/chain';
   import { m } from '$lib/paraglide/messages';
 
   import Svg from '$lib/components/Svg.svelte';
@@ -99,7 +100,7 @@
   });
 
   // The document list is always shown alphabetically
-  let sortedDocs = $derived(extendedDocs.sort(sortBy('label')));
+  let sortedDocs = $derived(chain(extendedDocs).sortBy('label'));
 
   // Remove documents which do not match the user inputs:
   //
