@@ -263,6 +263,7 @@
         white-space: normal; // override <Button> default
         text-align: left; // override <Button> default
         position: relative;
+        color: var(--grey-7);
         @include widescreen {
           padding: 14px;
           gap: 10px;
