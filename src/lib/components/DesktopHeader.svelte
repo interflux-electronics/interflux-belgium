@@ -4,7 +4,7 @@
   import { m } from '$lib/paraglide/messages';
   import { markdown } from '$lib/helpers';
   import { header } from '$lib/state/header.svelte';
-  import { page as app } from '$app/state';
+  import { page } from '$app/state';
 
   function closeMenu() {
     header.shownMenu = 'none';
@@ -38,7 +38,7 @@
   }
 </script>
 
-<header id="desktop" class={app.data.theme}>
+<header id="desktop" class={page.data.headerTheme}>
   <div class="bg"></div>
 
   <nav>
