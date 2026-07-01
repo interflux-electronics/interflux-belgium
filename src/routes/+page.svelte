@@ -10,7 +10,8 @@
   import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
   import Events from '$lib/components/Events.svelte';
   import { desktop, mobile, tablet, widescreen } from '$lib/state/media.svelte';
-  import { sortBy, markdown, spanEachWord } from '$lib/helpers';
+  import { markdown, spanEachWord } from '$lib/helpers';
+  import chain from '$lib/helpers/chain';
   import type { PageProps } from './$types';
   import type { Product, Event } from '$lib/types';
 
@@ -65,7 +66,7 @@
     })
   );
 
-  let productsSorted = $derived(productsExtended.sort(sortBy('frontPageRank')));
+  let productsSorted = $derived(chain(productsExtended).sortBy('frontPageRank'));
   let newProducts = $derived(productsSorted.filter((p: Product) => p.status === 'new'));
   let popularProducts = $derived(productsSorted.filter((p: Product) => p.status === 'popular'));
   let popularLayout = $derived.by(() => {
