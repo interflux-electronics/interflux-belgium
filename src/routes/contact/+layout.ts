@@ -31,7 +31,7 @@ export const load: LayoutLoad = async ({ fetch }) => {
   return {
     companies,
     events,
-    theme: 'blue overlap' // configured per route
+    headerTheme: 'blue overlap' // configured per route
   };
 };
 
