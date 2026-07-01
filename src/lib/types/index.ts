@@ -23,6 +23,12 @@ export interface File {
   category: Category;
 }
 
+export interface Image {
+  path: string;
+  variations: VariationList;
+  alt: string;
+}
+
 export type ImageSize = `${number}x${number}`;
 export type ImageExtension = 'webp' | 'jpg' | 'png' | 'svg' | 'mp4' | 'webm' | 'ogg';
 export type Variation = `@${ImageSize}.${ImageExtension}`;
@@ -36,18 +42,19 @@ export interface Product {
   id: string;
   name: string;
   label: string;
-  isNew: boolean;
-  isPopular: boolean;
+  pitch: string;
+  status: 'new' | 'popular' | 'recommended' | 'outdated' | 'discontinued' | 'offline';
   avatarPath: string;
   avatarVariations: VariationList;
   avatarAlt: string;
   familyLabel: string;
-  status: 'new' | 'popular';
   subFamily: ProductFamily;
   mainFamily: ProductFamily;
+  uses: Use[];
 }
 
 export interface ProductFamily {
+  id: string;
   nameSingle: string;
   namePlural: string;
   productFamily: string;
@@ -55,6 +62,19 @@ export interface ProductFamily {
   slug: string;
   gist: string;
   theFullMonty: string;
+}
+
+export interface Use {
+  id: string;
+  slug: string;
+  text: string;
+  gist: string;
+  productUses: ProductUse[];
+}
+
+export interface ProductUse {
+  product: Product;
+  use: Use;
 }
 
 export interface Event {
