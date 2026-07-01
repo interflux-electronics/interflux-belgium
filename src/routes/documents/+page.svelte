@@ -243,7 +243,6 @@
         <div class="documents">
           {#each shownDocs as doc, index (index)}
             {#if doc.url}
-              <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
               <a href={doc.url} target="_blank" class="document">
                 {@render docLink(doc)}
               </a>

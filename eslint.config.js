@@ -24,7 +24,9 @@ export default defineConfig(
       // see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
       'no-undef': 'off',
       // not needed
-      'svelte/no-at-html-tags': 'off'
+      'svelte/no-at-html-tags': 'off',
+      // good in principle, but does not work well for anything other than static routes
+      'svelte/no-navigation-without-resolve': 'off'
     }
   },
   {
