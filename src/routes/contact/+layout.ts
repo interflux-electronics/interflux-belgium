@@ -1,7 +1,7 @@
 import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
 import { normalizeJsonApi, getJson } from '$lib/helpers';
 import { getOptions } from '$lib/state/headers.svelte';
-import { sortBy } from '$lib/helpers';
+import chain from '$lib/helpers/chain';
 import type { LayoutLoad } from './$types';
 import type { Company } from '$lib/types';
 
@@ -20,7 +20,7 @@ export const load: LayoutLoad = async ({ fetch }) => {
 
   const companies: Company[] = companiesData.map((company: Company) => {
     const slug = company.businessName.replace(/\(|\)|®|,|\.|\//g, '').replace(/\s/g, '-');
-    const publicMembers = company.publicMembers.sort(sortBy('rankAmongMembers'));
+    const publicMembers = chain(company.publicMembers).sortBy('rankAmongMembers');
 
     return { ...company, slug, publicMembers };
   });
