@@ -18,7 +18,7 @@
   // During CSR, use screen width to detect mobile / desktop
   let isMobile = $derived(browser ? mobile.current : device.type === 'mobile');
   let isTablet = $derived(browser ? tablet.current : device.type === 'tablet');
-  let narrowView = $derived(isMobile || isTablet);
+  let isMobileOrTablet = $derived(isMobile || isTablet);
 
   beforeNavigate(({ type }) => {
     // Prevents "Are you sure" dialogs
@@ -39,7 +39,7 @@
   }
 </script>
 
-{#if header.visible && narrowView}
+{#if header.visible && isMobileOrTablet}
   <MobileHeader />
 {/if}
 
@@ -53,7 +53,7 @@
   role="button"
   tabindex="0"
 >
-  {#if header.visible && !narrowView}
+  {#if header.visible && !isMobileOrTablet}
     <DesktopHeader />
     {#if header.crumbs}
       <Breadcrumbs />
