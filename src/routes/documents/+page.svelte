@@ -349,6 +349,7 @@
           background: none;
           border: none;
           padding: 0;
+          color: var(--grey-7);
           &:hover,
           &:focus {
             cursor: pointer;
