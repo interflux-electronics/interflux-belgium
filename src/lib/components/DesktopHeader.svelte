@@ -159,13 +159,11 @@
     &.blue {
       .bg {
         background-color: var(--blue-4);
-        opacity: 90%;
       }
     }
     &.green {
       .bg {
         background-color: var(--green-3);
-        opacity: 90%;
       }
     }
     &.overlap {
@@ -174,6 +172,9 @@
       }
       @include desktop {
         margin-bottom: vw(-80px);
+      }
+      .bg {
+        opacity: 90%;
       }
     }
     nav {
