@@ -31,7 +31,7 @@ export default defineConfig({
   //   preprocessorOptions: {
   //     scss: {
   //       additionalData: `
-  //         @use '$lib/styles/components' as *;
+  //         @use '$lib/styles/for-components' as *;
   // 	    `
   //     }
   //   }
