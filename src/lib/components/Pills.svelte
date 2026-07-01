@@ -2,6 +2,7 @@
   export interface Option {
     id: string;
     label: string;
+    url?: string;
   }
 
   interface Props {
@@ -9,9 +10,10 @@
     options: Option[];
     selected?: Option;
     onSelect: (option: Option | undefined) => void;
+    resetURL?: string;
   }
 
-  let { layout = 'horizontal', options, selected, onSelect }: Props = $props();
+  let { layout = 'horizontal', options, selected, onSelect, resetURL }: Props = $props();
 
   function select(option: Option | undefined) {
     onSelect(option);
@@ -24,14 +26,26 @@
 
 <div class="pills {layout}">
   {#if selected}
-    <button class="pill selected" onclick={() => reset()}>
-      {selected.label}
-    </button>
+    {#if selected.url}
+      <a href={resetURL} class="pill selected" onclick={() => reset()}>
+        {selected.label}
+      </a>
+    {:else}
+      <button class="pill selected" onclick={() => reset()}>
+        {selected.label}
+      </button>
+    {/if}
   {:else}
     {#each options as option (option.id)}
-      <button class="pill idle" onclick={() => select(option)}>
-        {option.label}
-      </button>
+      {#if option.url}
+        <a href={option.url} class="pill idle" onclick={() => select(option)}>
+          {option.label}
+        </a>
+      {:else}
+        <button class="pill idle" onclick={() => select(option)}>
+          {option.label}
+        </button>
+      {/if}
     {/each}
   {/if}
 </div>
