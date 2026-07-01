@@ -5,9 +5,10 @@
   import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
   import Flag from '$lib/components/Flag.svelte';
   import Svg from '$lib/components/Svg.svelte';
-  import type { Company } from '$lib/types';
-  import { sortBy, mark } from '$lib/helpers';
+  import { mark } from '$lib/helpers';
   import { resolve } from '$app/paths';
+  import chain from '$lib/helpers/chain';
+  import type { Company } from '$lib/types';
 
   interface Props {
     companies: Company[];
@@ -19,8 +20,8 @@
   let query: string | '' = $state('');
 
   let sortedCompanies = $derived.by(() => {
-    const withRank = companies.filter((c) => !!c.order).sort(sortBy('order'));
-    const without = companies.filter((c) => !c.order).sort(sortBy('businessName'));
+    const withRank = chain(companies).filterBy('order').sortBy('order'); // TODO: review
+    const without = chain(companies).rejectBy('order').sortBy('businessName'); // TODO: review
 
     return [...withRank, ...without];
   });
