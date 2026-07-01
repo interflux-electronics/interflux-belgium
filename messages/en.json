@@ -64,6 +64,8 @@
   "selective_soldering": "Selective soldering",
   "show_all": "Show all",
   "show_less": "Show less",
+  "show_only_recommended_products": "Show only recommended products",
+
   "solder_alloys": "Solder alloys",
   "solder_bath_conditioning": "Solder bath conditioning",
   "solder_paste_jetting": "Solder paste jetting",
@@ -174,5 +176,21 @@
   "company_support_p": "With 14 international daughter companies and 3 strategic production plants under the Interflux® name and a global network of agents and distributors, Interflux® Electronics N.V. provides a vast support network. High quality, technical, logistical, sales and on-site **customer support** for Interflux® products is widely available.",
   "iso_9001_compliant": "ISO 9001 Compliant",
   "keen_to_learn_more": "Keen to learn more?",
-  "open_slide_deck": "Open slide deck"
+  "open_slide_deck": "Open slide deck",
+
+  "results_for": "Results for: \"{query}\"",
+  "search_product": "Search product",
+  "product_category": "Product category",
+  "product_categories": "Product categories",
+
+  "suitable_for": "Suitable for",
+
+  "new": "new",
+  "popular": "popular",
+  "outdated": "outdated",
+  "out_of_production": "out of production",
+  "other": "Other",
+  "family_for_use": "`{family} for ${use}`",
+
+  "a_has_been_replace_by_b": "{a} has been replaced by {b}."
 }
