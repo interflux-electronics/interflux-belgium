@@ -207,7 +207,8 @@
     <div class="fields">
       <div class="filter">
         <TextInput
-          theme="large grey-border"
+          size="large"
+          theme="grey-border"
           icon="search"
           onKeyUp={(e) => (query = e.currentTarget.value)}
         />

@@ -70,7 +70,8 @@
       <p>{m.contact_network_2()}</p>
 
       <TextInput
-        theme="large grey-border"
+        size="large"
+        theme="grey-border"
         icon="search"
         onKeyUp={(e) => (query = e.currentTarget.value)}
       />

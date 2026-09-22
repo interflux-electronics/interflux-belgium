@@ -140,6 +140,7 @@
     background: rgba(var(--blue-5), 100%);
     transition: all 400ms var(--ease-out-expo);
     z-index: 3;
+    flex-shrink: 0;
 
     // Rather than not rendering the HTML with Ember responsive, we render the
     // HTML and hide it with CSS. This way, Fastboot does not need to know the

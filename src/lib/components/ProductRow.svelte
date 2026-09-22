@@ -10,10 +10,9 @@
   interface Props {
     product: Product;
     search?: string;
-    alternativeAvatar?: Image;
   }
 
-  let { product, search, alternativeAvatar }: Props = $props();
+  let { product, search }: Props = $props();
 
   let status = $derived(product.status);
 
@@ -57,13 +56,6 @@
       : [];
 
     return [...uses, ...qualities];
-  });
-
-  let replacedBy = $derived(() => {
-    const a = product.name;
-    const b = product.superiorProduct.name;
-
-    return m.a_has_been_replace_by_b({ a, b });
   });
 
   let familyLabel = $derived.by(() => {
@@ -123,7 +115,7 @@
         {/if}
       </div>
       {#if product.superiorProduct?.id}
-        <p>{replacedBy}</p>
+        <p>{m.a_has_been_replace_by_b({ a: product.name, b: product.superiorProduct.name })}</p>
       {:else}
         {#if product.pitch}
           <div class="pitch">
@@ -220,9 +212,11 @@
             0 0 12px RGBA(0, 0, 0, 0.1);
         }
         .right {
-          svg {
-            [fill] {
-              fill: var(--blue-0);
+          :global {
+            svg {
+              [fill] {
+                fill: var(--blue-0);
+              }
             }
           }
         }
@@ -399,6 +393,9 @@
               }
             }
           }
+        }
+        p {
+          color: var(--grey-7);
         }
         .pitch {
           overflow: hidden;

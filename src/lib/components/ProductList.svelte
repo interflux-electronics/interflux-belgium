@@ -1,40 +1,58 @@
 <script lang="ts">
   import ProductListSearch from '$lib/components/ProductListSearch.svelte';
-  import ProductListFeatured from '$lib/components/ProductListFeatured.svelte';
-  import ProductListHidden from '$lib/components/ProductListHidden.svelte';
+  import ProductListPromoted from '$lib/components/ProductListPromoted.svelte';
+  import ProductListDemoted from '$lib/components/ProductListDemoted.svelte';
   import Shimmer from '$lib/components/Shimmer.svelte';
   import chain from '$lib/helpers/chain';
+  import capitalize from '$lib/helpers/capitalize';
   import { m } from '$lib/paraglide/messages';
-  import type { Product, ProductFamily, Use } from '$lib/types';
+  import type { Product, ProductFamily, GroupBy, Use } from '$lib/types';
 
   interface Props {
     title: string;
     products: Product[];
-    groupBy: 'mainFamily' | 'subFamily' | 'use' | 'mainFamilyForUse' | 'none';
-    search?: string;
+    groupBy: GroupBy;
+    search?: string | undefined;
     loading?: boolean;
     use?: Use;
   }
 
   let { title, products, groupBy, search, loading = false, use }: Props = $props();
 
-  let groups = $derived.by(() => {
-    // For `/products` path, where we show all products, group by main family
+  function filterFeatured(products: Product[]) {
+    return products?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
+  }
+
+  function filterHidden(products: Product[]) {
+    return products?.filter((p) => ['demoted', 'replaced', 'discontinued'].includes(p.status));
+  }
+
+  interface Group {
+    id: string;
+    title?: string;
+    featured: Product[];
+    hidden: Product[];
+  }
+
+  let groups: Group[] = $derived.by(() => {
+    // For all products page
     if (groupBy === 'mainFamily') {
       const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
 
       return mainFamilies.map((family: ProductFamily) => {
         const subset = chain(products)
           .filterBy('mainFamily.id', family.id)
-          .sortBy('rankAmongFamily');
+          .sortBy('rankAmongFamily')
+          .toArray();
 
-        // TODO: rankAmongMainFamily
-
-        return {
-          title: family.label,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+        const group: Group = {
+          id: family.id,
+          title: capitalize(family.namePlural) || '?',
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
@@ -56,99 +74,119 @@
         const subset = family
           ? chain(products).filterBy('subFamily.id', id)
           : chain(products).rejectBy('subFamily.id');
+        const sorted = subset.sortBy('rankAmongFamily').toArray();
 
-        const title = family ? family.label : m.other();
-
-        // TODO: rankAmongSubFamily
-
-        return {
-          title,
-          featured: subset.filterBy('isFeatured').sortBy('rankAmongFamily').toArray(),
-          hidden: subset.filterBy('isHidden').sortBy('rankAmongFamily').toArray()
+        const group: Group = {
+          id: family?.id,
+          title: family ? capitalize(family.namePlural) : m.other(),
+          featured: filterFeatured(sorted),
+          hidden: filterHidden(sorted)
         };
+
+        return group;
       });
     }
 
     // For solder pastes
     // For solder wires
     // For solder alloys
-    if (groupBy === 'use') {
-      const uses = chain(products).mapBy('uses').flat().uniqBy('id').sortBy('rank');
+    if (groupBy === 'alloy') {
+      const alloys = ['lead-free-soldering', 'low-melting-point-soldering', 'lead-based-soldering'];
+
+      const uses = chain(products)
+        .mapBy('uses')
+        .flat()
+        .uniqBy('id')
+        .sortBy('rank')
+        .toArray()
+        .filter((use) => alloys.includes(use.id));
 
       return uses.map((use: Use) => {
-        const rank = 'rankAmongProducts';
-        const productUses = use.productUses.filter((pu) => {
-          return products.find((p) => p.id === pu.product.id);
-        });
-        const ranked = chain(productUses).filterBy(rank).sortBy(rank);
-        const rankless = chain(productUses).rejectBy(rank);
-        const sorted = [...ranked, ...rankless];
-        const subset = chain(sorted).mapBy('product');
-        const title = use.forLabel; // TODO
+        const subset = chain(use.productUses)
+          .sortBy('rankAmongProducts')
+          .filterBy('product')
+          .toArray()
+          .map((productUse) => {
+            const product = productUse.product;
+            const overrides = {};
 
-        // TODO: override the avatar with avatar set on use
+            // Products can be given a ranking order unique to one of their Uses.
+            // That ranking lives on the relation in-between model called ProductUse.
+            // Here below we print that rank onto the Product for sorting.
+            overrides.rankAmongProducts = productUse.rankAmongProducts;
 
-        // let rows = $derived.by(() => {
-        //   if (!productUses) {
-        //     return products.map((product) => {
-        //       return { product };
-        //     });
-        //   }
+            // Products have their main avatar image. However, when shown under the context of one of
+            // their Uses, that avatar can be overriden to better fit the Use. For example DP 5505
+            // solder paste is shown with green lid under "Lead-free soldering" and with blue lid
+            // under "Lead-based soldering".
+            // Here below we override that avatar.
+            if (productUse.showAlternativeAvatar) {
+              if (productUse.image) {
+                const img = productUse.image;
 
-        //   return products.map((product) => {
-        //     const productUse = productUses.findBy('product.id', product.get('id'));
-        //     const alternativeAvatar =
-        //       productUse && productUse.showAlternativeAvatar && productUse.image
-        //         ? productUse.image
-        //         : null;
+                overrides.avatarPath = img.path;
+                overrides.avatarVariations = img.variations;
+                overrides.avatarAlt = img.alt;
+              }
+            }
 
-        //     return { product, alternativeAvatar };
-        //   });
-        // });
+            return { ...product, ...overrides };
+          });
 
-        return {
-          title,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+        const group: Group = {
+          id: use.id,
+          title: `For ${use.text}`, // TODO: translate
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
     // For processes (uses)
     if (groupBy === 'mainFamilyForUse') {
-      const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id');
+      const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
 
       return mainFamilies.map((family) => {
-        const subset = chain(products).filterBy('mainFamily.id', family.get('id'));
-        const title = m.family_for_use({ family: family.label, use: use.name }); // TODO: review
+        const subset = chain(products).filterBy('mainFamily', family).toArray();
 
-        return {
-          title,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+        const group: Group = {
+          id: family.id,
+          title: undefined, // hidden on purpose
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
-    // For fluxing systems and search
-    if (groupBy === 'none') {
-      console.log(products);
-      return [
-        {
-          title: null,
-          featured: products.filter((p) => ['new', 'popular', 'recommended'].includes(p.status)),
-          hidden: products.filter((p) => ['outdated', 'discontinued'].includes(p.status))
-        }
-      ];
-    }
+    // No grouping
+    // For fluxing systems
+    // For search search
+    const extended = products.map((product) => {
+      const statusRank = [
+        'new',
+        'popular',
+        'promoted',
+        'demoted',
+        'replaced',
+        'discontinued',
+        'offline'
+      ].indexOf(product.status);
 
-    // For spotting issues
-    return [
-      {
-        title: '?',
-        products: []
-      }
-    ];
+      return { ...product, statusRank };
+    });
+    const subset = chain<Product>(extended).sortBy('statusRank', 'name').toArray();
+    const group = {
+      id: '',
+      title: '',
+      featured: filterFeatured(subset),
+      hidden: filterHidden(subset)
+    };
+
+    return [group];
   });
 </script>
 
@@ -159,14 +197,14 @@
   {:else if search}
     <ProductListSearch {products} {search} />
   {:else}
-    {#each groups as group (group.title)}
+    {#each groups as group (group.id)}
       <section>
         {#if group.title}
           <h2>{group.title}</h2>
         {/if}
 
-        <ProductListFeatured products={group.featured} />
-        <ProductListHidden products={group.hidden} />
+        <ProductListPromoted products={group.featured} />
+        <ProductListDemoted products={group.hidden} />
       </section>
     {/each}
   {/if}
@@ -224,63 +262,6 @@
         text-align: center;
         width: 100%;
         padding: 16vw 10vw;
-      }
-      & + p {
-        margin-top: 20px;
-      }
-      &.with-arrow {
-        display: flex;
-        gap: 20px;
-        svg {
-          width: 12px;
-          height: auto;
-          [fill] {
-            fill: var(--blue-0);
-          }
-        }
-      }
-    }
-    ol.hidden {
-      // avoid display: none so <ResponsiveImage> JS can use offsetWidth
-      overflow: hidden;
-      height: 0;
-      &.expanded {
-        overflow: visible;
-        height: auto;
-      }
-      & + .button.secondary.grey-border {
-        width: 100%;
-        height: 50px;
-        border-radius: 0;
-        border: 1px solid var(--grey-1);
-        border-left: 0;
-        border-right: 0;
-        margin-top: -1px;
-        transition: box-shadow 150ms ease-out;
-        &:hover,
-        &:focus {
-          z-index: 1;
-          outline: 0;
-          @include widescreen {
-            box-shadow:
-              0 0 0 2px var(--blue-0),
-              0 0 12px RGBA(0, 0, 0, 0.1);
-          }
-          @include desktop {
-            box-shadow:
-              0 0 0 2px var(--blue-0),
-              0 0 12px RGBA(0, 0, 0, 0.1);
-          }
-        }
-      }
-    }
-    ol {
-      display: flex;
-      flex-direction: column;
-      li {
-        &.hide {
-          display: none;
-        }
       }
     }
   }

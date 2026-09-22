@@ -6,6 +6,7 @@
   import Button from '$lib/components/Button.svelte';
   import Flag from '$lib/components/Flag.svelte';
   import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
+  import { browser } from '$app/environment';
   import type { Option } from '$lib/components/Pills.svelte';
   import type { CountryData, DocumentData, Company } from '$lib/types';
 
@@ -42,6 +43,11 @@
   }
 
   $effect(() => {
+    // Do not eagerly load during SSR to avoid API being hit 2x, but first hit remains unused
+    if (!browser) {
+      return;
+    }
+
     if (country) {
       fetchRecommendations();
     } else {

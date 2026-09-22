@@ -10,10 +10,9 @@
     options: Option[];
     selected?: Option;
     onSelect: (option: Option | undefined) => void;
-    resetURL?: string;
   }
 
-  let { layout = 'horizontal', options, selected, onSelect, resetURL }: Props = $props();
+  let { layout = 'horizontal', options, selected, onSelect }: Props = $props();
 
   function select(option: Option | undefined) {
     onSelect(option);
@@ -27,7 +26,7 @@
 <div class="pills {layout}">
   {#if selected}
     {#if selected.url}
-      <a href={resetURL} class="pill selected" onclick={() => reset()}>
+      <a href={selected.url} class="pill selected" onclick={() => reset()}>
         {selected.label}
       </a>
     {:else}

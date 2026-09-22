@@ -311,7 +311,8 @@
     <TextInput
       type="search"
       icon="search"
-      theme="large grey-border"
+      size="large"
+      theme="grey-border"
       {onFocus}
       {onBlur}
       {onMouseOver}

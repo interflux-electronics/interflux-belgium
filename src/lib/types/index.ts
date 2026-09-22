@@ -38,6 +38,8 @@ export type VariationList =
   | `${Variation},${Variation},${Variation}`
   | `${Variation},${Variation},${Variation},${Variation}`;
 
+export type GroupBy = 'mainFamily' | 'subFamily' | 'alloy' | 'mainFamilyForUse' | 'none';
+
 export interface Product {
   id: string;
   name: string;
@@ -51,30 +53,36 @@ export interface Product {
   subFamily: ProductFamily;
   mainFamily: ProductFamily;
   uses: Use[];
+  superiorProduct: Product;
 }
 
 export interface ProductFamily {
   id: string;
-  nameSingle: string;
-  namePlural: string;
-  productFamily: string;
-  rank: number;
-  slug: string;
-  gist: string;
-  theFullMonty: string;
+  nameSingle?: string;
+  namePlural?: string;
+  productFamily?: string;
+  rank?: number;
+  slug?: string;
+  gist?: string;
+  theFullMonty?: string;
+  products?: Product[];
 }
 
 export interface Use {
   id: string;
-  slug: string;
-  text: string;
-  gist: string;
-  productUses: ProductUse[];
+  slug?: string;
+  text?: string;
+  gist?: string;
+  productUses?: ProductUse[];
+  products?: Product[];
 }
 
 export interface ProductUse {
   product: Product;
   use: Use;
+  showAlternativeAvatar: boolean;
+  rankAmongProducts: number;
+  image: Image;
 }
 
 export interface Event {
@@ -168,6 +176,7 @@ const AVAILABLE_ICONS = [
   'arrow-down',
   'arrow-left',
   'arrow-right',
+  'arrow-up',
   'chemistry',
   'chevron-left',
   'chevron-down',

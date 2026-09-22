@@ -10,9 +10,18 @@
 </script>
 
 {#if products}
-  <ol class="featured">
+  <ol class="promoted">
     {#each products as product (product.id)}
       <ProductRow {product} />
     {/each}
   </ol>
 {/if}
+
+<style lang="scss">
+  @use '$lib/styles/components' as *;
+
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

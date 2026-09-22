@@ -11,7 +11,8 @@
     type?: 'text' | 'search' | 'email' | 'password' | 'date';
     placeholder?: string;
     disabled?: boolean;
-    theme?: string;
+    size: 'medium' | 'large';
+    theme?: 'grey-border' | 'blue';
     icon?: Icon;
     id?: string;
 
@@ -35,7 +36,8 @@
     type = 'text',
     placeholder,
     disabled = false,
-    theme,
+    size = 'large',
+    theme = 'grey-border',
     icon,
     id,
 
@@ -48,7 +50,7 @@
     onKeyUp
   }: Props = $props();
 
-  let classes = $derived([theme || 'no-theme', icon ? `has-icon ${icon}` : 'no-icon'].join(' '));
+  let classes = $derived([size, theme, icon ? `has-icon ${icon}` : 'no-icon'].join(' '));
 </script>
 
 <div class="text-input {classes}">
@@ -82,30 +84,6 @@
   @use '$lib/styles/components' as *;
 
   .text-input {
-    // &.big.white.shadow {
-    //   p {
-    //     font-family: var(--bold);
-    //     font-size: 18px;
-    //     line-height: 48px;
-    //     padding: 0 28px;
-    //     border-radius: 4px;
-    //     border: 0;
-    //     outline: 0;
-    //     width: 100%; // Always be as wide as the parent
-    //     box-sizing: border-box;
-    //     background: white;
-    //     font-family: var(--bold);
-    //     color: var(--blue-3);
-    //     @include placeholder {
-    //       color: rgba(black, 0.3);
-    //     }
-    //     box-shadow: 0 2px 4px RGBA(0, 0, 0, 0.2);
-    //     @include placeholder {
-    //       color: rgba(white, 0.3);
-    //     }
-    //   }
-    // }
-
     &.grey-border {
       position: relative;
       display: flex;
@@ -227,6 +205,7 @@
           }
         }
       }
+
       .icon {
         display: flex;
         align-items: center;
@@ -273,26 +252,50 @@
       }
     }
 
-    &.blue {
-      input {
-        background-color: var(--blue-3);
-        outline: 2px solid var(--blue-4);
-        color: white;
-        line-height: 40px;
-        padding: 0 13px;
-        border: 0;
-        border-radius: 3px;
-        font-family: var(--bold);
-        width: 180px;
-        &::placeholder {
-          font-family: var(--regular);
-          color: white;
-          opacity: 0.9;
-        }
-        &:focus {
-          outline: 2px solid var(--blue-0);
-        }
-      }
-    }
+    // &.blue {
+    //   input {
+    //     background-color: var(--blue-3);
+    //     outline: 2px solid var(--blue-4);
+    //     color: white;
+    //     line-height: 40px;
+    //     padding: 0 13px;
+    //     border: 0;
+    //     border-radius: 3px;
+    //     font-family: var(--bold);
+    //     width: 180px;
+    //     &::placeholder {
+    //       font-family: var(--regular);
+    //       color: white;
+    //       opacity: 0.9;
+    //     }
+    //     &:focus {
+    //       outline: 2px solid var(--blue-0);
+    //     }
+    //   }
+    // }
+
+    // &.big.white.shadow {
+    //   p {
+    //     font-family: var(--bold);
+    //     font-size: 18px;
+    //     line-height: 48px;
+    //     padding: 0 28px;
+    //     border-radius: 4px;
+    //     border: 0;
+    //     outline: 0;
+    //     width: 100%; // Always be as wide as the parent
+    //     box-sizing: border-box;
+    //     background: white;
+    //     font-family: var(--bold);
+    //     color: var(--blue-3);
+    //     @include placeholder {
+    //       color: rgba(black, 0.3);
+    //     }
+    //     box-shadow: 0 2px 4px RGBA(0, 0, 0, 0.2);
+    //     @include placeholder {
+    //       color: rgba(white, 0.3);
+    //     }
+    //   }
+    // }
   }
 </style>
