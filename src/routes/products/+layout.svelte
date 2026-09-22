@@ -216,7 +216,7 @@
 
         {#if familyOptions.length > 0 || familySelected}
           <div class="filter">
-            <h3 class="label">{m.product_category()}</h3>
+            <h3 class="label">{m.category()}</h3>
 
             <Pills
               options={familyOptions}
@@ -229,7 +229,7 @@
 
         {#if useOptions.length > 0 || useSelected}
           <div class="filter">
-            <h3 class="label">{m.product_category()}</h3>
+            <h3 class="label">{m.processes()}</h3>
 
             <Pills
               options={useOptions}

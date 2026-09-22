@@ -2,7 +2,6 @@
   import ProductListSearch from '$lib/components/ProductListSearch.svelte';
   import ProductListPromoted from '$lib/components/ProductListPromoted.svelte';
   import ProductListDemoted from '$lib/components/ProductListDemoted.svelte';
-  import Shimmer from '$lib/components/Shimmer.svelte';
   import chain from '$lib/helpers/chain';
   import capitalize from '$lib/helpers/capitalize';
   import { m } from '$lib/paraglide/messages';
@@ -14,9 +13,10 @@
     groupBy: GroupBy;
     search?: string | undefined;
     family?: ProductFamily;
+    use?: Use;
   }
 
-  let { title, products, groupBy, search, family }: Props = $props();
+  let { title, products, groupBy, search, family, use }: Props = $props();
 
   function filterFeatured(products: Product[]) {
     return products?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
@@ -141,16 +141,22 @@
       });
     }
 
-    // For processes (uses)
+    // For use routes
+    // For use & family routes
     if (groupBy === 'mainFamilyForUse') {
       const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
 
-      return mainFamilies.map((family) => {
-        const subset = chain(products).filterBy('mainFamily', family).toArray();
+      return mainFamilies.map((mainFamily) => {
+        const subset = chain(products).filterBy('mainFamily', mainFamily).toArray();
+
+        // Hide the title when on products/family/[familySlug]/for/[useSlug]
+        // Because the <h1> will be identical to the <h2>
+        const title =
+          use && family ? undefined : `${capitalize(mainFamily.namePlural)} for ${use?.text}`;
 
         const group: Group = {
-          id: family.id,
-          title: undefined, // hidden on purpose
+          id: mainFamily.id,
+          title,
           featured: filterFeatured(subset),
           hidden: filterHidden(subset)
         };

@@ -12,4 +12,4 @@
   let groupBy: GroupBy = 'mainFamilyForUse';
 </script>
 
-<ProductList {title} {products} {groupBy} {use} />
+<ProductList {title} {products} {groupBy} {use} {family} />
