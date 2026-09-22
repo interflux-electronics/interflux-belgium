@@ -13,11 +13,10 @@
     products: Product[];
     groupBy: GroupBy;
     search?: string | undefined;
-    loading?: boolean;
     family?: ProductFamily;
   }
 
-  let { title, products, groupBy, search, loading = false, family }: Props = $props();
+  let { title, products, groupBy, search, family }: Props = $props();
 
   function filterFeatured(products: Product[]) {
     return products?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
@@ -190,9 +189,7 @@
 
 <div class="product-list">
   <h1>{title}</h1>
-  {#if loading}
-    <Shimmer shape="row" />
-  {:else if search}
+  {#if search}
     <ProductListSearch {products} {search} />
   {:else}
     {#each groups as group (group.id)}

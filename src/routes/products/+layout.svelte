@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from '$app/state';
+  import { page, navigating } from '$app/state';
   import { m } from '$lib/paraglide/messages';
   import chain from '$lib/helpers/chain';
   import TextInput from '$lib/components/TextInput.svelte';
@@ -8,6 +8,11 @@
   import type { LayoutProps } from './$types';
   import type { Product, ProductFamily, Use } from '$lib/types';
   import type { Option } from '$lib/components/Pills.svelte';
+  import LoadingCube from '$lib/components/LoadingCube.svelte';
+
+  let loading = $derived(
+    navigating.from != null && navigating.to?.route.id?.startsWith('/products')
+  );
 
   let { children }: LayoutProps = $props();
 
@@ -288,7 +293,12 @@
     </div>
 
     <article class={layout}>
-      {@render children()}
+      {#if loading}
+        <LoadingCube />
+        <!-- <Shimmer shape="row" /> -->
+      {:else}
+        {@render children()}
+      {/if}
     </article>
   </div>
 </div>

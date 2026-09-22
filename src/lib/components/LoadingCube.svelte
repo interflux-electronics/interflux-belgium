@@ -11,31 +11,36 @@
 
   let side = $state('front');
 
+  // Each time the <LoadingSpinner> appears, the sequence starts with the "front", which is the
+  // Interflux logo. It then immediately rotates to one of the other randomised sides.
+  // We iterate through all sides before returning to the Interflux logo.
   $effect(() => {
     const sides = ['bottom', 'top', 'right', 'left', 'back'];
 
-    // Fisher-Yates shuffle
-    // Avoid .sort(() => 0.5 - Math.random()))
+    // We use the Fisher-Yates shuffle
+    // We avoid .sort(() => 0.5 - Math.random())
     for (let i = sides.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [sides[i], sides[j]] = [sides[j], sides[i]];
     }
 
-    // Add front side to end of the deck because its always the first one to briefly show.
     const deck = [...sides, 'front'];
 
     let index = 0;
 
     const loop = async () => {
       while (true) {
-        await delay(1); // very short delay before change
-        side = deck[index]; // update the face
+        // Without this delay, the first side is instantly shown without first showing the front.
+        await delay(100);
+
+        // This triggers the cube to rotate.
+        side = deck[index];
 
         // Here we keep increasing +1 until 6 is reached.
         // The modulus will be: 1, 2, 3, 4, 5, 0, 1, 2, 3, ...
         index = (index + 1) % deck.length;
 
-        await delay(1400);
+        await delay(1200);
       }
     };
 
