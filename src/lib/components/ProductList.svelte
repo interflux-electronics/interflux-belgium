@@ -14,10 +14,10 @@
     groupBy: GroupBy;
     search?: string | undefined;
     loading?: boolean;
-    use?: Use;
+    family?: ProductFamily;
   }
 
-  let { title, products, groupBy, search, loading = false, use }: Props = $props();
+  let { title, products, groupBy, search, loading = false, family }: Props = $props();
 
   function filterFeatured(products: Product[]) {
     return products?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
@@ -91,17 +91,15 @@
     // For solder wires
     // For solder alloys
     if (groupBy === 'alloy') {
-      const alloys = ['lead-free-soldering', 'low-melting-point-soldering', 'lead-based-soldering'];
+      const alloys =
+        family?.id === 'solder-wires'
+          ? ['lead-free-soldering', 'low-melting-point-soldering', 'lead-based-soldering']
+          : ['low-melting-point-soldering', 'lead-free-soldering', 'lead-based-soldering'];
 
-      const uses = chain(products)
-        .mapBy('uses')
-        .flat()
-        .uniqBy('id')
-        .sortBy('rank')
-        .toArray()
-        .filter((use) => alloys.includes(use.id));
+      const uses = chain(products).mapBy('uses').flat().uniqBy('id');
+      const sorted = alloys.map((alloy) => uses.findBy('id', alloy));
 
-      return uses.map((use: Use) => {
+      return sorted.map((use: Use) => {
         const subset = chain(use.productUses)
           .sortBy('rankAmongProducts')
           .filterBy('product')
