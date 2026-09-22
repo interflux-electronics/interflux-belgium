@@ -1,11 +1,13 @@
 <script lang="ts">
-  import type { Product, Image } from '$lib/types';
+  import { PUBLIC_CDN_HOST } from '$env/static/public';
+  import chain from '$lib/helpers/chain';
   import Svg from '$lib/components/Svg.svelte';
   import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
-  import { mark } from '$lib/helpers/mark';
-  import chain from '$lib/helpers/chain';
+  import Image from '$lib/components/Image.svelte';
   import { m } from '$lib/paraglide/messages';
+  import { mark } from '$lib/helpers/mark';
   import { markdown } from '$lib/helpers';
+  import type { Product, ProductUse, ProductQuality } from '$lib/types';
 
   interface Props {
     product: Product;
@@ -44,16 +46,17 @@
   });
 
   let features = $derived.by(() => {
-    const uses = product.productUsesSorted
-      ? chain(product.productUsesSorted).filterBy('showOnProductList').mapBy('use').toArray()
-      : [];
+    const uses = chain<ProductUse>(product.productUses)
+      .sortBy('rankAmongUses')
+      .filterBy('showOnProductList')
+      .mapBy('use')
+      .toArray();
 
-    const qualities = product.productQualitiesSorted
-      ? chain(product.productQualitiesSorted)
-          .filterBy('showOnProductList')
-          .mapBy('quality')
-          .toArray()
-      : [];
+    const qualities = chain<ProductQuality>(product.productQualities)
+      .sortBy('rankAmongQualities')
+      .filterBy('showOnProductList')
+      .mapBy('quality')
+      .toArray();
 
     return [...uses, ...qualities];
   });
@@ -130,8 +133,7 @@
           <div class="features">
             {#each features as feature (feature.id)}
               <div class="feature">
-                <!-- <Image @src={feature.iconURL} /> -->
-                <img src={feature.iconURL} alt={feature.text} />
+                <Image src="{PUBLIC_CDN_HOST}/{feature.icon || '/images/icons/check.svg'}" />
                 <div class="callout">
                   <span>
                     <!-- TODO: translate -->
@@ -164,8 +166,10 @@
       h4:not(.red) {
         background-color: var(--grey-5) !important;
       }
-      img {
-        filter: grayscale(1) opacity(0.8);
+      :global {
+        img {
+          filter: grayscale(1) opacity(0.8);
+        }
       }
     }
     a {

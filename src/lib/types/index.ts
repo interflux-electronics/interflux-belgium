@@ -54,6 +54,8 @@ export interface Product {
   mainFamily: ProductFamily;
   uses: Use[];
   superiorProduct: Product;
+  productUses: ProductUse[];
+  productQualities: ProductQuality[];
 }
 
 export interface ProductFamily {
@@ -77,9 +79,26 @@ export interface Use {
   products?: Product[];
 }
 
+export interface Quality {
+  id: string;
+  slug?: string;
+  text?: string;
+  gist?: string;
+  productQualities?: ProductQuality[];
+  products?: Product[];
+}
+
 export interface ProductUse {
   product: Product;
   use: Use;
+  showAlternativeAvatar: boolean;
+  rankAmongProducts: number;
+  image: Image;
+}
+
+export interface ProductQuality {
+  product: Product;
+  quality: Quality;
   showAlternativeAvatar: boolean;
   rankAmongProducts: number;
   image: Image;

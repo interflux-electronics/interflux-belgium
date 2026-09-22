@@ -7,11 +7,17 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 
   const { useSlug } = params;
 
-  const [use] = await Promise.all([
-    api.get<Use>(
-      `/v1/public/uses/${useSlug}?include=products,products.uses,products.main-family,products.sub-family`
-    )
-  ]);
+  const includes = [
+    'products',
+    'products.main-family',
+    'products.sub-family',
+    'products.uses',
+    'products.qualities',
+    'products.product-uses',
+    'products.product-qualities'
+  ].join(',');
+
+  const [use] = await Promise.all([api.get<Use>(`/v1/public/uses/${useSlug}?include=${includes}`)]);
 
   const products: Product[] = use.products || [];
 

@@ -7,10 +7,18 @@ export const load: LayoutServerLoad = async ({ parent, params }) => {
   await parent();
 
   const { familySlug } = params;
+
+  const includes = [
+    'main-family',
+    'sub-family',
+    'uses',
+    'qualities',
+    'product-uses',
+    'product-qualities'
+  ].join(',');
+
   const [products] = await Promise.all([
-    api.get<Product[]>(
-      `/v1/public/products?filter[main_family]=${familySlug}&include=main-family,sub-family,uses,product-uses,product-uses.image`
-    )
+    api.get<Product[]>(`/v1/public/products?filter[main_family]=${familySlug}&include=${includes}`)
   ]);
   const family = chain(products).mapBy('mainFamily').filterBy('id', familySlug).first();
 
