@@ -1,20 +1,38 @@
 <script lang="ts">
   import { page, navigating } from '$app/state';
+  import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
   import chain from '$lib/helpers/chain';
   import TextInput from '$lib/components/TextInput.svelte';
   import Pills from '$lib/components/Pills.svelte';
   import Button from '$lib/components/Button.svelte';
+  import LoadingCube from '$lib/components/LoadingCube.svelte';
   import type { LayoutProps } from './$types';
   import type { Product, ProductFamily, Use } from '$lib/types';
   import type { Option } from '$lib/components/Pills.svelte';
-  import LoadingCube from '$lib/components/LoadingCube.svelte';
-
-  let loading = $derived(
-    navigating.from != null && navigating.to?.route.id?.startsWith('/products')
-  );
 
   let { children }: LayoutProps = $props();
+
+  // SEARCH
+
+  // On page load, read the search param from the URL, then pass that param to the search <input>.
+  let search = $derived.by(() => {
+    return page.url.searchParams.get('search') ?? '';
+  });
+
+  // Each time the search <input> value changes, update the URL.
+  function setSearch(value: string) {
+    const url = new URL(page.url);
+    const saneSearch = value.replaceAll(/[^a-zA-Z0-9 ]/g, '');
+
+    if (saneSearch) {
+      url.searchParams.set('search', saneSearch);
+    } else {
+      url.searchParams.delete('search');
+    }
+
+    goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+  }
 
   // PRODUCTS, FAMILIES & USES
 
@@ -27,53 +45,39 @@
     'products' in page.data ? (page.data.products as Product[]) : undefined
   );
 
+  let productsForSearch = $derived.by(() => {
+    if (!search) {
+      return products;
+    }
+
+    const saneSearch = search.replaceAll(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+    return products?.filter((product) => {
+      const { name, pitch, superiorProduct } = product;
+
+      const nameMatch = name && name.toLowerCase().includes(saneSearch);
+      const pitchMatch = pitch && !superiorProduct && pitch.toLowerCase().includes(saneSearch);
+
+      return nameMatch || pitchMatch;
+    });
+  });
+
   const mainFamilies: ProductFamily[] = $derived.by(() => {
-    return chain<Product>(products).mapBy('mainFamily').uniqBy('id').sortBy('rank').toArray();
+    return chain<Product>(productsForSearch)
+      .mapBy('mainFamily')
+      .uniqBy('id')
+      .sortBy('rank')
+      .toArray();
   });
 
   const uses: Use[] = $derived.by(() => {
-    return chain<Product>(products).mapBy('uses').flat().uniqBy('id').sortBy('rank').toArray();
+    return chain<Product>(productsForSearch)
+      .mapBy('uses')
+      .flat()
+      .uniqBy('id')
+      .sortBy('rank')
+      .toArray();
   });
-
-  $effect(() => {
-    console.log({ products });
-    console.log({ uses });
-  });
-
-  // const families: ProductFamily[] = [
-  //   { id: 'soldering-fluxes', namePlural: m.soldering_fluxes() },
-  //   { id: 'solder-pastes', namePlural: m.solder_pastes() },
-  //   { id: 'solder-wires', namePlural: m.solder_wires() },
-  //   { id: 'solder-alloys', namePlural: m.solder_alloys() },
-  //   { id: 'auxiliaries', namePlural: m.auxiliaries() },
-  //   { id: 'fluxing-systems', namePlural: m.fluxing_systems() }
-  // ];
-
-  // const uses: Use[] = [
-  //   { id: 'dip-fluxing', text: m.dip_fluxing() },
-  //   { id: 'dip-soldering', text: m.dip_soldering() },
-  //   { id: 'dispensing', text: m.dispensing() },
-  //   { id: 'foam-fluxing', text: m.foam_fluxing() },
-  //   { id: 'general-cleaning', text: m.cleaning() },
-  //   { id: 'hand-soldering', text: m.hand_soldering() },
-  //   { id: 'jet-fluxing', text: m.jet_fluxing() },
-  //   { id: 'laser-soldering', text: m.laser_soldering() },
-  //   { id: 'low-melting-point-soldering', text: m.low_melting_point_soldering_LMPA_Q() },
-  //   { id: 'OSP-soldering', text: m.OSP_soldering() },
-  //   { id: 'pre-tinning', text: m.pre_tinning() },
-  //   { id: 'reflow-soldering', text: m.reflow_soldering() },
-  //   { id: 'rework-and-repair', text: m.rework_repair() },
-  //   { id: 'robot-soldering', text: m.robot_soldering() },
-  //   { id: 'selective-soldering', text: m.selective_soldering() },
-  //   { id: 'lead-based-soldering', text: m.lead_based_soldering() },
-  //   { id: 'lead-free-soldering', text: m.lead_free_soldering() },
-  //   { id: 'solder-bath-conditioning', text: m.solder_bath_conditioning() },
-  //   { id: 'solder-paste-jetting', text: m.solder_paste_jetting() },
-  //   { id: 'spray-fluxing', text: m.spray_fluxing() },
-  //   { id: 'stencil-printing', text: m.stencil_printing() },
-  //   { id: 'vapor-phase-soldering', text: m.vapor_phase_soldering() },
-  //   { id: 'wave-soldering', text: m.wave_soldering() }
-  // ];
 
   function getFamilyURL(family: ProductFamily) {
     const route = page.route.id;
@@ -123,20 +127,24 @@
 
   const familyOptions: Option[] = $derived.by(() => {
     return mainFamilies.map((f) => {
+      const count = chain(productsForSearch).filterBy('mainFamily', f).toArray().length;
+
       return {
         id: f.id,
-        label: f.namePlural || '?',
-        url: getFamilyURL(f)
+        label: `${f.namePlural} <i>${count}</i>`,
+        url: getFamilyURL(f) + (search && `?search=${search}`)
       };
     });
   });
 
   const useOptions: Option[] = $derived.by(() => {
     return uses.map((u) => {
+      const count = productsForSearch?.filter((p) => p.uses.includes(u)).length;
+
       return {
         id: u.id,
-        label: u.text || '??',
-        url: getUseURL(u)
+        label: `${u.text} <i>${count}</i>`,
+        url: getUseURL(u) + (search && `?search=${search}`)
       };
     });
   });
@@ -148,54 +156,54 @@
     useOptions.find((f) => f.id === page.params.useSlug)
   );
 
-  // SEARCH
-
-  // Set by the URL:
-  let search: string | '' = $state('');
-
-  // Writable derived that syncs with URL query param
-  // let search = $derived.by(() => {
-  //   return page.url.searchParams.get('q') ?? '';
-  // });
-
-  // When the local value changes, update the URL
-  // $effect(() => {
-  //   // Read the derived value to establish dependency
-  //   const currentSearch = search;
-
-  //   const newUrl = new URL(page.url);
-  //   if (currentSearch) {
-  //     newUrl.searchParams.set('q', currentSearch);
-  //   } else {
-  //     newUrl.searchParams.delete('q');
-  //   }
-
-  //   // Avoid unnecessary navigation if values match
-  //   if (newUrl.search !== page.url.search) {
-  //     tick().then(() => {
-  //       goto(newUrl, { replaceState: true });
-  //     });
-  //   }
-  // });
-
-  // let searchTitle: string = $derived(`${m.results_for({ query: search })} "${search}"`);
-  // let searchRoute: boolean = $derived(!!search);
-
-  // function setSearch(value: string) {
-  //   const url = new URL(page.url);
-  //   if (value) {
-  //     url.searchParams.set('search', value);
-  //   } else {
-  //     url.searchParams.delete('search');
-  //   }
-  //   goto(url, { replaceState: true, keepFocus: true, noScroll: true });
-  // }
-
   // VIEW
 
   let layout: 'list' | 'grid' = $state('list');
   let stickyMenu = $derived(page.url.pathname !== '/products' || search);
   let showFilters = $state(false); // for mobile & tablets
+  let loading = $derived(
+    navigating.from != null && navigating.to?.route.id?.startsWith('/products')
+  );
+
+  // $effect(() => {
+  //   console.log({ products });
+  //   console.log({ uses });
+  // });
+
+  // const families: ProductFamily[] = [
+  //   { id: 'soldering-fluxes', namePlural: m.soldering_fluxes() },
+  //   { id: 'solder-pastes', namePlural: m.solder_pastes() },
+  //   { id: 'solder-wires', namePlural: m.solder_wires() },
+  //   { id: 'solder-alloys', namePlural: m.solder_alloys() },
+  //   { id: 'auxiliaries', namePlural: m.auxiliaries() },
+  //   { id: 'fluxing-systems', namePlural: m.fluxing_systems() }
+  // ];
+
+  // const uses: Use[] = [
+  //   { id: 'dip-fluxing', text: m.dip_fluxing() },
+  //   { id: 'dip-soldering', text: m.dip_soldering() },
+  //   { id: 'dispensing', text: m.dispensing() },
+  //   { id: 'foam-fluxing', text: m.foam_fluxing() },
+  //   { id: 'general-cleaning', text: m.cleaning() },
+  //   { id: 'hand-soldering', text: m.hand_soldering() },
+  //   { id: 'jet-fluxing', text: m.jet_fluxing() },
+  //   { id: 'laser-soldering', text: m.laser_soldering() },
+  //   { id: 'low-melting-point-soldering', text: m.low_melting_point_soldering_LMPA_Q() },
+  //   { id: 'OSP-soldering', text: m.OSP_soldering() },
+  //   { id: 'pre-tinning', text: m.pre_tinning() },
+  //   { id: 'reflow-soldering', text: m.reflow_soldering() },
+  //   { id: 'rework-and-repair', text: m.rework_repair() },
+  //   { id: 'robot-soldering', text: m.robot_soldering() },
+  //   { id: 'selective-soldering', text: m.selective_soldering() },
+  //   { id: 'lead-based-soldering', text: m.lead_based_soldering() },
+  //   { id: 'lead-free-soldering', text: m.lead_free_soldering() },
+  //   { id: 'solder-bath-conditioning', text: m.solder_bath_conditioning() },
+  //   { id: 'solder-paste-jetting', text: m.solder_paste_jetting() },
+  //   { id: 'spray-fluxing', text: m.spray_fluxing() },
+  //   { id: 'stencil-printing', text: m.stencil_printing() },
+  //   { id: 'vapor-phase-soldering', text: m.vapor_phase_soldering() },
+  //   { id: 'wave-soldering', text: m.wave_soldering() }
+  // ];
 </script>
 
 <div class="products-page">
@@ -210,7 +218,7 @@
             theme="grey-border"
             icon="search"
             value={search}
-            onKeyUp={(e) => (search = e.currentTarget.value)}
+            onKeyUp={(e) => setSearch(e.currentTarget.value)}
           />
         </div>
 
@@ -239,38 +247,6 @@
             />
           </div>
         {/if}
-
-        <!-- {#if !search}
-          <fieldset>
-            <legend>
-              {familySelected ? m.product_category() : m.product_categories()}
-            </legend>
-            {#if familiesLoading}
-              <p>{m.loading()}</p>
-            {:else}
-              <Pills
-                options={familyOptions}
-                selected={familySelected}
-                onSelect={(option: Option | undefined) => (familySelected = option)}
-                layout="vertical"
-              />
-            {/if}
-          </fieldset>
-
-          <fieldset>
-            <legend>{m.suitable_for()}</legend>
-            {#if usesLoading}
-              <p>{m.loading()}</p>
-            {:else}
-              <Pills
-                options={useOptions}
-                selected={useSelected}
-                onSelect={(option: Option | undefined) => (useSelected = option)}
-                layout="vertical"
-              />
-            {/if}
-          </fieldset>
-        {/if} -->
       </div>
     </aside>
 
@@ -295,7 +271,6 @@
     <article class={layout}>
       {#if loading}
         <LoadingCube />
-        <!-- <Shimmer shape="row" /> -->
       {:else}
         {@render children()}
       {/if}

@@ -18,33 +18,6 @@
 
   let status = $derived(product.status);
 
-  let searchMatch = $derived.by(() => {
-    // Show if there is no search query.
-    if (!search) {
-      return true;
-    }
-
-    // Show if the search term matches the search query.
-    if (product.name.toLowerCase().includes(search.toLowerCase())) {
-      return true;
-    }
-
-    // Hide if name does not match and product has no pitch.
-    if (!product.pitch) {
-      return false;
-    }
-
-    // Hide if the product has a superior product. This will hide the pitch.
-    if (product.superiorProduct.id) {
-      return false;
-    }
-
-    const pitch = product.pitch;
-
-    // Show if the first 180 characters of the pitch contain the search term.
-    return pitch.slice(0, 180).includes(search);
-  });
-
   let features = $derived.by(() => {
     const uses = chain<ProductUse>(product.productUses)
       .sortBy('rankAmongUses')
@@ -80,7 +53,7 @@
   });
 </script>
 
-<li id={product.id} class="product-row {product.status} {searchMatch ? 'match' : 'hide'}">
+<li id={product.id} class="product-row {product.status}">
   <a href="/product/{product.id}">
     <div class="left">
       {#if product.avatarPath}
@@ -157,9 +130,6 @@
   @use '$lib/styles/components' as *;
 
   .product-row {
-    &.hide {
-      display: none;
-    }
     &.outdated,
     &.discontinued {
       h3,

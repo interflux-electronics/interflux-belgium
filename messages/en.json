@@ -177,7 +177,8 @@
   "keen_to_learn_more": "Keen to learn more?",
   "open_slide_deck": "Open slide deck",
 
-  "results_for": "Results for: \"{query}\"",
+  "results_for": "Results for \"{query}\"",
+  "products_for": "Products for \"{query}\"",
   "search_product": "Search product",
   "product_category": "Product category",
   "product_categories": "Product categories",

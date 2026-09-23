@@ -5,25 +5,62 @@
   import chain from '$lib/helpers/chain';
   import capitalize from '$lib/helpers/capitalize';
   import { m } from '$lib/paraglide/messages';
+  import { page } from '$app/state';
   import type { Product, ProductFamily, GroupBy, Use } from '$lib/types';
 
   interface Props {
     title: string;
     products: Product[];
     groupBy: GroupBy;
-    search?: string | undefined;
     family?: ProductFamily;
     use?: Use;
   }
 
-  let { title, products, groupBy, search, family, use }: Props = $props();
+  let { title, products: allProducts, groupBy, family, use }: Props = $props();
 
-  function filterFeatured(products: Product[]) {
-    return products?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
+  let search: string | undefined = $derived(page.url.searchParams.get('search') ?? undefined);
+
+  let productsForSearch = $derived.by(() => {
+    if (!search) {
+      return allProducts;
+    }
+
+    const saneSearch = search.replaceAll(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+    return allProducts?.filter((product) => {
+      const { name, pitch, superiorProduct } = product;
+
+      const nameMatch = name && name.toLowerCase().includes(saneSearch);
+      const pitchMatch = pitch && !superiorProduct && pitch.toLowerCase().includes(saneSearch);
+
+      return nameMatch || pitchMatch;
+    });
+  });
+
+  let productsSortedByStatus = $derived.by(() => {
+    const extended = productsForSearch.map((product) => {
+      const statusRank = [
+        'new',
+        'popular',
+        'promoted',
+        'demoted',
+        'replaced',
+        'discontinued',
+        'offline'
+      ].indexOf(product.status);
+
+      return { ...product, statusRank };
+    });
+
+    return chain<Product>(extended).sortBy('statusRank', 'name').toArray();
+  });
+
+  function filterFeatured(subset: Product[]) {
+    return subset?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
   }
 
-  function filterHidden(products: Product[]) {
-    return products?.filter((p) => ['demoted', 'replaced', 'discontinued'].includes(p.status));
+  function filterHidden(subset: Product[]) {
+    return subset?.filter((p) => ['demoted', 'replaced', 'discontinued'].includes(p.status));
   }
 
   interface Group {
@@ -34,6 +71,8 @@
   }
 
   let groups: Group[] = $derived.by(() => {
+    const products = productsForSearch;
+
     // For all products page
     if (groupBy === 'mainFamily') {
       const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
@@ -165,48 +204,35 @@
       });
     }
 
-    // No grouping
     // For fluxing systems
-    // For search search
-    const extended = products.map((product) => {
-      const statusRank = [
-        'new',
-        'popular',
-        'promoted',
-        'demoted',
-        'replaced',
-        'discontinued',
-        'offline'
-      ].indexOf(product.status);
+    if (groupBy === 'none') {
+      const group = {
+        id: '',
+        title: '',
+        featured: filterFeatured(productsSortedByStatus),
+        hidden: filterHidden(productsSortedByStatus)
+      };
 
-      return { ...product, statusRank };
-    });
-    const subset = chain<Product>(extended).sortBy('statusRank', 'name').toArray();
-    const group = {
-      id: '',
-      title: '',
-      featured: filterFeatured(subset),
-      hidden: filterHidden(subset)
-    };
+      return [group];
+    }
 
-    return [group];
+    return [];
   });
 </script>
 
 <div class="product-list">
-  <h1>{title}</h1>
   {#if search}
-    <ProductListSearch {products} {search} />
+    <h1>{m.products_for({ query: search })}</h1>
+    <ProductListSearch products={productsSortedByStatus} {search} />
   {:else}
+    <h1>{title}</h1>
     {#each groups as group (group.id)}
-      <section>
-        {#if group.title}
-          <h2>{group.title}</h2>
-        {/if}
+      {#if group.title}
+        <h2>{group.title}</h2>
+      {/if}
 
-        <ProductListPromoted products={group.featured} />
-        <ProductListDemoted products={group.hidden} />
-      </section>
+      <ProductListPromoted products={group.featured} />
+      <ProductListDemoted products={group.hidden} />
     {/each}
   {/if}
 </div>
