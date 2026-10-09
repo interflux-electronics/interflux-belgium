@@ -3,7 +3,11 @@
   import { downcase } from '$lib/helpers';
   import type { Country } from '$lib/types';
 
-  export let country: Country;
+  interface Props {
+    country: Country;
+  }
+
+  let { country }: Props = $props();
 </script>
 
 <img
