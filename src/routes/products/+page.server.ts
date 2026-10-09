@@ -1,8 +1,8 @@
-import api from '$lib/helpers/api';
+import { api } from '$lib/helpers/api';
 import type { PageServerLoad } from './$types';
 import type { Product } from '$lib/types';
 
-export const load: PageServerLoad = async ({ parent }) => {
+export const load: PageServerLoad = async ({ parent, fetch }) => {
   await parent();
 
   const includes = [
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ parent }) => {
   ].join(',');
 
   const [products] = await Promise.all([
-    api.get<Product[]>(`/v1/public/products?include=${includes}`)
+    api(fetch).get<Product[]>(`/v1/public/products?include=${includes}`)
   ]);
 
   return { products };

@@ -1,8 +1,8 @@
-import api from '$lib/helpers/api';
+import { api } from '$lib/helpers/api';
 import type { PageServerLoad } from './$types';
 import type { Use, Product } from '$lib/types';
 
-export const load: PageServerLoad = async ({ parent, params }) => {
+export const load: PageServerLoad = async ({ parent, params, fetch }) => {
   await parent();
 
   const { useSlug } = params;
@@ -17,7 +17,9 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     'products.product-qualities'
   ].join(',');
 
-  const [use] = await Promise.all([api.get<Use>(`/v1/public/uses/${useSlug}?include=${includes}`)]);
+  const [use] = await Promise.all([
+    api(fetch).get<Use>(`/v1/public/uses/${useSlug}?include=${includes}`)
+  ]);
 
   const products: Product[] = use.products || [];
 
