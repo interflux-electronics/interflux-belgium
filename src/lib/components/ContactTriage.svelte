@@ -5,7 +5,6 @@
   import Svg from '$lib/components/Svg.svelte';
   import Button from '$lib/components/Button.svelte';
   import Flag from '$lib/components/Flag.svelte';
-  import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
   import { browser } from '$app/environment';
   import type { Option } from '$lib/components/Pills.svelte';
   import type { CountryData, DocumentData, Company } from '$lib/types';
@@ -62,7 +61,7 @@
 
     statusCompanies = 'fetching';
 
-    const url = `${apiHost}/company-markets?filter[country-id]=${country.id}`;
+    const url = `/api/company-markets?filter[country-id]=${country.id}`;
 
     try {
       const response = await fetch(url);
