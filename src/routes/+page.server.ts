@@ -1,4 +1,3 @@
-import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
 import { normalizeJsonApi, getJson } from '$lib/helpers';
 import { getOptions } from '$lib/state/headers.svelte';
 import type { PageServerLoad } from './$types';
@@ -8,12 +7,12 @@ export const load: PageServerLoad = async ({ fetch }) => {
 
   const [products, events] = await Promise.all([
     fetch(
-      `${apiHost}/v1/public/products?filter[onFrontPage]=true&include=main_family,sub_family`,
+      `/api/v1/public/products?filter[onFrontPage]=true&include=main_family,sub_family`,
       getOptions
     )
       .then(getJson)
       .then(normalizeJsonApi),
-    fetch(`${apiHost}/v1/public/events?include=country&upcoming=true`, getOptions)
+    fetch(`/api/v1/public/events?include=country&upcoming=true`, getOptions)
       .then(getJson)
       .then(normalizeJsonApi)
   ]);

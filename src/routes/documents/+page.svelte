@@ -207,7 +207,8 @@
     <div class="fields">
       <div class="filter">
         <TextInput
-          theme="large grey-border"
+          size="large"
+          theme="grey-border"
           icon="search"
           onKeyUp={(e) => (query = e.currentTarget.value)}
         />
@@ -349,6 +350,7 @@
           background: none;
           border: none;
           padding: 0;
+          color: var(--grey-7);
           &:hover,
           &:focus {
             cursor: pointer;

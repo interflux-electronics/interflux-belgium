@@ -70,7 +70,8 @@
       <p>{m.contact_network_2()}</p>
 
       <TextInput
-        theme="large grey-border"
+        size="large"
+        theme="grey-border"
         icon="search"
         onKeyUp={(e) => (query = e.currentTarget.value)}
       />
@@ -263,6 +264,7 @@
         white-space: normal; // override <Button> default
         text-align: left; // override <Button> default
         position: relative;
+        color: var(--grey-7);
         @include widescreen {
           padding: 14px;
           gap: 10px;

@@ -8,7 +8,13 @@
   interface Props {
     label?: string;
     size?: 'medium' | 'large' | 'no-size';
-    theme?: 'primary green' | 'primary orange' | 'secondary ghost' | 'tertiary ghost' | 'no-theme';
+    theme?:
+      | 'primary green'
+      | 'primary orange'
+      | 'secondary ghost'
+      | 'tertiary ghost'
+      | 'product-list-expander'
+      | 'no-theme';
     icon?: Icon;
     iconPosition?: 'left' | 'right';
     url?: string;
@@ -630,6 +636,55 @@
       &.left {
         justify-content: flex-start;
         gap: 4vw;
+      }
+    }
+
+    &.product-list-expander {
+      width: 100%;
+      height: 50px;
+      border-radius: 0;
+      border: 1px solid var(--grey-1);
+      border-left: 0;
+      border-right: 0;
+      margin-top: -1px;
+      transition: box-shadow 150ms ease-out;
+
+      &:hover,
+      &:focus {
+        color: var(--blue-0);
+        z-index: 1;
+        outline: 0;
+        @include widescreen {
+          box-shadow:
+            0 0 0 2px var(--blue-0),
+            0 0 12px RGBA(0, 0, 0, 0.1);
+        }
+        @include desktop {
+          box-shadow:
+            0 0 0 2px var(--blue-0),
+            0 0 12px RGBA(0, 0, 0, 0.1);
+        }
+        .icon {
+          :global {
+            svg {
+              [fill] {
+                fill: var(--blue-0);
+              }
+            }
+          }
+        }
+      }
+
+      .icon {
+        margin-left: 10px;
+        :global {
+          svg {
+            width: 12px;
+            [fill] {
+              fill: var(--grey-5);
+            }
+          }
+        }
       }
     }
   }

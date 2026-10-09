@@ -70,6 +70,7 @@ function tryParseDate(value: any): Date | null {
 export interface ChainableArray<T> extends Array<T> {
   mapBy(path: Path<T>): ChainableArray<any>;
   filterBy(path: Path<T>, value?: any): ChainableArray<T>;
+  findBy(path: Path<T>, value?: any): T | undefined;
   rejectBy(path: Path<T>, value?: any): ChainableArray<T>;
   uniqBy(path?: Path<T>): ChainableArray<T>;
   sortBy(...args: (Path<T> | 'asc' | 'desc')[]): ChainableArray<T>;
@@ -87,6 +88,11 @@ export interface ChainableArray<T> extends Array<T> {
    * Useful when you want to assign the final result or pass it to non-chainable code.
    */
   toArray(): T[];
+
+  /**
+   * Returns the first item, or undefined if the chain is empty.
+   */
+  first(): T | undefined;
 }
 
 function toChainable<T>(arr: T[]): ChainableArray<T> {
@@ -101,6 +107,13 @@ function toChainable<T>(arr: T[]): ChainableArray<T> {
       return toChainable(this.filter((item) => !!getByPath(item, path)));
     }
     return toChainable(this.filter((item) => getByPath(item, path) === value));
+  };
+
+  chainable.findBy = function (path: string, value?: any): T | undefined {
+    if (value === undefined) {
+      return this.find((item) => !!getByPath(item, path));
+    }
+    return this.find((item) => getByPath(item, path) === value);
   };
 
   chainable.rejectBy = function (path: string, value?: any): ChainableArray<T> {
@@ -167,6 +180,10 @@ function toChainable<T>(arr: T[]): ChainableArray<T> {
 
   chainable.toArray = function (): T[] {
     return [...this];
+  };
+
+  chainable.first = function (): T | undefined {
+    return this[0];
   };
 
   return chainable;

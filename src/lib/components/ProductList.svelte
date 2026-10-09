@@ -1,40 +1,96 @@
 <script lang="ts">
   import ProductListSearch from '$lib/components/ProductListSearch.svelte';
-  import ProductListFeatured from '$lib/components/ProductListFeatured.svelte';
-  import ProductListHidden from '$lib/components/ProductListHidden.svelte';
-  import Shimmer from '$lib/components/Shimmer.svelte';
+  import ProductListPromoted from '$lib/components/ProductListPromoted.svelte';
+  import ProductListDemoted from '$lib/components/ProductListDemoted.svelte';
   import chain from '$lib/helpers/chain';
+  import capitalize from '$lib/helpers/capitalize';
   import { m } from '$lib/paraglide/messages';
-  import type { Product, ProductFamily, Use } from '$lib/types';
+  import { page } from '$app/state';
+  import type { Product, ProductFamily, GroupBy, Use } from '$lib/types';
 
   interface Props {
     title: string;
     products: Product[];
-    groupBy: 'mainFamily' | 'subFamily' | 'use' | 'mainFamilyForUse' | 'none';
-    search?: string;
-    loading?: boolean;
+    groupBy: GroupBy;
+    family?: ProductFamily;
     use?: Use;
   }
 
-  let { title, products, groupBy, search, loading = false, use }: Props = $props();
+  let { title, products: allProducts, groupBy, family, use }: Props = $props();
 
-  let groups = $derived.by(() => {
-    // For `/products` path, where we show all products, group by main family
+  let search: string | undefined = $derived(page.url.searchParams.get('search') ?? undefined);
+
+  let productsForSearch = $derived.by(() => {
+    if (!search) {
+      return allProducts;
+    }
+
+    const saneSearch = search.replaceAll(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+    return allProducts?.filter((product) => {
+      const { name, pitch, superiorProduct } = product;
+
+      const nameMatch = name && name.toLowerCase().includes(saneSearch);
+      const pitchMatch = pitch && !superiorProduct && pitch.toLowerCase().includes(saneSearch);
+
+      return nameMatch || pitchMatch;
+    });
+  });
+
+  let productsSortedByStatus = $derived.by(() => {
+    const extended = productsForSearch.map((product) => {
+      const statusRank = [
+        'new',
+        'popular',
+        'promoted',
+        'demoted',
+        'replaced',
+        'discontinued',
+        'offline'
+      ].indexOf(product.status);
+
+      return { ...product, statusRank };
+    });
+
+    return chain<Product>(extended).sortBy('statusRank', 'name').toArray();
+  });
+
+  function filterFeatured(subset: Product[]) {
+    return subset?.filter((p) => ['new', 'popular', 'promoted'].includes(p.status));
+  }
+
+  function filterHidden(subset: Product[]) {
+    return subset?.filter((p) => ['demoted', 'replaced', 'discontinued'].includes(p.status));
+  }
+
+  interface Group {
+    id: string;
+    title?: string;
+    featured: Product[];
+    hidden: Product[];
+  }
+
+  let groups: Group[] = $derived.by(() => {
+    const products = productsForSearch;
+
+    // For all products page
     if (groupBy === 'mainFamily') {
       const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
 
       return mainFamilies.map((family: ProductFamily) => {
         const subset = chain(products)
           .filterBy('mainFamily.id', family.id)
-          .sortBy('rankAmongFamily');
+          .sortBy('rankAmongFamily')
+          .toArray();
 
-        // TODO: rankAmongMainFamily
-
-        return {
-          title: family.label,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+        const group: Group = {
+          id: family.id,
+          title: capitalize(family.namePlural) || '?',
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
@@ -56,118 +112,127 @@
         const subset = family
           ? chain(products).filterBy('subFamily.id', id)
           : chain(products).rejectBy('subFamily.id');
+        const sorted = subset.sortBy('rankAmongFamily').toArray();
 
-        const title = family ? family.label : m.other();
-
-        // TODO: rankAmongSubFamily
-
-        return {
-          title,
-          featured: subset.filterBy('isFeatured').sortBy('rankAmongFamily').toArray(),
-          hidden: subset.filterBy('isHidden').sortBy('rankAmongFamily').toArray()
+        const group: Group = {
+          id: family?.id,
+          title: family ? capitalize(family.namePlural) : m.other(),
+          featured: filterFeatured(sorted),
+          hidden: filterHidden(sorted)
         };
+
+        return group;
       });
     }
 
     // For solder pastes
     // For solder wires
     // For solder alloys
-    if (groupBy === 'use') {
-      const uses = chain(products).mapBy('uses').flat().uniqBy('id').sortBy('rank');
+    if (groupBy === 'alloy') {
+      const alloys =
+        family?.id === 'solder-wires'
+          ? ['lead-free-soldering', 'low-melting-point-soldering', 'lead-based-soldering']
+          : ['low-melting-point-soldering', 'lead-free-soldering', 'lead-based-soldering'];
 
-      return uses.map((use: Use) => {
-        const rank = 'rankAmongProducts';
-        const productUses = use.productUses.filter((pu) => {
-          return products.find((p) => p.id === pu.product.id);
-        });
-        const ranked = chain(productUses).filterBy(rank).sortBy(rank);
-        const rankless = chain(productUses).rejectBy(rank);
-        const sorted = [...ranked, ...rankless];
-        const subset = chain(sorted).mapBy('product');
-        const title = use.forLabel; // TODO
+      const uses = chain(products).mapBy('uses').flat().uniqBy('id');
+      const sorted = alloys.map((alloy) => uses.findBy('id', alloy));
 
-        // TODO: override the avatar with avatar set on use
+      return sorted.map((use: Use) => {
+        const subset = chain(use.productUses)
+          .sortBy('rankAmongProducts')
+          .filterBy('product')
+          .toArray()
+          .map((productUse) => {
+            const product = productUse.product;
+            const overrides = {};
 
-        // let rows = $derived.by(() => {
-        //   if (!productUses) {
-        //     return products.map((product) => {
-        //       return { product };
-        //     });
-        //   }
+            // Products can be given a ranking order unique to one of their Uses.
+            // That ranking lives on the relation in-between model called ProductUse.
+            // Here below we print that rank onto the Product for sorting.
+            overrides.rankAmongProducts = productUse.rankAmongProducts;
 
-        //   return products.map((product) => {
-        //     const productUse = productUses.findBy('product.id', product.get('id'));
-        //     const alternativeAvatar =
-        //       productUse && productUse.showAlternativeAvatar && productUse.image
-        //         ? productUse.image
-        //         : null;
+            // Products have their main avatar image. However, when shown under the context of one of
+            // their Uses, that avatar can be overriden to better fit the Use. For example DP 5505
+            // solder paste is shown with green lid under "Lead-free soldering" and with blue lid
+            // under "Lead-based soldering".
+            // Here below we override that avatar.
+            if (productUse.showAlternativeAvatar) {
+              if (productUse.image) {
+                const img = productUse.image;
 
-        //     return { product, alternativeAvatar };
-        //   });
-        // });
+                overrides.avatarPath = img.path;
+                overrides.avatarVariations = img.variations;
+                overrides.avatarAlt = img.alt;
+              }
+            }
 
-        return {
-          title,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+            return { ...product, ...overrides };
+          });
+
+        const group: Group = {
+          id: use.id,
+          title: `For ${use.text}`, // TODO: translate
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
-    // For processes (uses)
+    // For use routes
+    // For use & family routes
     if (groupBy === 'mainFamilyForUse') {
-      const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id');
+      const mainFamilies = chain(products).mapBy('mainFamily').uniqBy('id').sortBy('rank');
 
-      return mainFamilies.map((family) => {
-        const subset = chain(products).filterBy('mainFamily.id', family.get('id'));
-        const title = m.family_for_use({ family: family.label, use: use.name }); // TODO: review
+      return mainFamilies.map((mainFamily) => {
+        const subset = chain(products).filterBy('mainFamily', mainFamily).toArray();
 
-        return {
+        // Hide the title when on products/family/[familySlug]/for/[useSlug]
+        // Because the <h1> will be identical to the <h2>
+        const title =
+          use && family ? undefined : `${capitalize(mainFamily.namePlural)} for ${use?.text}`;
+
+        const group: Group = {
+          id: mainFamily.id,
           title,
-          featured: subset.filterBy('isFeatured').toArray(),
-          hidden: subset.filterBy('isHidden').toArray()
+          featured: filterFeatured(subset),
+          hidden: filterHidden(subset)
         };
+
+        return group;
       });
     }
 
-    // For fluxing systems and search
+    // For fluxing systems
     if (groupBy === 'none') {
-      console.log(products);
-      return [
-        {
-          title: null,
-          featured: products.filter((p) => ['new', 'popular', 'recommended'].includes(p.status)),
-          hidden: products.filter((p) => ['outdated', 'discontinued'].includes(p.status))
-        }
-      ];
+      const group = {
+        id: '',
+        title: '',
+        featured: filterFeatured(productsSortedByStatus),
+        hidden: filterHidden(productsSortedByStatus)
+      };
+
+      return [group];
     }
 
-    // For spotting issues
-    return [
-      {
-        title: '?',
-        products: []
-      }
-    ];
+    return [];
   });
 </script>
 
 <div class="product-list">
-  <h1>{title}</h1>
-  {#if loading}
-    <Shimmer shape="row" />
-  {:else if search}
-    <ProductListSearch {products} {search} />
+  {#if search}
+    <h1>{m.products_for({ query: search })}</h1>
+    <ProductListSearch products={productsSortedByStatus} {search} />
   {:else}
-    {#each groups as group (group.title)}
-      <section>
-        {#if group.title}
-          <h2>{group.title}</h2>
-        {/if}
+    <h1>{title}</h1>
+    {#each groups as group (group.id)}
+      {#if group.title}
+        <h2>{group.title}</h2>
+      {/if}
 
-        <ProductListFeatured products={group.featured} />
-        <ProductListHidden products={group.hidden} />
-      </section>
+      <ProductListPromoted products={group.featured} />
+      <ProductListDemoted products={group.hidden} />
     {/each}
   {/if}
 </div>
@@ -224,63 +289,6 @@
         text-align: center;
         width: 100%;
         padding: 16vw 10vw;
-      }
-      & + p {
-        margin-top: 20px;
-      }
-      &.with-arrow {
-        display: flex;
-        gap: 20px;
-        svg {
-          width: 12px;
-          height: auto;
-          [fill] {
-            fill: var(--blue-0);
-          }
-        }
-      }
-    }
-    ol.hidden {
-      // avoid display: none so <ResponsiveImage> JS can use offsetWidth
-      overflow: hidden;
-      height: 0;
-      &.expanded {
-        overflow: visible;
-        height: auto;
-      }
-      & + .button.secondary.grey-border {
-        width: 100%;
-        height: 50px;
-        border-radius: 0;
-        border: 1px solid var(--grey-1);
-        border-left: 0;
-        border-right: 0;
-        margin-top: -1px;
-        transition: box-shadow 150ms ease-out;
-        &:hover,
-        &:focus {
-          z-index: 1;
-          outline: 0;
-          @include widescreen {
-            box-shadow:
-              0 0 0 2px var(--blue-0),
-              0 0 12px RGBA(0, 0, 0, 0.1);
-          }
-          @include desktop {
-            box-shadow:
-              0 0 0 2px var(--blue-0),
-              0 0 12px RGBA(0, 0, 0, 0.1);
-          }
-        }
-      }
-    }
-    ol {
-      display: flex;
-      flex-direction: column;
-      li {
-        &.hide {
-          display: none;
-        }
       }
     }
   }

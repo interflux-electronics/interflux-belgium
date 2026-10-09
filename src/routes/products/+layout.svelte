@@ -1,228 +1,278 @@
 <script lang="ts">
-  import { page } from '$app/state';
+  import { page, navigating } from '$app/state';
   import { goto } from '$app/navigation';
-  import { tick } from 'svelte';
   import { m } from '$lib/paraglide/messages';
   import chain from '$lib/helpers/chain';
-  import capitalize from '$lib/helpers/capitalize';
   import TextInput from '$lib/components/TextInput.svelte';
-  import ProductList from '$lib/components/ProductList.svelte';
   import Pills from '$lib/components/Pills.svelte';
-  import type { PageProps } from './$types';
-  import type { Product, ProductFamily, Option } from '$lib/types';
+  import Button from '$lib/components/Button.svelte';
+  import LoadingCube from '$lib/components/LoadingCube.svelte';
+  import type { LayoutProps } from './$types';
+  import type { Product, ProductFamily, Use } from '$lib/types';
+  import type { Option } from '$lib/components/Pills.svelte';
 
-  let { data }: PageProps = $props();
+  let { children }: LayoutProps = $props();
 
-  let products: Product[] = $derived(data.products);
+  // SEARCH
 
-  console.log('✅ /products layout', products.length);
-
-  let uses = $derived.by(() => {
-    return chain(products).mapBy('uses').flat().uniqBy('id');
-  });
-
-  let mainFamilies = $derived.by(() => {
-    return chain(products).mapBy('mainFamily').flat().uniqBy('id');
-  });
-
-  // SEARCH BY NAME
-
-  // Writable derived that syncs with URL query param
+  // On page load, read the search param from the URL, then pass that param to the search <input>.
   let search = $derived.by(() => {
-    return page.url.searchParams.get('q') ?? '';
+    return page.url.searchParams.get('search') ?? '';
   });
 
-  // When the local value changes, update the URL
-  $effect(() => {
-    // Read the derived value to establish dependency
-    const currentSearch = search;
+  // Each time the search <input> value changes, update the URL.
+  function setSearch(value: string) {
+    const url = new URL(page.url);
+    const saneSearch = value.replaceAll(/[^a-zA-Z0-9 ]/g, '');
 
-    const newUrl = new URL(page.url);
-    if (currentSearch) {
-      newUrl.searchParams.set('q', currentSearch);
+    if (saneSearch) {
+      url.searchParams.set('search', saneSearch);
     } else {
-      newUrl.searchParams.delete('q');
+      url.searchParams.delete('search');
     }
 
-    // Avoid unnecessary navigation if values match
-    if (newUrl.search !== page.url.search) {
-      tick().then(() => {
-        goto(newUrl, { replaceState: true });
-      });
+    goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+  }
+
+  // PRODUCTS, FAMILIES & USES
+
+  // 1. This layout does not load data.
+  // 2. Its child routes load products from the backend and then pass it to this layout.
+  // 3. Families and uses are then derived from those products.
+  // 4. Users only see options that match the products they are seeing.
+
+  let products: Product[] | undefined = $derived(
+    'products' in page.data ? (page.data.products as Product[]) : undefined
+  );
+
+  let productsForSearch = $derived.by(() => {
+    if (!search) {
+      return products;
     }
+
+    const saneSearch = search.replaceAll(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+
+    return products?.filter((product) => {
+      const { name, pitch, superiorProduct } = product;
+
+      const nameMatch = name && name.toLowerCase().includes(saneSearch);
+      const pitchMatch = pitch && !superiorProduct && pitch.toLowerCase().includes(saneSearch);
+
+      return nameMatch || pitchMatch;
+    });
   });
 
-  let searchTitle = $derived(`${m.results_for({ query: search })} "${search}"`);
-
-  let familiesLoading = $state(false);
-  let familySelected: Option | undefined = $state(undefined);
-  let familySubet: ProductFamily[] | undefined = $state(undefined);
-
-  let usesLoading = $state(false);
-  let useSelected: Option | undefined = $state(undefined);
-  let useSubet: Use[] | undefined = $state(undefined);
-
-  // let mainFamilies = [];
-  // let familySelected; // set by child routes
-  // let familiesSubset; // set by child routes
-
-  let familyOptions: Option[] = $derived.by(() => {
-    const families = useSelected && familiesSubset ? familiesSubset : mainFamilies;
-
-    return chain(families)
+  const mainFamilies: ProductFamily[] = $derived.by(() => {
+    return chain<Product>(productsForSearch)
+      .mapBy('mainFamily')
+      .uniqBy('id')
       .sortBy('rank')
-      .map((family) => {
-        const id = family.id;
-        const label = capitalize(family.namePlural);
-        const url = getFamilyURL(family);
+      .toArray();
+  });
 
-        return { id, label, url };
-      });
+  const uses: Use[] = $derived.by(() => {
+    return chain<Product>(productsForSearch)
+      .mapBy('uses')
+      .flat()
+      .uniqBy('id')
+      .sortBy('rank')
+      .toArray();
   });
 
   function getFamilyURL(family: ProductFamily) {
-    // On the mix route, clicking the selected family button takes you to the use route.
-    if (familySelected && useSelected) {
-      return `/products/for/${useSelected}`;
+    const route = page.route.id;
+    const { useSlug } = page.params;
+
+    if (route === '/products') {
+      return `/products/family/${family.slug}`;
     }
 
-    // On the family route, clicking the selected family button takes you the index route.
-    if (familySelected) {
-      return '/products';
+    if (route === '/products/family/[familySlug]') {
+      return `/products`;
     }
 
-    // On the use route, clicking a family button takes you the mix route.
-    if (useSelected) {
-      return `/products/family/${family.id}/for/${useSelected}`;
+    if (route === '/products/for/[useSlug]') {
+      return `/products/family/${family.slug}/for/${useSlug}`;
     }
 
-    // On the index route, clicking a family button takes you to the family route.
-    return `/products/family/${family.id}`;
+    if (route === '/products/family/[familySlug]/for/[useSlug]') {
+      return `/products/for/${useSlug}`;
+    }
+
+    return `/products`;
   }
-
-  let useOptions: Option[] = $derived.by(() => {
-    const _uses = familySelected && usesSubset ? usesSubset : uses;
-
-    return chain(_uses)
-      .sortBy('rank')
-      .map((use) => {
-        const id = use.id;
-        const label = capitalize(use.text);
-        const url = getUseURL(use);
-
-        return { id, label, url };
-      });
-  });
 
   function getUseURL(use: Use) {
-    // On the mix route, clicking the selected use button takes you to the family route.
-    if (familySelected && useSelected) {
-      return `/products/family/${familySelected}`;
+    const route = page.route.id;
+    const { familySlug } = page.params;
+
+    if (route === '/products') {
+      return `/products/for/${use.slug}`;
     }
 
-    // On the family route, clicking a use button takes you to the mix route.
-    if (familySelected) {
-      return `/products/family/${familySelected}/for/${use.id}`;
+    if (route === '/products/family/[familySlug]') {
+      return `/products/family/${familySlug}/for/${use.slug}`;
     }
 
-    // On the use route, clicking the selected use button takes you to the index route.
-    if (useSelected) {
-      return 'products';
+    if (route === '/products/for/[useSlug]') {
+      return `/products`;
     }
 
-    // On the index route, clicking a use button takes you to the use route.
-    return `/products/for/${use.id}`;
+    if (route === '/products/family/[familySlug]/for/[useSlug]') {
+      return `/products/family/${familySlug}`;
+    }
+
+    return `/products`;
   }
+
+  const familyOptions: Option[] = $derived.by(() => {
+    return mainFamilies.map((f) => {
+      const count = chain(productsForSearch).filterBy('mainFamily', f).toArray().length;
+
+      return {
+        id: f.id,
+        label: `${f.namePlural} <i>${count}</i>`,
+        url: getFamilyURL(f) + (search && `?search=${search}`)
+      };
+    });
+  });
+
+  const useOptions: Option[] = $derived.by(() => {
+    return uses.map((u) => {
+      const count = productsForSearch?.filter((p) => p.uses.includes(u)).length;
+
+      return {
+        id: u.id,
+        label: `${u.text} <i>${count}</i>`,
+        url: getUseURL(u) + (search && `?search=${search}`)
+      };
+    });
+  });
+
+  let familySelected: Option | undefined = $derived.by(() =>
+    familyOptions.find((f) => f.id === page.params.familySlug)
+  );
+  let useSelected: Option | undefined = $derived.by(() =>
+    useOptions.find((f) => f.id === page.params.useSlug)
+  );
 
   // VIEW
 
   let layout: 'list' | 'grid' = $state('list');
-
   let stickyMenu = $derived(page.url.pathname !== '/products' || search);
+  let showFilters = $state(false); // for mobile & tablets
+  let loading = $derived(
+    navigating.from != null && navigating.to?.route.id?.startsWith('/products')
+  );
 
-  // FOR MOBILE & TABLET
+  // $effect(() => {
+  //   console.log({ products });
+  //   console.log({ uses });
+  // });
 
-  let fitlersAreShown = $state(false);
+  // const families: ProductFamily[] = [
+  //   { id: 'soldering-fluxes', namePlural: m.soldering_fluxes() },
+  //   { id: 'solder-pastes', namePlural: m.solder_pastes() },
+  //   { id: 'solder-wires', namePlural: m.solder_wires() },
+  //   { id: 'solder-alloys', namePlural: m.solder_alloys() },
+  //   { id: 'auxiliaries', namePlural: m.auxiliaries() },
+  //   { id: 'fluxing-systems', namePlural: m.fluxing_systems() }
+  // ];
 
-  function showFilters() {
-    filtersAreShown = true;
-  }
-
-  function hideFilters() {
-    fitlersAreShown = false;
-  }
+  // const uses: Use[] = [
+  //   { id: 'dip-fluxing', text: m.dip_fluxing() },
+  //   { id: 'dip-soldering', text: m.dip_soldering() },
+  //   { id: 'dispensing', text: m.dispensing() },
+  //   { id: 'foam-fluxing', text: m.foam_fluxing() },
+  //   { id: 'general-cleaning', text: m.cleaning() },
+  //   { id: 'hand-soldering', text: m.hand_soldering() },
+  //   { id: 'jet-fluxing', text: m.jet_fluxing() },
+  //   { id: 'laser-soldering', text: m.laser_soldering() },
+  //   { id: 'low-melting-point-soldering', text: m.low_melting_point_soldering_LMPA_Q() },
+  //   { id: 'OSP-soldering', text: m.OSP_soldering() },
+  //   { id: 'pre-tinning', text: m.pre_tinning() },
+  //   { id: 'reflow-soldering', text: m.reflow_soldering() },
+  //   { id: 'rework-and-repair', text: m.rework_repair() },
+  //   { id: 'robot-soldering', text: m.robot_soldering() },
+  //   { id: 'selective-soldering', text: m.selective_soldering() },
+  //   { id: 'lead-based-soldering', text: m.lead_based_soldering() },
+  //   { id: 'lead-free-soldering', text: m.lead_free_soldering() },
+  //   { id: 'solder-bath-conditioning', text: m.solder_bath_conditioning() },
+  //   { id: 'solder-paste-jetting', text: m.solder_paste_jetting() },
+  //   { id: 'spray-fluxing', text: m.spray_fluxing() },
+  //   { id: 'stencil-printing', text: m.stencil_printing() },
+  //   { id: 'vapor-phase-soldering', text: m.vapor_phase_soldering() },
+  //   { id: 'wave-soldering', text: m.wave_soldering() }
+  // ];
 </script>
 
 <div class="products-page">
   <div class="liner">
-    <aside class:show={fitlersAreShown} class:hide={!fitlersAreShown}>
+    <aside class:show={showFilters} class:hide={!showFilters}>
       <div class:sticky={stickyMenu}>
-        <fieldset>
-          <legend>{m.search_product()}</legend>
+        <div class="filter">
+          <h3 class="label">{m.search_product()}</h3>
 
           <TextInput
-            theme="large grey-border"
+            size="medium"
+            theme="grey-border"
             icon="search"
-            onKeyUp={(e) => (query = e.currentTarget.value)}
+            value={search}
+            onKeyUp={(e) => setSearch(e.currentTarget.value)}
           />
-        </fieldset>
+        </div>
 
-        {#if !search}
-          <fieldset>
-            <legend>
-              {familySelected ? m.product_category() : m.product_categories()}
-            </legend>
-            {#if familiesLoading}
-              <p>{m.loading()}</p>
-            {:else}
-              <Pills
-                options={familyOptions}
-                selected={familySelected}
-                onSelect={(option: Option | undefined) => (familySelected = option)}
-                layout="vertical"
-              />
-            {/if}
-          </fieldset>
+        {#if familyOptions.length > 0 || familySelected}
+          <div class="filter">
+            <h3 class="label">{m.category()}</h3>
 
-          <fieldset>
-            <legend>{m.suitable_for()}</legend>
-            {#if usesLoading}
-              <p>{m.loading()}</p>
-            {:else}
-              <Pills
-                options={useOptions}
-                selected={useSelected}
-                onSelect={(option: Option | undefined) => (useSelected = option)}
-                layout="vertical"
-              />
-            {/if}
-          </fieldset>
+            <Pills
+              options={familyOptions}
+              selected={familySelected}
+              onSelect={(option: Option | undefined) => (familySelected = option)}
+              layout="vertical"
+            />
+          </div>
+        {/if}
+
+        {#if useOptions.length > 0 || useSelected}
+          <div class="filter">
+            <h3 class="label">{m.processes()}</h3>
+
+            <Pills
+              options={useOptions}
+              selected={useSelected}
+              onSelect={(option: Option | undefined) => (useSelected = option)}
+              layout="vertical"
+            />
+          </div>
         {/if}
       </div>
     </aside>
 
     <div class="mobile-buttons">
-      {#if fitlersAreShown}
-        <!-- <Button
-            @text={{t 'Hide' 'products.15'}}
-            @icon='arrow-up'
-            @onClick={{this.hideFilters}}
-          /> -->
+      {#if showFilters}
+        <Button
+          label={m.hide()}
+          onClick={() => (showFilters = true)}
+          theme="secondary ghost"
+          size="medium"
+        />
       {:else}
-        <!-- <Button
-            @icon='search'
-            @text={{t 'Search product' 'products.11'}}
-            @onClick={this.showFilters}
-          /> -->
+        <Button
+          label={m.search_product()}
+          onClick={() => (showFilters = false)}
+          theme="secondary ghost"
+          size="medium"
+        />
       {/if}
     </div>
 
     <article class={layout}>
-      {#if search}
-        <ProductList {products} {search} groupBy="none" title={m.results_for({ query: search })} />
+      {#if loading}
+        <LoadingCube />
       {:else}
-        <ProductList {products} groupBy="none" title={m.all_products()} />
-        <!-- {outlet} -->
+        {@render children()}
       {/if}
     </article>
   </div>
@@ -232,7 +282,6 @@
   @use '$lib/styles/components' as *;
 
   .products-page {
-    background: var(--grey-0);
     @include tablet {
       padding-top: 9vw;
     }
@@ -312,26 +361,27 @@
           }
         }
       }
-      input {
-        @include widescreen {
-          width: 220px;
-        }
-        @include desktop {
-          width: vw(220px);
-        }
-        @include tablet {
-          width: 33vw;
-        }
-        @include mobile {
-          width: 100%;
+      :global {
+        input {
+          @include widescreen {
+            width: 220px;
+          }
+          @include desktop {
+            width: vw(220px);
+          }
+          @include tablet {
+            width: 33vw;
+          }
+          @include mobile {
+            width: 100%;
+          }
         }
       }
-
-      fieldset {
+      .filter {
         padding: 0;
         border: 0;
         margin: 0;
-        & + fieldset {
+        & + .filter {
           @include widescreen {
             margin-top: 30px;
           }
@@ -346,7 +396,7 @@
           }
         }
       }
-      legend {
+      h3 {
         @include paragraph;
         font-family: var(--bold);
         @include widescreen {
@@ -362,14 +412,17 @@
           margin-bottom: 4.5vw;
         }
       }
-      #search {
-        position: relative;
-        z-index: 2;
+      // #search {
+      //   position: relative;
+      //   z-index: 2;
+      //   input {
+      //     width: 100%;
+      //   }
+      // }
+      :global {
         input {
           width: 100%;
         }
-      }
-      :global {
         .pill,
         .pill.selected span {
           overflow: hidden;
@@ -389,6 +442,7 @@
         }
       }
     }
+
     article {
       background: white;
       box-shadow: 0 4px 8px rgba(black, 0.1);
@@ -413,9 +467,6 @@
       //     }
       //   }
       // }
-    }
-    & + .spacer {
-      background: var(--grey-0);
     }
 
     .mobile-buttons {

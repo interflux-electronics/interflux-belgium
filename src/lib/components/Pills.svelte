@@ -10,10 +10,9 @@
     options: Option[];
     selected?: Option;
     onSelect: (option: Option | undefined) => void;
-    resetURL?: string;
   }
 
-  let { layout = 'horizontal', options, selected, onSelect, resetURL }: Props = $props();
+  let { layout = 'horizontal', options, selected, onSelect }: Props = $props();
 
   function select(option: Option | undefined) {
     onSelect(option);
@@ -27,23 +26,23 @@
 <div class="pills {layout}">
   {#if selected}
     {#if selected.url}
-      <a href={resetURL} class="pill selected" onclick={() => reset()}>
-        {selected.label}
+      <a href={selected.url} class="pill selected" onclick={() => reset()}>
+        {@html selected.label}
       </a>
     {:else}
       <button class="pill selected" onclick={() => reset()}>
-        {selected.label}
+        {@html selected.label}
       </button>
     {/if}
   {:else}
     {#each options as option (option.id)}
       {#if option.url}
         <a href={option.url} class="pill idle" onclick={() => select(option)}>
-          {option.label}
+          {@html option.label}
         </a>
       {:else}
         <button class="pill idle" onclick={() => select(option)}>
-          {option.label}
+          {@html option.label}
         </button>
       {/if}
     {/each}
@@ -89,6 +88,8 @@
     box-sizing: border-box;
     color: var(--grey-7);
     transition: background-color 400ms var(--ease-out-expo);
+    display: flex;
+    gap: 5px;
     @include widescreen {
       font-size: 16px;
       border-radius: 18px;
@@ -127,7 +128,29 @@
         border-color: var(--green-3);
         box-shadow: 0 3px 6px rgba(black, 0.2);
       }
+      :global {
+        i {
+          background-color: var(--green-3);
+          color: white;
+        }
+      }
     }
+    :global {
+      i {
+        font-size: 12px;
+        min-width: 16px;
+        padding: 0 3px;
+        height: 16px;
+        border-radius: 10px;
+        background-color: var(--grey-1);
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: normal;
+      }
+    }
+
     // &.has-icon {
     //   display: flex;
     //   flex-direction: row-reverse;

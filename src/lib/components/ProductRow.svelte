@@ -1,69 +1,37 @@
 <script lang="ts">
-  import type { Product, Image } from '$lib/types';
+  import { PUBLIC_CDN_HOST } from '$env/static/public';
+  import chain from '$lib/helpers/chain';
   import Svg from '$lib/components/Svg.svelte';
   import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
-  import { mark } from '$lib/helpers/mark';
-  import chain from '$lib/helpers/chain';
+  import Image from '$lib/components/Image.svelte';
   import { m } from '$lib/paraglide/messages';
+  import { mark } from '$lib/helpers/mark';
   import { markdown } from '$lib/helpers';
+  import type { Product, ProductUse, ProductQuality } from '$lib/types';
 
   interface Props {
     product: Product;
     search?: string;
-    alternativeAvatar?: Image;
   }
 
-  let { product, search, alternativeAvatar }: Props = $props();
+  let { product, search }: Props = $props();
 
   let status = $derived(product.status);
 
-  let searchMatch = $derived.by(() => {
-    // Show if there is no search query.
-    if (!search) {
-      return true;
-    }
-
-    // Show if the search term matches the search query.
-    if (product.name.toLowerCase().includes(search.toLowerCase())) {
-      return true;
-    }
-
-    // Hide if name does not match and product has no pitch.
-    if (!product.pitch) {
-      return false;
-    }
-
-    // Hide if the product has a superior product. This will hide the pitch.
-    if (product.superiorProduct.id) {
-      return false;
-    }
-
-    const pitch = product.pitch;
-
-    // Show if the first 180 characters of the pitch contain the search term.
-    return pitch.slice(0, 180).includes(search);
-  });
-
   let features = $derived.by(() => {
-    const uses = product.productUsesSorted
-      ? chain(product.productUsesSorted).filterBy('showOnProductList').mapBy('use').toArray()
-      : [];
+    const uses = chain<ProductUse>(product.productUses)
+      .sortBy('rankAmongUses')
+      .filterBy('showOnProductList')
+      .mapBy('use')
+      .toArray();
 
-    const qualities = product.productQualitiesSorted
-      ? chain(product.productQualitiesSorted)
-          .filterBy('showOnProductList')
-          .mapBy('quality')
-          .toArray()
-      : [];
+    const qualities = chain<ProductQuality>(product.productQualities)
+      .sortBy('rankAmongQualities')
+      .filterBy('showOnProductList')
+      .mapBy('quality')
+      .toArray();
 
     return [...uses, ...qualities];
-  });
-
-  let replacedBy = $derived(() => {
-    const a = product.name;
-    const b = product.superiorProduct.name;
-
-    return m.a_has_been_replace_by_b({ a, b });
   });
 
   let familyLabel = $derived.by(() => {
@@ -85,7 +53,7 @@
   });
 </script>
 
-<li id={product.id} class="product-row {product.status} {searchMatch ? 'match' : 'hide'}">
+<li id={product.id} class="product-row {product.status}">
   <a href="/product/{product.id}">
     <div class="left">
       {#if product.avatarPath}
@@ -123,7 +91,7 @@
         {/if}
       </div>
       {#if product.superiorProduct?.id}
-        <p>{replacedBy}</p>
+        <p>{m.a_has_been_replace_by_b({ a: product.name, b: product.superiorProduct.name })}</p>
       {:else}
         {#if product.pitch}
           <div class="pitch">
@@ -138,8 +106,7 @@
           <div class="features">
             {#each features as feature (feature.id)}
               <div class="feature">
-                <!-- <Image @src={feature.iconURL} /> -->
-                <img src={feature.iconURL} alt={feature.text} />
+                <Image src="{PUBLIC_CDN_HOST}/{feature.icon || '/images/icons/check.svg'}" />
                 <div class="callout">
                   <span>
                     <!-- TODO: translate -->
@@ -163,17 +130,16 @@
   @use '$lib/styles/components' as *;
 
   .product-row {
-    &.hide {
-      display: none;
-    }
     &.outdated,
     &.discontinued {
       h3,
       h4:not(.red) {
         background-color: var(--grey-5) !important;
       }
-      img {
-        filter: grayscale(1) opacity(0.8);
+      :global {
+        img {
+          filter: grayscale(1) opacity(0.8);
+        }
       }
     }
     a {
@@ -220,9 +186,11 @@
             0 0 12px RGBA(0, 0, 0, 0.1);
         }
         .right {
-          svg {
-            [fill] {
-              fill: var(--blue-0);
+          :global {
+            svg {
+              [fill] {
+                fill: var(--blue-0);
+              }
             }
           }
         }
@@ -399,6 +367,9 @@
               }
             }
           }
+        }
+        p {
+          color: var(--grey-7);
         }
         .pitch {
           overflow: hidden;

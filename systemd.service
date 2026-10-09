@@ -1,19 +1,32 @@
 [Unit]
 Description=Svelte Kit prototype.interflux.com
-After=network.target
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
 
 [Service]
 Type=simple
-User=interflux
+User=bot
 WorkingDirectory=/var/www/prototype.interflux.com
 Environment=NODE_ENV=production
-Environment=PORT=3000
-ExecStart=/home/interflux/.nvm/versions/node/v24.14.0/bin/node build/index.js
-ExecReload=/bin/kill -TSTP $MAINPID
-Restart=always
-KillMode=process
-StandardOutput=append:/var/log/prototype.interflux.com/app.log
-StandardError=inherit
+Environment=ORIGIN=https://prototype.interflux.com
+Environment=SOCKET_PATH=/run/prototype.interflux.com/app.sock
+RuntimeDirectory=prototype.interflux.com
+RuntimeDirectoryMode=0750
+UMask=0007
+ExecStart=/home/bot/.nvm/versions/node/v24.14.0/bin/node build/index.js
+Restart=on-failure
+RestartSec=5
+KillMode=control-group
+TimeoutStopSec=35
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=read-only
+ProtectSystem=strict
+ReadWritePaths=/var/www/prototype.interflux.com /var/log/prototype.interflux.com
+StandardOutput=append:/var/log/prototype.interflux.com/systemd-stdout.log
+StandardError=append:/var/log/prototype.interflux.com/systemd-stderr.log
 
 [Install]
 WantedBy=multi-user.target

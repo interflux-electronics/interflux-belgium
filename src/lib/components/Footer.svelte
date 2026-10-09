@@ -106,6 +106,8 @@
   @use 'sass:color';
 
   footer {
+    flex-shrink: 0;
+
     @include widescreen {
       display: flex;
     }

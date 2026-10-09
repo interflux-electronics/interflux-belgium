@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_API_HOST as apiHost } from '$env/static/public';
   import { m } from '$lib/paraglide/messages';
   import TextInput from './TextInput.svelte';
   import type { CountryData, DocumentData } from '$lib/types';
@@ -245,7 +244,7 @@
     // !~    does not match regex, case sensitive
     // !~*   does not match regex, case insensitive
     //
-    const url = `${apiHost}/${apiPath}?filter[${filter}]=~*${q}`;
+    const url = `/api/${apiPath}?filter[${filter}]=~*${q}`;
 
     // Fetch data
     const response = await fetch(url);
@@ -311,7 +310,8 @@
     <TextInput
       type="search"
       icon="search"
-      theme="large grey-border"
+      size="large"
+      theme="grey-border"
       {onFocus}
       {onBlur}
       {onMouseOver}

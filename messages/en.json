@@ -64,7 +64,6 @@
   "selective_soldering": "Selective soldering",
   "show_all": "Show all",
   "show_less": "Show less",
-  "show_only_recommended_products": "Show only recommended products",
 
   "solder_alloys": "Solder alloys",
   "solder_bath_conditioning": "Solder bath conditioning",
@@ -178,7 +177,8 @@
   "keen_to_learn_more": "Keen to learn more?",
   "open_slide_deck": "Open slide deck",
 
-  "results_for": "Results for: \"{query}\"",
+  "results_for": "Results for \"{query}\"",
+  "products_for": "Products for \"{query}\"",
   "search_product": "Search product",
   "product_category": "Product category",
   "product_categories": "Product categories",
@@ -190,7 +190,13 @@
   "outdated": "outdated",
   "out_of_production": "out of production",
   "other": "Other",
-  "family_for_use": "`{family} for ${use}`",
+  "family_for_use": "{family} for {use}",
 
-  "a_has_been_replace_by_b": "{a} has been replaced by {b}."
+  "a_has_been_replace_by_b": "{a} has been replaced by {b}.",
+
+  "hide": "Hide",
+
+  "lead_based_soldering": "lead-based soldering",
+  "lead_free_soldering": "lead-based soldering",
+  "dip_fluxing": "dip fluxing"
 }

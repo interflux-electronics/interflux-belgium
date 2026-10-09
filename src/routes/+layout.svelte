@@ -20,7 +20,7 @@
   <meta name="git-branch" content={gitBranch} />
   <meta name="git-revision" content={gitRevision} />
   <meta name="build-time" content={buildTime} />
-  <meta name="built-with" content="Svelte Kit 5 - https://svelte.dev/" />
+  <meta name="built-with" content="Svelte 5 - https://svelte.dev/" />
   <meta name="built-by" content="Jan Werkhoven - jw@interflux.au" />
   <meta name="copyright" content="© since 1980 by Interflux Electronics NV ®" />
 

@@ -195,6 +195,7 @@
     header#mobile {
       position: relative;
       z-index: 2;
+      flex-shrink: 0;
 
       // Rather than not rendering the HTML with Ember responsive, we render the
       // HTML and hide it with CSS. This way, Fastboot does not need to know the
