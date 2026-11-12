@@ -36,9 +36,11 @@
     clip.style = `width: 0px`;
     closeMenu();
   }
+
+  let theme = $derived([page.data.headers?.theme || 'blue'].join());
 </script>
 
-<header id="desktop" class={page.data.headerTheme}>
+<header id="desktop" class={theme}>
   <div class="bg"></div>
 
   <nav>

@@ -30,11 +30,6 @@ export const load: LayoutLoad = async ({ fetch }) => {
   return {
     companies,
     events,
-    headerTheme: 'blue overlap' // configured per route
+    header: { theme: 'blue overlap' }
   };
 };
-
-// import { header } from '$lib/state/header.svelte';
-// import { main } from '$lib/state/main.svelte';
-// import { footer } from '$lib/state/footer.svelte';
-// import { page } from '$lib/state/page.svelte';

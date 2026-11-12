@@ -5,8 +5,7 @@ export const header = $state({
   crumbs: [],
   backPath: '/',
   visible: true,
-  shownMenu: 'none',
-  headerTheme: 'blue'
+  shownMenu: 'none'
 });
 
 export interface HeaderProps {
