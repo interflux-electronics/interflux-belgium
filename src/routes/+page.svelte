@@ -23,7 +23,7 @@
 
   console.log('✅ /');
   // svelte-ignore state_referenced_locally
-  console.log({ products, events });
+  console.log('✅ /', products.length, events.length);
 
   let heroPhrase: string = $state('');
 

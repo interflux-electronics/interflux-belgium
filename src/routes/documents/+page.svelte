@@ -21,8 +21,7 @@
   let documents: Document[] = $derived(data.documents);
   let products: Product[] = $derived(data.products);
 
-  console.log('✅ /documents');
-  console.log({ documents, products });
+  console.log('✅ /documents', documents.length, products.length);
 
   const categories: Category[] = [
     { id: 'TD', label: 'TD', long: m.td(), icon: 'file-spreadsheet' },

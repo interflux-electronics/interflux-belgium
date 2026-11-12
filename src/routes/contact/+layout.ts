@@ -24,8 +24,7 @@ export const load: LayoutLoad = async ({ fetch }) => {
     return { ...company, slug, publicMembers };
   });
 
-  console.log('✅ /contact');
-  console.log({ companies, events });
+  console.log('✅ /contact', companies.length, events.length);
 
   return {
     companies,

@@ -73,8 +73,6 @@
       const json = await response.json();
       const data = json.data;
 
-      console.log({ data });
-
       companiesForCountry = data;
       statusCompanies = 'done';
     } catch (error) {

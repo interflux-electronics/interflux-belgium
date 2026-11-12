@@ -7,8 +7,7 @@ export const load: LayoutLoad = async ({ parent }) => {
 
   const { companies } = parentData;
 
-  console.log('✅ /contact/map');
-  console.log({ companies });
+  console.log('✅ /contact/map', companies.length);
 
   return { companies };
 };
