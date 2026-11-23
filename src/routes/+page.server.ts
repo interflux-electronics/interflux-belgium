@@ -1,20 +1,17 @@
-import { normalizeJsonApi, getJson } from '$lib/helpers';
-import { getOptions } from '$lib/state/headers.svelte';
+import { api } from '$lib/helpers/api';
 import type { PageServerLoad } from './$types';
+import type { Product, Event } from '$lib/types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ parent, fetch }) => {
+  await parent();
+
   console.log('⛵️ /');
 
+  const includes = ['main_family', 'sub_family'].join(',');
+
   const [products, events] = await Promise.all([
-    fetch(
-      `/api/v1/public/products?filter[onFrontPage]=true&include=main_family,sub_family`,
-      getOptions
-    )
-      .then(getJson)
-      .then(normalizeJsonApi),
-    fetch(`/api/v1/public/events?include=country&upcoming=true`, getOptions)
-      .then(getJson)
-      .then(normalizeJsonApi)
+    api(fetch).get<Product[]>(`/v1/public/products?filter[onFrontPage]=true&include=${includes}`),
+    api(fetch).get<Event[]>(`/v1/public/events?include=country&upcoming=true`)
   ]);
 
   console.log('✅ /', products.length, events.length);
