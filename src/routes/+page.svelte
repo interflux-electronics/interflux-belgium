@@ -231,10 +231,8 @@
   </div>
 </section>
 
-{#if isLoading}
-  <Events isLoading={true} />
-{:else}
-  <Events isLoading={false} {events} />
+{#if events.length}
+  <Events {events} />
 {/if}
 
 <section id="why">

@@ -11,10 +11,10 @@
 
   interface Props {
     events?: Event[];
-    isLoading: boolean;
+    isLoading?: boolean;
   }
 
-  let { events, isLoading }: Props = $props();
+  let { events, isLoading = false }: Props = $props();
 
   let view = $derived.by(() => {
     if (isLoading) {
