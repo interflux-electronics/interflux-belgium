@@ -37,7 +37,7 @@
     closeMenu();
   }
 
-  let theme = $derived([page.data.headers?.theme || 'blue'].join());
+  let theme = $derived([page.data.header?.theme || 'blue'].join());
 </script>
 
 <header id="desktop" class={theme}>
@@ -140,7 +140,6 @@
   header {
     position: relative;
     background: rgba(var(--blue-5), 100%);
-    transition: all 400ms var(--ease-out-expo);
     z-index: 3;
     flex-shrink: 0;
 
@@ -202,6 +201,7 @@
       height: 100%;
       left: 0;
       top: 0;
+      transition: all 400ms var(--ease-out-expo);
     }
     .left {
       a#logo {

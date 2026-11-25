@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Svg } from '$lib/components';
   import type { Snippet } from 'svelte';
-  import type { Icon } from '$lib/types';
+  import type { Icon } from '$lib/components/Svg.svelte';
 
   // legacy tertiary orange
 
@@ -11,6 +11,7 @@
     theme?:
       | 'primary green'
       | 'primary orange'
+      | 'secondary'
       | 'secondary ghost'
       | 'tertiary ghost'
       | 'product-list-expander'
@@ -261,6 +262,24 @@
           gap: vw-mobile(10px); // TODO: review
         }
       }
+
+      &.arrow-down,
+      &.arrow-up {
+        .icon {
+          @include widescreen {
+            width: 12px;
+          }
+          @include desktop {
+            width: vw(12px);
+          }
+          @include tablet {
+            width: vw-tablet(12px);
+          }
+          @include mobile {
+            width: vw-mobile(12px); // TODO: review
+          }
+        }
+      }
     }
 
     // Styles
@@ -319,13 +338,13 @@
           0 3px 6px rgba(black, 0.2);
       }
 
-      // :global {
-      //   svg {
-      //     [fill] {
-      //       fill: var(--grey-5);
-      //     }
-      //   }
-      // }
+      :global {
+        svg {
+          [fill] {
+            fill: var(--grey-5);
+          }
+        }
+      }
 
       // &.white-border {
       //   border-color: rgba(white, 0.5);
@@ -364,25 +383,6 @@
           }
         }
       }
-
-      // &.blue-focus {
-      //   &:hover,
-      //   &:focus {
-      //     color: var(--blue-0);
-      //     border-color: var(--blue-0);
-      //     box-shadow: inset 0 0 0 1px var(--blue-0);
-      //     :global {
-      //       svg {
-      //         [fill] {
-      //           fill: var(--blue-0);
-      //         }
-      //       }
-      //     }
-      //   }
-      //   &:focus {
-      //     box-shadow: 0 0 0 1px var(--blue-0) inset;
-      //   }
-      // }
 
       // &.orange {
       //   &:hover,

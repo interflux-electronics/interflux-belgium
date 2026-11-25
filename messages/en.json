@@ -198,5 +198,12 @@
 
   "lead_based_soldering": "lead-based soldering",
   "lead_free_soldering": "lead-based soldering",
-  "dip_fluxing": "dip fluxing"
+  "dip_fluxing": "dip fluxing",
+  "watch_replay": "Watch replay",
+  "download_slides": "Download slides",
+  "coo_at_interflux": "COO at Interflux Electronics",
+  "many_years_experience": "30+ years of field experience",
+  "speaker": "Speaker",
+  "topic": "Topic",
+  "who_would_watch": "Who should watch"
 }
